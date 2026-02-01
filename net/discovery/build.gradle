@@ -31,4 +31,7 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
     implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
+
+    testImplementation "junit:junit:$junitVersion"
+    testImplementation 'org.json:json:20230618'
 }
