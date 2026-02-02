@@ -242,6 +242,11 @@
         <item>@string/home_continue_title</item>
         <item>@string/home_new_title</item>
         <item>@string/home_surprise_title</item>
+        <item>@string/home_audiothek_featured_title</item>
+        <item>@string/home_audiothek_charts_title</item>
+        <item>@string/home_audiothek_hot_title</item>
+        <item>@string/home_audiothek_live_title</item>
+        <item>@string/home_audiothek_stage_title</item>
         <item>@string/home_classics_title</item>
         <item>@string/home_downloads_title</item>
     </string-array>
@@ -250,6 +255,11 @@
         <item>QueueSection</item>
         <item>InboxSection</item>
         <item>EpisodesSurpriseSection</item>
+        <item>AudiothekFeaturedSection</item>
+        <item>AudiothekChartsSection</item>
+        <item>AudiothekHotSection</item>
+        <item>AudiothekLiveSection</item>
+        <item>AudiothekStageSection</item>
         <item>SubscriptionsSection</item>
         <item>DownloadsSection</item>
     </string-array>

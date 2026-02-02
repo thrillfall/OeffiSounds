@@ -64,6 +64,12 @@
     <!-- Home fragment -->
     <string name="home_surprise_title">Get surprised</string>
     <string name="home_classics_title">Check your classics</string>
+    <string name="home_audiothek_title">Discover Audiothek</string>
+    <string name="home_audiothek_featured_title">Audiothek: Featured</string>
+    <string name="home_audiothek_charts_title">Audiothek: Podcasts-Charts</string>
+    <string name="home_audiothek_hot_title">Audiothek: Hot</string>
+    <string name="home_audiothek_live_title">Audiothek: Live</string>
+    <string name="home_audiothek_stage_title">Audiothek: Stage</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>
