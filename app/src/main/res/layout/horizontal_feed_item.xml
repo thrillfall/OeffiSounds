@@ -4,11 +4,12 @@
     xmlns:squareImageView="http://schemas.android.com/apk/de.danoeh.antennapod"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="96dp"
+    android:layout_height="wrap_content"
     android:padding="4dp"
     android:clipToPadding="false"
     android:clipToOutline="false"
-    android:clipChildren="false">
+    android:clipChildren="false"
+    android:orientation="vertical">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -30,6 +31,18 @@
             squareImageView:direction="height" />
 
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/titleLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:lines="2"
+        android:singleLine="false"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textSize="14sp"
+        android:visibility="gone" />
 
     <Button
         android:id="@+id/actionButton"

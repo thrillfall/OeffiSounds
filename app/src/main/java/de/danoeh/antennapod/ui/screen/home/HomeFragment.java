@@ -23,6 +23,12 @@ import de.danoeh.antennapod.storage.database.DBReader;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.ui.echo.EchoConfig;
 import de.danoeh.antennapod.ui.screen.SearchFragment;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekChartsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EchoSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EpisodesSurpriseSection;
@@ -107,6 +113,18 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
                 return new InboxSection();
             case EpisodesSurpriseSection.TAG:
                 return new EpisodesSurpriseSection();
+            case AudiothekFeaturedSection.TAG:
+                return new AudiothekFeaturedSection();
+            case AudiothekChartsSection.TAG:
+                return new AudiothekChartsSection();
+            case AudiothekHotSection.TAG:
+                return new AudiothekHotSection();
+            case AudiothekLiveSection.TAG:
+                return new AudiothekLiveSection();
+            case AudiothekStageSection.TAG:
+                return new AudiothekStageSection();
+            case AudiothekSection.TAG:
+                return new AudiothekSection();
             case SubscriptionsSection.TAG:
                 return new SubscriptionsSection();
             case DownloadsSection.TAG:

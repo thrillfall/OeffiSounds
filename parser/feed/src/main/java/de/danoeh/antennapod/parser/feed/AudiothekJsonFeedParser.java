@@ -38,16 +38,19 @@ class AudiothekJsonFeedParser {
         }
 
         JSONObject programSet = data.optJSONObject("programSet");
-        if (programSet == null) {
+        JSONObject editorialCollection = data.optJSONObject("editorialCollection");
+        if (programSet == null && editorialCollection == null) {
             throw new UnsupportedFeedtypeException("json", "Missing data.programSet");
         }
 
         feed.setType(Feed.TYPE_RSS2);
-        feed.setTitle(programSet.optString("title", feed.getTitle()));
-        feed.setDescription(programSet.optString("synopsis", null));
-        feed.setLink(programSet.optString("sharingUrl", null));
 
-        JSONObject image = programSet.optJSONObject("image");
+        JSONObject feedRoot = programSet != null ? programSet : editorialCollection;
+        feed.setTitle(feedRoot.optString("title", feed.getTitle()));
+        feed.setDescription(feedRoot.optString("synopsis", null));
+        feed.setLink(feedRoot.optString("sharingUrl", null));
+
+        JSONObject image = feedRoot.optJSONObject("image");
         if (image != null) {
             String imageUrl = image.optString("url1X1", null);
             if (imageUrl == null) {
@@ -58,9 +61,16 @@ class AudiothekJsonFeedParser {
             }
         }
 
+        JSONArray nodes = null;
+        if (programSet != null) {
+            JSONObject itemsObj = programSet.optJSONObject("items");
+            nodes = itemsObj != null ? itemsObj.optJSONArray("nodes") : null;
+        } else {
+            JSONObject itemsObj = editorialCollection.optJSONObject("items");
+            nodes = itemsObj != null ? itemsObj.optJSONArray("nodes") : null;
+        }
+
         List<FeedItem> items = new ArrayList<>();
-        JSONObject itemsObj = programSet.optJSONObject("items");
-        JSONArray nodes = itemsObj != null ? itemsObj.optJSONArray("nodes") : null;
         if (nodes != null) {
             for (int i = 0; i < nodes.length(); i++) {
                 JSONObject node = nodes.optJSONObject(i);
@@ -83,6 +93,9 @@ class AudiothekJsonFeedParser {
                 String identifier = node.optString("publicationId", null);
                 if (TextUtils.isEmpty(identifier)) {
                     identifier = node.optString("assetId", null);
+                }
+                if (TextUtils.isEmpty(identifier)) {
+                    identifier = node.optString("id", null);
                 }
                 if (!TextUtils.isEmpty(identifier)) {
                     item.setItemIdentifier(identifier);
