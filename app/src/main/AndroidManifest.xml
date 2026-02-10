@@ -58,17 +58,6 @@
 
         <meta-data android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true"/>
-        <meta-data android:name="com.google.android.gms.car.notification.SmallIcon"
-            android:resource="@drawable/ic_notification"/>
-        <meta-data
-            android:name="com.google.android.gms.car.application"
-            android:resource="@xml/automotive_app_desc"/>
-        <meta-data
-            android:name="com.google.android.backup.api_key"
-            android:value="AEdPqrEAAAAI3a05VToCTlqBymJrbFGaKQMvF-bBAuLsOdavBA"/>
-        <meta-data
-            android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="de.danoeh.antennapod.playback.cast.CastOptionsProvider" />
 
         <!-- Version < 3.0. DeX Mode and Screen Mirroring support -->
         <meta-data android:name="com.samsung.android.keepalive.density" android:value="true"/>
