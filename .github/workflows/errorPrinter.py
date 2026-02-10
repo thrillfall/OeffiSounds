@@ -4,8 +4,8 @@ import os.path
 import glob
 from pathlib import Path
 
-if os.path.isfile('app/build/reports/lint-results-playDebug.xml'):
-    dom = minidom.parse('app/build/reports/lint-results-playDebug.xml')
+if os.path.isfile('app/build/reports/lint-results-freeDebug.xml'):
+    dom = minidom.parse('app/build/reports/lint-results-freeDebug.xml')
     issues = dom.getElementsByTagName('issue')
     for issue in issues:
         locations = issue.getElementsByTagName('location')

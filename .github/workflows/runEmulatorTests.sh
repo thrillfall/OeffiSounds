@@ -4,7 +4,7 @@ set -o pipefail
 adb logcat -c
 
 runTests() {
-    ./gradlew connectedPlayDebugAndroidTest connectedDebugAndroidTest \
+    ./gradlew connectedFreeDebugAndroidTest connectedDebugAndroidTest \
         -Pandroid.testInstrumentationRunnerArguments.notAnnotation=de.test.antennapod.IgnoreOnCi
 }
 

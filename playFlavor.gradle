@@ -4,8 +4,5 @@ android {
         free {
             dimension "market"
         }
-        play {
-            dimension "market"
-        }
     }
 }

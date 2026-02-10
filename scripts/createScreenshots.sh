@@ -25,12 +25,12 @@ sleep 10
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk
 adb root
 
-adb uninstall de.danoeh.antennapod.debug
-./gradlew :app:installPlayDebug
-adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity"
+adb uninstall de.oeffisounds.app.debug
+./gradlew :app:installFreeDebug
+adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity"
 sleep 1
-adb shell am force-stop de.danoeh.antennapod.debug
-version=$(adb shell dumpsys package de.danoeh.antennapod.debug | grep versionName | cut -d'=' -f2)
+adb shell am force-stop de.oeffisounds.app.debug
+version=$(adb shell dumpsys package de.oeffisounds.app.debug | grep versionName | cut -d'=' -f2)
 versionMajor=0$(echo $version | cut -d'.' -f1)
 versionMinor=0$(echo $version | cut -d'.' -f2)
 
@@ -38,19 +38,19 @@ wget "https://github.com/AntennaPod/Branding/raw/master/Screenshots/ScreenshotsD
 
 function resetDatabase() {
     theme=$1
-    adb shell am force-stop de.danoeh.antennapod.debug
-    adb shell rm /data/data/de.danoeh.antennapod.debug/databases/Antennapod.db-journal
-    adb push ScreenshotsDatabaseExport.db /data/data/de.danoeh.antennapod.debug/databases/Antennapod.db
-    adb shell chmod 777 /data/data/de.danoeh.antennapod.debug/databases
-    adb shell chmod 777 /data/data/de.danoeh.antennapod.debug/databases/Antennapod.db
+    adb shell am force-stop de.oeffisounds.app.debug
+    adb shell rm /data/data/de.oeffisounds.app.debug/databases/Antennapod.db-journal
+    adb push ScreenshotsDatabaseExport.db /data/data/de.oeffisounds.app.debug/databases/Antennapod.db
+    adb shell chmod 777 /data/data/de.oeffisounds.app.debug/databases
+    adb shell chmod 777 /data/data/de.oeffisounds.app.debug/databases/Antennapod.db
     echo "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><map><boolean name='prefMainActivityIsFirstLaunch' value='false' /></map>" > tmp
-    adb push tmp /data/data/de.danoeh.antennapod.debug/shared_prefs/MainActivityPrefs.xml
+    adb push tmp /data/data/de.oeffisounds.app.debug/shared_prefs/MainActivityPrefs.xml
     echo "<?xml version='1.0' encoding='utf-8' standalone='yes' ?><map>
         <string name='prefTheme'>$theme</string>
         <long name='de.danoeh.antennapod.preferences.currentlyPlayingMedia' value='1' />
         <long name='FeedMedia.PrefMediaId' value='2432' />
         </map>" > tmp
-    adb push tmp /data/data/de.danoeh.antennapod.debug/shared_prefs/de.danoeh.antennapod.debug_preferences.xml
+    adb push tmp /data/data/de.oeffisounds.app.debug/shared_prefs/de.oeffisounds.app.debug_preferences.xml
     rm tmp
     sleep 1
 }
@@ -81,31 +81,31 @@ function createScreenshots() {
     switchLanguage $language
 
     resetDatabase 0
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "SubscriptionFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "SubscriptionFragment"
     screenshot "screenshots/$language/00.png"
 
     resetDatabase 0
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
     sleep 1
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --ez "open_player" "true"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --ez "open_player" "true"
     screenshot "screenshots/$language/01.png"
 
     resetDatabase 0
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
     sleep 1
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --ez "open_drawer" "true"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --ez "open_drawer" "true"
     screenshot "screenshots/$language/02.png"
 
     resetDatabase 0
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "EpisodesFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "EpisodesFragment"
     screenshot "screenshots/$language/03a.png"
 
     resetDatabase 1
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "EpisodesFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "EpisodesFragment"
     screenshot "screenshots/$language/03b.png"
 
     resetDatabase 0
-    adb shell am start -n "de.danoeh.antennapod.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
+    adb shell am start -n "de.oeffisounds.app.debug/de.danoeh.antennapod.activity.MainActivity" --es "fragment_tag" "QueueFragment"
     screenshot "screenshots/$language/04.png"
 }
 
