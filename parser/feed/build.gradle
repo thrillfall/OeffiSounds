@@ -5,6 +5,9 @@ apply from: "../../common.gradle"
 
 android {
     namespace "de.danoeh.antennapod.parser.feed"
+    lint {
+        disable 'DuplicatePlatformClasses'
+    }
 }
 
 dependencies {
