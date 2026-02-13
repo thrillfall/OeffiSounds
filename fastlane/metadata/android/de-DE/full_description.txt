@@ -1,0 +1,3 @@
+Öffi Sounds ist ein Fork von AntennaPod, einem freien und quelloffenen Podcast-Manager für Android.
+
+Der Fokus liegt auf der einfachen Suche/Entdeckung von Inhalten aus dem deutschen öffentlich-rechtlichen Rundfunk über ARD Sounds (früher ARD Audiothek), kombiniert mit den bekannten AntennaPod-Funktionen zur Verwaltung und Wiedergabe von Podcasts.
