@@ -50,8 +50,12 @@ public class AboutFragment extends AnimatedPreferenceFragment {
                     .addToBackStack(getString(R.string.contributors)).commit();
             return true;
         });
-        findPreference("about_privacy_policy").setOnPreferenceClickListener((preference) -> {
-            IntentUtils.openInBrowser(getContext(), "https://antennapod.org/privacy/");
+        findPreference("about_source_code").setOnPreferenceClickListener((preference) -> {
+            IntentUtils.openInBrowser(getContext(), "https://github.com/thrillfall/OeffiSounds");
+            return true;
+        });
+        findPreference("about_report_issues").setOnPreferenceClickListener((preference) -> {
+            IntentUtils.openInBrowser(getContext(), "https://github.com/thrillfall/OeffiSounds/issues");
             return true;
         });
         findPreference("about_licenses").setOnPreferenceClickListener((preference) -> {

@@ -15,10 +15,15 @@
             android:summary="@string/contributors_summary"
             android:title="@string/contributors"/>
     <Preference
-            android:key="about_privacy_policy"
-            android:icon="@drawable/ic_policy"
-            android:summary="www.antennapod.org/privacy"
-            android:title="@string/privacy_policy"/>
+            android:key="about_source_code"
+            android:icon="@drawable/ic_info"
+            android:summary="@string/oeffisounds_source_code_summary"
+            android:title="@string/oeffisounds_source_code_title"/>
+    <Preference
+            android:key="about_report_issues"
+            android:icon="@drawable/ic_bug"
+            android:summary="@string/oeffisounds_report_issues_summary"
+            android:title="@string/oeffisounds_report_issues_title"/>
     <Preference
             android:key="about_licenses"
             android:icon="@drawable/ic_info"

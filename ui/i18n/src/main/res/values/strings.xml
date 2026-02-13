@@ -623,6 +623,10 @@
     <string name="privacy_policy">Privacy policy</string>
     <string name="licenses">Licenses</string>
     <string name="licenses_summary">AntennaPod uses other great software</string>
+    <string name="oeffisounds_source_code_title">Source code</string>
+    <string name="oeffisounds_source_code_summary">github.com/thrillfall/OeffiSounds</string>
+    <string name="oeffisounds_report_issues_title">Report issues</string>
+    <string name="oeffisounds_report_issues_summary">github.com/thrillfall/OeffiSounds/issues</string>
 
     <!-- Search -->
     <string name="search_status_no_results">No results were found</string>
