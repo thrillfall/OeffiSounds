@@ -732,6 +732,7 @@
     <string name="synchronization_host_label">Server address</string>
     <string name="proceed_to_login_butLabel">Proceed to login</string>
     <string name="synchronization_nextcloud_authenticate_browser">Grant access using the opened web browser and come back to AntennaPod.</string>
+    <string name="synchronization_nextcloud_login_with_app">Login with Nextcloud app</string>
     <string name="gpodnetauth_login_butLabel">Login</string>
     <string name="synchronization_credentials_explanation">Please provide the credentials of your account on the synchronization server.</string>
     <string name="gpodnetauth_encryption_warning">Password and data are not encrypted!</string>

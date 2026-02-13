@@ -1,0 +1,2 @@
+- Nextcloud-Synchronisation: vereinfachter Login über die Nextcloud-App (SSO) mit Kontoauswahl
+- Nextcloud-Synchronisation: Fehler bei ungültiger Request-URL behoben

@@ -15,6 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:visibility="gone"
             android:text="@string/synchronization_host_explanation" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -22,6 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            android:visibility="gone"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -57,9 +59,17 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/loginWithNextcloudAppButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/synchronization_nextcloud_login_with_app" />
+
+        <Button
             android:id="@+id/chooseHostButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:text="@string/proceed_to_login_butLabel" />
 
     </LinearLayout>

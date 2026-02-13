@@ -7,11 +7,15 @@ apply from: "../playFlavor.gradle"
 android {
     namespace "de.danoeh.antennapod"
 
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+    }
+
     defaultConfig {
         applicationId "de.oeffisounds.app"
         // Version code: simple incrementing integer, bump per release
-        versionCode 2
-        versionName "1.0.1"
+        versionCode 3
+        versionName "1.1.0"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -116,6 +120,8 @@ dependencies {
     annotationProcessor "org.greenrobot:eventbus-annotation-processor:$eventbusVersion"
     implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
+
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
 
     implementation 'com.github.ByteHamster:SearchPreference:v2.5.0'
     implementation 'com.github.skydoves:balloon:1.5.3'
