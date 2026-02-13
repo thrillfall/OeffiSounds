@@ -356,9 +356,8 @@ public class SyncService extends Worker {
                         SynchronizationCredentials.getHosturl(), SynchronizationCredentials.getDeviceId(),
                         SynchronizationCredentials.getUsername(), SynchronizationCredentials.getPassword());
             case NEXTCLOUD_GPODDER:
-                return new NextcloudSyncService(AntennapodHttpClient.getHttpClient(),
-                        SynchronizationCredentials.getHosturl(), SynchronizationCredentials.getUsername(),
-                        SynchronizationCredentials.getPassword());
+                return new NextcloudSyncService(getApplicationContext(),
+                        SynchronizationCredentials.getNextcloudAccountName());
             default:
                 return null;
         }

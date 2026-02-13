@@ -19,5 +19,8 @@ dependencies {
     implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
     implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
 
+    implementation "com.github.nextcloud:Android-SingleSignOn:1.0.0"
+    implementation "com.google.code.gson:gson:2.10.1"
+
     testImplementation "junit:junit:$junitVersion"
 }

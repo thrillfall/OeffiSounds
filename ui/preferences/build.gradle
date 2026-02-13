@@ -48,4 +48,5 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp-urlconnection:$okhttpVersion"
     implementation "org.greenrobot:eventbus:$eventbusVersion"
     implementation 'com.github.ByteHamster:SearchPreference:2.7.3'
+    implementation "com.github.nextcloud:Android-SingleSignOn:1.0.0"
 }

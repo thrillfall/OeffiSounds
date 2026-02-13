@@ -114,9 +114,9 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
     private void updateScreen() {
         final boolean loggedIn = SynchronizationSettings.isProviderConnected();
         Preference preferenceHeader = findPreference(PREFERENCE_SYNCHRONIZATION_DESCRIPTION);
+        SynchronizationProvider selectedProvider = SynchronizationProvider
+                .fromIdentifier(getSelectedSyncProviderKey());
         if (loggedIn) {
-            SynchronizationProvider selectedProvider =
-                    SynchronizationProvider.fromIdentifier(getSelectedSyncProviderKey());
             preferenceHeader.setTitle("");
             preferenceHeader.setSummary(getProviderSummary(selectedProvider));
             preferenceHeader.setIcon(getProviderIcon(selectedProvider));
@@ -138,8 +138,14 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
         findPreference(PREFERENCE_FORCE_FULL_SYNC).setEnabled(loggedIn);
         findPreference(PREFERENCE_LOGOUT).setEnabled(loggedIn);
         if (loggedIn) {
+            String username;
+            if (selectedProvider == SynchronizationProvider.NEXTCLOUD_GPODDER) {
+                username = SynchronizationCredentials.getNextcloudAccountName();
+            } else {
+                username = SynchronizationCredentials.getUsername();
+            }
             String summary = getString(R.string.synchronization_login_status,
-                    SynchronizationCredentials.getUsername(), SynchronizationCredentials.getHosturl());
+                    username, SynchronizationCredentials.getHosturl());
             Spanned formattedSummary = HtmlCompat.fromHtml(summary, HtmlCompat.FROM_HTML_MODE_LEGACY);
             findPreference(PREFERENCE_LOGOUT).setSummary(formattedSummary);
             updateLastSyncReport(SynchronizationSettings.isLastSyncSuccessful(),

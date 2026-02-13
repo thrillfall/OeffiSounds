@@ -12,6 +12,7 @@ public abstract class SynchronizationCredentials {
     private static final String PREF_PASSWORD = "de.danoeh.antennapod.preferences.gpoddernet.password";
     private static final String PREF_DEVICEID = "de.danoeh.antennapod.preferences.gpoddernet.deviceID";
     private static final String PREF_HOSTNAME = "prefGpodnetHostname";
+    private static final String PREF_NEXTCLOUD_ACCOUNT_NAME = "de.danoeh.antennapod.preferences.nextcloud.accountName";
 
     private static SharedPreferences prefs;
 
@@ -51,10 +52,19 @@ public abstract class SynchronizationCredentials {
         prefs.edit().putString(PREF_HOSTNAME, value).apply();
     }
 
+    public static String getNextcloudAccountName() {
+        return prefs.getString(PREF_NEXTCLOUD_ACCOUNT_NAME, null);
+    }
+
+    public static void setNextcloudAccountName(String accountName) {
+        prefs.edit().putString(PREF_NEXTCLOUD_ACCOUNT_NAME, accountName).apply();
+    }
+
     public static synchronized void clear() {
         setUsername(null);
         setPassword(null);
         setDeviceId(null);
+        setNextcloudAccountName(null);
         UserPreferences.setGpodnetNotificationsEnabled();
     }
 }
