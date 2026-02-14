@@ -38,7 +38,6 @@
         android:backupAgent=".storage.importexport.OpmlBackupAgent"
         android:restoreAnyVersion="true"
         android:theme="@style/Theme.AntennaPod.Splash"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:logo="@mipmap/ic_launcher"
         android:resizeableActivity="true"

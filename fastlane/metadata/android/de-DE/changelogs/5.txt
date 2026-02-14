@@ -1,0 +1,4 @@
+- Einstellungen: Upstream-Hinweis zur Fork-/GPL-Warnung entfernt
+- Über/Fehler melden: Links zu Öffi Sounds Quellcode und Issue-Tracker aktualisiert
+- Sicherheit: Klartext-Traffic deaktiviert und Google-Dependency-Metadatenblock entfernt
+- Store-Metadaten: Fastlane-Listing vervollständigt
