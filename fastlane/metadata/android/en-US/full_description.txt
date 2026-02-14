@@ -1,0 +1,9 @@
+Öffi Sounds is a fork of AntennaPod, a free and open-source podcast manager for Android.
+
+It focuses on discovering and listening to content from German public radio via ARD Sounds (formerly ARD Audiothek), while keeping the core AntennaPod podcast management and playback features.
+
+Source code:
+https://github.com/thrillfall/OeffiSounds
+
+Translations:
+https://hosted.weblate.org/projects/antennapod/
