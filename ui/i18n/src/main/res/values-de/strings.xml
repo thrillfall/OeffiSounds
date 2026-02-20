@@ -448,9 +448,9 @@
     <string name="episode_information">Episodeninformation</string>
     <!--About screen-->
   <string name="about_pref">Über</string>
-    <string name="antennapod_version">AntennaPod-Version</string>
+    <string name="antennapod_version">Öffi Sounds-Version (basiert auf AntennaPod)</string>
     <string name="contributors">Beitragende</string>
-    <string name="contributors_summary">Jeder kann helfen, AntennaPod besser zu machen – durch Code, Übersetzungen oder durch Unterstützen anderer Nutzer in unserem Forum</string>
+    <string name="contributors_summary">Öffi Sounds basiert auf AntennaPod.</string>
     <string name="developers">Entwicklung</string>
     <string name="translators">Übersetzung</string>
     <string name="special_thanks">Besonderen Dank</string>
