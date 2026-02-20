@@ -44,6 +44,13 @@
     <!--Home fragment-->
   <string name="home_surprise_title">Lass dich überraschen</string>
     <string name="home_classics_title">Genieße deine Klassiker</string>
+    <string name="home_audiothek_title">Audiothek entdecken</string>
+    <string name="home_audiothek_featured_title">Audiothek: Empfohlen</string>
+    <string name="home_audiothek_charts_title">Audiothek: Podcast-Charts</string>
+    <string name="home_audiothek_hot_title">Audiothek: Beliebt</string>
+    <string name="home_audiothek_live_title">Audiothek: Live</string>
+    <string name="home_audiothek_stage_title">Audiothek: Bühne</string>
+    <string name="home_audiothek_heute_wichtig_title">Heute wichtig</string>
     <string name="home_continue_title">Höre weiter</string>
     <string name="home_new_title">Was gibt\'s Neues</string>
     <string name="home_downloads_title">Verwalte Downloads</string>
@@ -450,7 +457,7 @@
   <string name="about_pref">Über</string>
     <string name="antennapod_version">Öffi Sounds-Version (basiert auf AntennaPod)</string>
     <string name="contributors">Beitragende</string>
-    <string name="contributors_summary">Öffi Sounds basiert auf AntennaPod.</string>
+    <string name="contributors_summary">Jeder kann helfen, Öffi Sounds besser zu machen – durch Code, Übersetzungen oder durch Unterstützen anderer Nutzer in unserem Forum. Öffi Sounds basiert auf AntennaPod.</string>
     <string name="developers">Entwicklung</string>
     <string name="translators">Übersetzung</string>
     <string name="special_thanks">Besonderen Dank</string>
