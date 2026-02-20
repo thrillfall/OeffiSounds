@@ -17,6 +17,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHeuteWichtigSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EpisodesSurpriseSection;
@@ -56,6 +57,7 @@ public class HomePreferences {
         List<String> hiddenSectionTags = getListPreference(context, PREF_HIDDEN_SECTIONS);
         if (hiddenSectionTags.isEmpty()) {
             hiddenSectionTags.add(AudiothekStageSection.TAG);
+            hiddenSectionTags.add(AudiothekLiveSection.TAG);
         }
         return hiddenSectionTags;
     }
@@ -64,16 +66,17 @@ public class HomePreferences {
         List<String> storedSectionTagOrder = getListPreference(context, PREF_SECTION_ORDER);
         final List<String> sectionTagOrder = storedSectionTagOrder.isEmpty()
                 ? new ArrayList<>(Arrays.asList(
-                    AudiothekFeaturedSection.TAG,
-                    AudiothekChartsSection.TAG,
                     AudiothekHotSection.TAG,
-                    AudiothekLiveSection.TAG,
+                    AudiothekChartsSection.TAG,
+                    AudiothekHeuteWichtigSection.TAG,
+                    AudiothekFeaturedSection.TAG,
                     AudiothekSection.TAG,
                     QueueSection.TAG,
                     InboxSection.TAG,
                     EpisodesSurpriseSection.TAG,
                     SubscriptionsSection.TAG,
                     DownloadsSection.TAG,
+                    AudiothekLiveSection.TAG,
                     AudiothekStageSection.TAG))
                 : storedSectionTagOrder;
         List<String> hiddenSectionTags = getHiddenSectionTags(context);

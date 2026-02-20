@@ -26,6 +26,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHeuteWichtigSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EchoSection;
@@ -125,6 +126,8 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
                 return new AudiothekStageSection();
             case AudiothekSection.TAG:
                 return new AudiothekSection();
+            case AudiothekHeuteWichtigSection.TAG:
+                return new AudiothekHeuteWichtigSection();
             case SubscriptionsSection.TAG:
                 return new SubscriptionsSection();
             case DownloadsSection.TAG:

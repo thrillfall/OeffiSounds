@@ -70,6 +70,7 @@
     <string name="home_audiothek_hot_title">Audiothek: Hot</string>
     <string name="home_audiothek_live_title">Audiothek: Live</string>
     <string name="home_audiothek_stage_title">Audiothek: Stage</string>
+    <string name="home_audiothek_heute_wichtig_title">What\'s Important Today</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>
@@ -616,7 +617,7 @@
     <string name="about_pref">About</string>
     <string name="antennapod_version">Öffi Sounds version (based on AntennaPod)</string>
     <string name="contributors">Contributors</string>
-    <string name="contributors_summary">Öffi Sounds is based on AntennaPod.</string>
+    <string name="contributors_summary">Everyone can help to make Öffi Sounds better - with code, translations or by helping users in our forum. Öffi Sounds is based on AntennaPod.</string>
     <string name="developers">Developers</string>
     <string name="translators">Translators</string>
     <string name="special_thanks">Special thanks</string>
