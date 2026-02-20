@@ -93,13 +93,12 @@ public class NextcloudSyncService implements ISyncService {
                     .setAccountName(accountName)
                     .setToken(ssoAccount.token)
                     .build();
-            performRequest(request);
+            String responseString = performRequest(request);
+            return GpodnetUploadChangesResponse.fromJSONObject(responseString);
         } catch (Exception e) {
             e.printStackTrace();
             throw new NextcloudSynchronizationServiceException(e);
         }
-
-        return new GpodnetUploadChangesResponse(System.currentTimeMillis() / 1000, new HashMap<>());
     }
 
     @Override

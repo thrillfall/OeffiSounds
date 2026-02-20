@@ -1,0 +1,2 @@
+- Home: new "Heute Wichtig" section showcasing curated ARD Audiothek content
+- Sync: fixed endless loop when syncing subscription changes with Nextcloud
