@@ -43,9 +43,10 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
     public static final String TAG = "AudiothekHeuteWichtigSection";
 
     private static final String AUDIOTHEK_POLITIK_URL = "https://api.ardaudiothek.de/graphql";
-    private static final String GRAPHQL_QUERY = "{\"query\":\"query { editorialCategory(id: \\\"51850530\\\") { sections { title nodes { __typename id title image { url url1X1 } } } } }\"}";
-    private static final int NUM_ITEMS = 8;
     private static final String API_BASE_URL = "https://api.ardaudiothek.de";
+    private static final String GRAPHQL_QUERY = "{\"query\":\"query { editorialCategory(id: \\\"51850530\\\") { sections { title nodes { __typename id title image { url url1X1 } ... on ItemInterface { programSet { id title } } } } } }\"}";
+    private static final String PROGRAM_SET_URL_TEMPLATE = API_BASE_URL + "/programsets/%s";
+    private static final int NUM_ITEMS = 8;
 
     private Disposable disposable;
     private AudiothekHorizontalAdapter listAdapter;
@@ -185,8 +186,17 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
             }
 
             String title = node.optString("title", "");
-            String id = node.optString("id", "");
             
+            // Get programSet data like Hot section does
+            JSONObject programSet = node.optJSONObject("programSet");
+            if (programSet == null) {
+                continue;
+            }
+            String programSetId = programSet.optString("id", null);
+            if (programSetId == null || programSetId.isEmpty()) {
+                continue;
+            }
+
             // Get image directly from node (same as other working sections)
             JSONObject image = node.optJSONObject("image");
             String imageUrl = image != null ? image.optString("url1X1", null) : null;
@@ -197,7 +207,8 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
                 imageUrl = imageUrl.replace("{width}", "400");
             }
             
-            String feedUrl = API_BASE_URL + "/items/" + id;
+            // Build feedUrl from programSetId like Hot section does
+            String feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, programSetId);
             items.add(new AudiothekItem(title, imageUrl, feedUrl));
         }
 
