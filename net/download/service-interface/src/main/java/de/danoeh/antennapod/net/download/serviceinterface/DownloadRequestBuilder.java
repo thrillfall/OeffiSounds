@@ -73,6 +73,13 @@ public class DownloadRequestBuilder {
                 lastModified, username, password, false, arguments, initiatedByUser);
     }
 
+    private static final String AUDIOTHEK_HOST = "api.ardaudiothek.de";
+    private static final String PROGRAM_SET_PATH_PREFIX = "/programsets/";
+    private static final String PARAM_ORDER = "order";
+    private static final String PARAM_LIMIT = "limit";
+    private static final String ORDER_DESC = "desc";
+    private static final String LIMIT_SIZE = "200";
+
     private static String ensureAudiothekLimit(String url) {
         if (url == null) {
             return null;
@@ -80,25 +87,19 @@ public class DownloadRequestBuilder {
         try {
             URI uri = new URI(url);
             String host = uri.getHost();
-            if (host == null || !host.equalsIgnoreCase("api.ardaudiothek.de")) {
+            if (host == null || !host.equalsIgnoreCase(AUDIOTHEK_HOST)) {
                 return url;
             }
             String path = uri.getPath();
-            if (path == null || !path.startsWith("/programsets/")) {
+            if (path == null || !path.startsWith(PROGRAM_SET_PATH_PREFIX)) {
                 return url;
             }
             String query = uri.getQuery();
-            if (query != null && !query.isEmpty()) {
-                for (String part : query.split("&")) {
-                    if (part.startsWith("limit=")) {
-                        return url;
-                    }
-                }
-                query = query + "&limit=100";
-            } else {
-                query = "limit=100";
+            if (query != null && query.contains(PARAM_ORDER)) {
+                return url;
             }
-            URI updated = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), query, uri.getFragment());
+            String appended = PARAM_ORDER + '=' + ORDER_DESC + '&' + PARAM_LIMIT + '=' + LIMIT_SIZE;
+            URI updated = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), appended, uri.getFragment());
             return updated.toString();
         } catch (URISyntaxException e) {
             return url;
