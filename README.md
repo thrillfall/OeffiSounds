@@ -4,6 +4,7 @@
 [![GitHub Release](https://img.shields.io/github/v/release/thrillfall/OeffiSounds)](https://github.com/thrillfall/OeffiSounds/releases)
 [![Issues](https://img.shields.io/github/issues/thrillfall/OeffiSounds)](https://github.com/thrillfall/OeffiSounds/issues)
 [![Translations on Weblate](https://hosted.weblate.org/widget/antennapod/app/svg-badge.svg?native=1)](https://hosted.weblate.org/engage/antennapod/)
+[![IzzyOnDroid yearly downloads](https://img.shields.io/badge/dynamic/json?url=https://dlstats.izzyondroid.org/iod-stats-collector/stats/basic/yearly/rolling.json&query=$.['de.oeffisounds.app']&label=IzzyOnDroid%20yearly%20downloads)](https://apt.izzysoft.de/packages/de.oeffisounds.app)
 
 Öffi Sounds is a fork of [AntennaPod](https://github.com/AntennaPod/AntennaPod), the free and open-source podcast manager for Android.
 
