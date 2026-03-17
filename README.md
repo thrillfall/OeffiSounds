@@ -22,9 +22,9 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (1.2.0)
+### Latest Release (1.3.3)
 
-- Fetch all available ARD Sounds / Audiothek episodes by appending `?limit=100` when downloading feeds, while keeping stored subscription URLs clean without the query string.
+- Branding: show ÖffiSounds app logo on startup instead of AntennaPod logo
 
 ## Support / Issues
 

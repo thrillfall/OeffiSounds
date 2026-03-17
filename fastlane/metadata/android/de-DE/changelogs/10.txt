@@ -1,0 +1,1 @@
+- Branding: Öffi Sounds App-Logo beim Start anzeigen statt AntennaPod-Logo
