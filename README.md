@@ -22,9 +22,9 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (1.3.3)
+### Latest Release (1.4.0)
 
-- Branding: show ÖffiSounds app logo on startup instead of AntennaPod logo
+- Home: "Heute wichtig" section now uses ARD Playout API for reliable, up-to-date content
 
 ## Support / Issues
 

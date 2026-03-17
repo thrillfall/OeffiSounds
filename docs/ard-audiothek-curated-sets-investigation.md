@@ -9,7 +9,8 @@ This investigation aimed to identify curated content sets in the ARD Audiothek G
 1. **Examined existing implementation** - Analyzed current AudiothekSection classes to understand API usage patterns
 2. **API endpoint analysis** - Investigated the `/homescreen` GraphQL endpoint to discover available curated sets
 3. **Content enumeration** - Queried the API to retrieve current content for each identified curated set
-4. **Documentation** - Tracked findings and progress throughout the investigation
+4. **Playout API discovery** - Found a separate REST API serving the correct "Heute wichtig" content
+5. **Documentation** - Tracked findings and progress throughout the investigation
 
 ## Current Implementation Analysis
 
@@ -17,180 +18,162 @@ AntennaPod currently implements several ARD Audiothek sections:
 
 ### Existing Sections
 - **AudiothekSection** - Main section with featured and most played content
-- **AudiothekLiveSection** - Live content section  
+- **AudiothekLiveSection** - Live content section
 - **AudiothekStageSection** - Stage content section
 - **AudiothekChartsSection** - Charts/popular content section
-- **AudiothekFeaturedSection** - Featured content section
-- **AudiothekHotSection** - Hot/trending content section
+- **AudiothekFeaturedSection** - Featured content section (uses legacy REST API)
+- **AudiothekHotSection** - Hot/trending content section (uses GraphQL `Stage` type)
+- **AudiothekHeuteWichtigSection** - Today's important news episodes (uses ARD Playout API)
 
 ### API Usage
-All sections use the `https://api.ardaudiothek.de/homescreen` endpoint and parse different embedded content types from the response.
-
-## Findings
-
-### Available Curated Sets in `/homescreen` Endpoint
-
-The ARD Audiothek homescreen API returns **4 main curated sets**:
-
-#### 1. `mt:featuredProgramSets` - "Einfach mehr wissen" (Featured Content)
-- **Purpose**: Editorial selection of noteworthy programs and podcasts
-- **Current Content Count**: 7 items
-- **Content Type**: Program sets (podcasts/shows)
-- **Status**: ✅ **Already implemented** in AntennaPod
-
-**Current Content (as of Feb 19, 2026)**:
-1. "10 Dinge, die du über die Liebe wissen musst" - Relationship advice and topics
-2. "10 wichtige Fragen des Lebens" - Life's big questions and philosophy  
-3. "Aus der Geschichte lernen: Von Weimar bis USA" - Historical lessons and current events
-4. "10 Hacks, die dein Leben verbessern" - Life improvement tips
-5. "Die Ernährungs-Docs – eure Lieblingsfolgen" - Nutrition and health
-6. "Die 10 mächtigsten Frauen der Geschichte" - Historical female leaders
-7. "10 Menschen, die uns inspirieren" - Inspirational figures
-
-#### 2. `mt:mostPlayed` - "Podcasts-Charts" (Popular Content)
-- **Purpose**: Most played/trending episodes and shows
-- **Current Content Count**: 18 items
-- **Content Type**: Individual episodes from various shows
-- **Status**: ✅ **Already implemented** in AntennaPod
-
-**Current Content Highlights**:
-- "Holzschlange sei wachsam" (Kalk & Welk)
-- "Das vierte Skalpell" (Kein Mucks! Krimi-Podcast)
-- "Macht, Missbrauch, Milliarden" (nah dran)
-- Various crime podcasts, political commentary, and thriller content
-
-#### 3. `mt:stageItems` - "Stage" 
-- **Purpose**: Featured/stage content (likely premium or highlighted content)
-- **Current Content Count**: 0 items (empty)
-- **Status**: ⚠️ **Implemented but empty** - may be dynamic/time-based
-
-#### 4. `mt:items` - "LIVE: Bundesliga am Sonntag"
-- **Purpose**: Live content and events
-- **Current Content Count**: 0 items (empty)  
-- **Status**: ⚠️ **Implemented but empty** - appears to be event-specific
-
-### Key Observations
-
-1. **Limited Active Sets**: Only 2 out of 4 curated sets currently contain content
-2. **Dynamic Nature**: The empty sets (`mt:stageItems`, `mt:items`) suggest time-sensitive or event-based content
-3. **Content Focus**: Active sets emphasize educational content (featured) and popular entertainment (charts)
-4. **No Additional Curated Sets**: The `/homescreen` endpoint appears to contain all available curated content for the main discovery interface
-
-## Content Analysis
-
-### Featured Program Sets Theme Analysis
-The "Einfach mehr wissen" section focuses on:
-- **Educational content**: Life advice, history, nutrition
-- **Self-improvement**: Life hacks, inspirational stories  
-- **Current affairs**: Historical parallels to modern events
-- **German-language content**: All titles in German
-
-### Most Played Content Theme Analysis
-The "Podcasts-Charts" section emphasizes:
-- **True crime**: Multiple crime podcasts and thrillers
-- **Political commentary**: Shows like "Amerika, wir müssen reden!"
-- **Comedy/Satire**: "Kalk & Welk", "extra 3"
-- **Current events**: Timely political and social topics
-
-## Technical Implementation Notes
-
-### API Structure
-```json
-{
-  "_embedded": {
-    "mt:featuredProgramSets": {
-      "title": "Einfach mehr wissen",
-      "_embedded": {
-        "mt:programSets": [...]
-      }
-    },
-    "mt:mostPlayed": {
-      "title": "Podcasts-Charts", 
-      "_embedded": {
-        "mt:items": [...]
-      }
-    },
-    "mt:stageItems": {...},
-    "mt:items": {...}
-  }
-}
-```
-
-### Content Types
-- **Program Sets**: Complete shows/podcasts with metadata
-- **Items**: Individual episodes with embedded program set information
-
-## Conclusion
-
-### Summary of Available Curated Sets
-
-| Set Name | API Key | Title | Content Count | Status |
-|----------|---------|-------|---------------|---------|
-| Featured Programs | `mt:featuredProgramSets` | "Einfach mehr wissen" | 7 items | ✅ Implemented |
-| Popular Charts | `mt:mostPlayed` | "Podcasts-Charts" | 18 items | ✅ Implemented |
-| Stage Content | `mt:stageItems` | "Stage" | 0 items | ⚠️ Empty |
-| Live Events | `mt:items` | "LIVE: Bundesliga am Sonntag" | 0 items | ⚠️ Empty |
-
-### Additional Discovery: Category-Based Curated Content
-
-**Found "Heute wichtig" section in "Politik & Hintergrund" category!**
-
-#### Category: "Politik & Hintergrund" (ID: 51850530)
-**API Endpoint**: `https://api.ardaudiothek.de/editorialcategories/51850530`
-
-This category contains **11 curated sections**:
-
-| Section | API Key | Type | Content Count | Status |
-|---------|---------|------|---------------|---------|
-| **Heute wichtig** | `mt:items` | featured_item | 0 items | ⚠️ Empty (time-sensitive) |
-| Top Podcasts | `mt:items` | featured_programset | 10 items | ✅ Available |
-| Neueste Episoden | `mt:items` | newest_episodes | 0 items | ⚠️ Empty |
-| Neue Politik-Podcasts | - | - | - | Available |
-| Newsletter Promo | - | - | - | Available |
-| Immer gut informiert | - | - | - | Available |
-| Aus den ARD-Auslandsstudios | - | - | - | Available |
-| Mehr spannende Themen | - | - | - | Available |
-| Podcast-Charts: Politik | `mt:mostPlayed` | most_played | 0 items | ⚠️ Empty |
-| Alle Sendungen aus dieser Rubrik | - | - | - | Available |
-
-#### "Top Podcasts" Content (Politics Category)
-**Current Active Content**:
-1. "11KM: der tagesschau-Podcast" (12200383)
-2. "Amerika, wir müssen reden!" (82222746) 
-3. "Was tun, Herr General? - Der Podcast zum Ukraine-Krieg" (10349279)
-4. "Streitkräfte und Strategien" (7852196)
-5. "0630 - der News-Podcast" (79906662)
-6. "Berlin Code - mit Linda Zervakis" (14053111)
-7. "Dark Matters – Geheimnisse der Geheimdienste" (12449787)
-8. "Deutschlandfunk - Der Tag" (46142064)
-9. "Weltspiegel Podcast" (61593768)
-10. "Die Entscheidung. Politik, die uns bis heute prägt" (57448438)
-
-### Key Findings About "Heute wichtig"
-
-- **Location**: Found as section #2 in "Politik & Hintergrund" category
-- **Type**: `featured_item` (individual episodes/items)
-- **Current Status**: **Empty** - likely time-sensitive daily content
-- **Expected Content**: Important daily news/political stories
-- **Pattern**: Similar to empty sets on homescreen, suggests dynamic/time-based content
-
-### Expanded Assessment
-
-**AntennaPod has access to most curated content, but category-specific sections like "Heute wichtig" are not currently implemented.** The investigation revealed:
-
-1. **Category-based curation**: Beyond homescreen, there are category-specific curated sections
-2. **"Heute wichtig" exists but is empty**: Likely daily/time-sensitive content that updates regularly
-3. **Rich category content**: "Politik & Hintergrund" alone contains 11 curated sections
-4. **Multiple content types**: Categories mix featured items, program sets, episodes, and charts
-
-### Recommendations
-
-1. **Implement category browsing**: Add functionality to explore editorial categories
-2. **Monitor dynamic content**: "Heute wichtig" and similar sections may contain content at different times
-3. **Category-specific sections**: Each category may have its own curated subsections
-4. **Time-based content**: Some curated sets appear to be daily/weekly and may be empty at certain times
+Sections use two different APIs:
+- Legacy REST API: `https://api.ardaudiothek.de/homescreen` (AudiothekFeaturedSection, AudiothekChartsSection)
+- GraphQL API: `https://api.ardaudiothek.de/graphql` (AudiothekHotSection, AudiothekHeuteWichtigSection)
+- ARD Playout API: `https://api.ard.de/playout-api/v1/` (AudiothekHeuteWichtigSection — **correct source**)
 
 ---
 
-*Investigation completed February 19, 2026*  
-*API endpoint: https://api.ardaudiothek.de/homescreen*
+## ARD Audiothek GraphQL API
+
+### Homescreen Sections (GraphQL)
+
+Query: `{ homescreen { sections { __typename id title type ... } } }`
+
+The homescreen returns exactly **8 sections** (the `limit` parameter does not expose additional sections):
+
+| # | Type | Title | Type Value | Notes |
+|---|------|-------|------------|-------|
+| 0 | `Stage` | — | `STAGE` | Hot section — already implemented |
+| 1 | `SophoraWidget` | — | `NAVIGATION` | Editorial category navigation (17 categories) |
+| 2 | `SophoraWidget` | "Der Playbutton für deinen Tag" | `banner` | Banner/promo |
+| 3 | `RecommendationSection` | "Podcasts-Charts" | `most_played` | Charts — already implemented |
+| 4 | `SophoraWidget` | "Immer gut informiert: News-Podcasts in der ARD Audiothek" | `featured_programset` | 12 ProgramSets |
+| 5 | `SophoraWidget` | "Exklusiv und vorab in der ARD Audiothek" | `featured_programset` | 11 ProgramSets |
+| 6 | `SophoraWidget` | "Unsere Lieblinge: Empfehlungen der Redaktion" | `featured_programset` | 10 ProgramSets |
+| 7 | `SophoraWidget` | "Fußball live hören" | `featured_programset` | 5 ProgramSets |
+
+**Important**: Section IDs use the `entdecken-100:` prefix. The "Heute wichtig" widget (`entdecken-108:`) is NOT in the GraphQL homescreen response — it comes from a separate API (see below).
+
+### Editorial Categories (GraphQL)
+
+Navigation category IDs (from NAVIGATION widget):
+
+| Label | editorialCategory ID | Title |
+|-------|---------------------|-------|
+| Comedy | 42914694 | Comedy & Satire |
+| True Crime | 63764892 | True Crime |
+| Doku | 42914710 | Doku & Reportage |
+| Sportschau | 42914734 | Sportschau |
+| Wissen | 42914742 | Wissen |
+| **Für Kinder** | **42914714** | **Für Kinder** |
+| Hörspiel | 42914712 | Hörspiel |
+| Hörbuch | 42914713 | Hörbuch |
+| Leben & Liebe | 63927336 | Leben & Liebe |
+| **Politik** | **51850530** | **Politik & Hintergrund** |
+| Geschichte | 42914743 | Geschichte |
+| Gesellschaft | 42914720 | Gesellschaft |
+| Religion & Philosophie | 42914732 | Religion & Philosophie |
+| Retro | 74928578 | Retro |
+| Musik entdecken | 42914724 | Musik entdecken |
+| Kultur | 42914736 | Kultur |
+| Wirtschaft | 42914740 | Wirtschaft |
+
+### GraphQL Schema Notes
+
+- `homescreen` and `editorialCategory` both return a `Board` type (API was updated)
+- Section types: `Stage`, `SophoraWidget`, `RecommendationSection`, `ProgramSetSection`
+- `SophoraWidget` sections have both `nodes` (typed) and `teasers` (with `content` Teaser interface) fields
+- Feed URL for programsets: `https://api.ardaudiothek.de/programsets/{id}` — accepts both numeric Sophora IDs and URN-style core IDs (e.g. `urn:ard:show:aa82d94affcdfbc0`)
+
+---
+
+## ARD Playout API (Key Discovery)
+
+**Base URL**: `https://api.ard.de/playout-api/v1/`
+
+This is a separate REST API used by the ardsounds.de website frontend. It serves the **complete home page widget structure** including "Heute wichtig", which is NOT available via the GraphQL homescreen API.
+
+### Homepage Widgets
+
+**Endpoint**: `GET https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/`
+
+Returns the full ARD Sounds homepage with **13 widgets**:
+
+| # | Widget ID | Title |
+|---|-----------|-------|
+| 0 | `urn:ard:playout-widget:4e45725723c910f8` | — (Stage/Hero) |
+| 1 | `urn:ard:playout-widget:031c209bf88e1c33` | — |
+| 2 | `urn:ard:playout-widget:2d0b38a8d998b683` | — |
+| 3 | `urn:ard:playout-widget:c44c8a6245bb1302` | Podcast Charts |
+| 4 | `urn:ard:playout-widget:201e53552f402867` | Gefährliche Nähe |
+| 5 | `urn:ard:playout-widget:4090209c0e6a0010` | Meine Sender |
+| **6** | **`urn:ard:playout-widget:d226f72219e4d437`** | **Heute wichtig** ✅ |
+| 7 | `urn:ard:playout-widget:43da15997c0b588c` | Entdecke ARD Sounds |
+| 8 | `urn:ard:playout-widget:ef7d85dae11c6150` | Twelve Months of Romance \| Hörbuch |
+| 9 | `urn:ard:playout-widget:9cee4f8dfc063b2b` | Neu dabei |
+| 10 | `urn:ard:playout-widget:8a6f840cabadd85f` | Hörspaß für Kinder |
+| 11 | `urn:ard:playout-widget:ca7415e0a7e32e3a` | Exklusiv und vorab bei uns |
+| 12 | `urn:ard:playout-widget:3d6fa68759dc0b00` | Verpasse keine Highlights |
+
+### "Heute wichtig" Widget Structure
+
+```json
+{
+  "id": "urn:ard:playout-widget:d226f72219e4d437",
+  "widgetType": "swiperTeaserWidget",
+  "title": "Heute wichtig",
+  "teasers": [
+    {
+      "title": "Baustart für Pipeline: Künstlicher See statt Tagebau",
+      "assetId": "urn:ard:episode:37b35560a5775104",
+      "showId": "urn:ard:show:aa82d94affcdfbc0",
+      "showTitle": "WDR 2 Das Thema",
+      "image": {
+        "templateURL": "https://api.ardmediathek.de/image-service/images/...?w={width}",
+        "aspectRatio": "ar1X1"
+      },
+      "duration": 154,
+      "firstPublicationDate": "2026-03-17T15:40:41Z",
+      "assetDownloadURL": "https://wdrmedien-a.akamaihd.net/..."
+    },
+    ...
+  ]
+}
+```
+
+### Implementation in AudiothekHeuteWichtigSection
+
+1. Fetch `https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/`
+2. Find widget with `title == "Heute wichtig"` in the `widgets` array
+3. For each teaser:
+   - `title` = teaser.title
+   - `imageUrl` = teaser.image.templateURL (replace `{width}` with `400`)
+   - `feedUrl` = `https://api.ardaudiothek.de/programsets/` + teaser.showId
+4. The `/programsets/` REST endpoint accepts URN-style `showId` directly (no ID lookup needed)
+
+### Other Available Pages
+
+| Canonical URL | Title | Notes |
+|---------------|-------|-------|
+| `/` | ARD Sounds Startseite | Main homepage — 13 widgets |
+| `/podcasts/` | Podcasts | Used in web app navigation |
+
+---
+
+## Previously Investigated (Legacy REST API)
+
+The old `https://api.ardaudiothek.de/homescreen` REST API returned:
+
+| Set Name | API Key | Title | Status |
+|----------|---------|-------|--------|
+| Featured Programs | `mt:featuredProgramSets` | "Einfach mehr wissen" | AudiothekFeaturedSection (legacy) |
+| Popular Charts | `mt:mostPlayed` | "Podcasts-Charts" | AudiothekChartsSection (legacy) |
+| Stage Content | `mt:stageItems` | "Stage" | Often empty |
+| Live Events | `mt:items` | Live events | Often empty |
+
+This API is still used by `AudiothekFeaturedSection` and `AudiothekChartsSection` but is considered legacy. The GraphQL and Playout APIs are preferred.
+
+---
+
+*Investigation updated March 17, 2026*
+*APIs: https://api.ardaudiothek.de/graphql | https://api.ard.de/playout-api/v1/*

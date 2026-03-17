@@ -1,0 +1,1 @@
+- Home: "Heute wichtig" section now uses ARD Playout API for reliable, up-to-date content

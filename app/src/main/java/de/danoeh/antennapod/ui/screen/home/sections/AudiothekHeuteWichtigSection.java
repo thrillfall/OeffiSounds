@@ -42,10 +42,10 @@ import okhttp3.Response;
 public class AudiothekHeuteWichtigSection extends HomeSection {
     public static final String TAG = "AudiothekHeuteWichtigSection";
 
-    private static final String AUDIOTHEK_POLITIK_URL = "https://api.ardaudiothek.de/graphql";
-    private static final String API_BASE_URL = "https://api.ardaudiothek.de";
-    private static final String GRAPHQL_QUERY = "{\"query\":\"query { editorialCategory(id: \\\"51850530\\\") { sections { title nodes { __typename id title image { url url1X1 } ... on ItemInterface { programSet { id title } } } } } }\"}";
-    private static final String PROGRAM_SET_URL_TEMPLATE = API_BASE_URL + "/programsets/%s";
+    private static final String PLAYOUT_API_URL =
+            "https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/";
+    private static final String PROGRAM_SET_URL_TEMPLATE =
+            "https://api.ardaudiothek.de/programsets/%s";
     private static final int NUM_ITEMS = 8;
 
     private Disposable disposable;
@@ -109,17 +109,15 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request.Builder requestBuilder = new Request.Builder()
-                            .url(AUDIOTHEK_POLITIK_URL)
-                            .addHeader("Content-Type", "application/json")
-                            .post(okhttp3.RequestBody.create(GRAPHQL_QUERY, okhttp3.MediaType.parse("application/json")));
-                    
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(requestBuilder.build()).execute()) {
+                    Request request = new Request.Builder()
+                            .url(PLAYOUT_API_URL)
+                            .build();
+                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
                         if (!response.isSuccessful()) {
                             throw new IOException("Unexpected response: " + response);
                         }
                         String body = response.body() != null ? response.body().string() : "";
-                        return parseHeuteWichtigGraphQL(body);
+                        return parseHeuteWichtig(body);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -139,209 +137,55 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
                 });
     }
 
-    private static List<AudiothekItem> parseHeuteWichtigGraphQL(String json) throws JSONException {
+    private static List<AudiothekItem> parseHeuteWichtig(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        JSONObject data = root.optJSONObject("data");
-        if (data == null) {
-            return new ArrayList<>();
-        }
-        
-        JSONObject editorialCategory = data.optJSONObject("editorialCategory");
-        if (editorialCategory == null) {
-            return new ArrayList<>();
-        }
-        
-        JSONArray sections = editorialCategory.optJSONArray("sections");
-        if (sections == null) {
+        JSONArray widgets = root.optJSONArray("widgets");
+        if (widgets == null) {
             return new ArrayList<>();
         }
 
-        // Find the "Heute wichtig" section
-        for (int i = 0; i < sections.length(); i++) {
-            JSONObject section = sections.optJSONObject(i);
-            if (section == null) {
+        // Find the "Heute wichtig" widget
+        for (int i = 0; i < widgets.length(); i++) {
+            JSONObject widget = widgets.optJSONObject(i);
+            if (widget == null) {
                 continue;
             }
-            
-            String title = section.optString("title");
-            if ("Heute wichtig".equals(title)) {
-                return parseGraphQLSectionItems(section);
+            if ("Heute wichtig".equals(widget.optString("title"))) {
+                return parseWidgetTeasers(widget);
             }
         }
-        
         return new ArrayList<>();
     }
 
-    private static List<AudiothekItem> parseGraphQLSectionItems(JSONObject section) throws JSONException {
+    private static List<AudiothekItem> parseWidgetTeasers(JSONObject widget) throws JSONException {
         List<AudiothekItem> items = new ArrayList<>();
-        JSONArray nodes = section.optJSONArray("nodes");
-        if (nodes == null) {
+        JSONArray teasers = widget.optJSONArray("teasers");
+        if (teasers == null) {
             return items;
         }
 
-        for (int i = 0; i < nodes.length() && i < NUM_ITEMS; i++) {
-            JSONObject node = nodes.optJSONObject(i);
-            if (node == null) {
+        for (int i = 0; i < teasers.length() && i < NUM_ITEMS; i++) {
+            JSONObject teaser = teasers.optJSONObject(i);
+            if (teaser == null) {
                 continue;
             }
 
-            String title = node.optString("title", "");
-            
-            // Get programSet data like Hot section does
-            JSONObject programSet = node.optJSONObject("programSet");
-            if (programSet == null) {
-                continue;
-            }
-            String programSetId = programSet.optString("id", null);
-            if (programSetId == null || programSetId.isEmpty()) {
+            String title = teaser.optString("title", "");
+            String showId = teaser.optString("showId", null);
+            if (showId == null || showId.isEmpty()) {
                 continue;
             }
 
-            // Get image directly from node (same as other working sections)
-            JSONObject image = node.optJSONObject("image");
-            String imageUrl = image != null ? image.optString("url1X1", null) : null;
-            if (imageUrl == null && image != null) {
-                imageUrl = image.optString("url", null);
-            }
+            JSONObject image = teaser.optJSONObject("image");
+            String imageUrl = image != null ? image.optString("templateURL", null) : null;
             if (imageUrl != null) {
                 imageUrl = imageUrl.replace("{width}", "400");
             }
-            
-            // Build feedUrl from programSetId like Hot section does
-            String feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, programSetId);
-            items.add(new AudiothekItem(title, imageUrl, feedUrl));
-        }
 
-        return items;
-    }
-
-    private static List<AudiothekItem> parseGraphQLItem(JSONObject item) throws JSONException {
-        List<AudiothekItem> items = new ArrayList<>();
-        
-        String title = item.optString("title", "");
-        String id = item.optString("id", "");
-        String feedUrl = API_BASE_URL + "/items/" + id;
-        
-        // Try to extract image from the item if available
-        String imageUrl = null;
-        JSONObject links = item.optJSONObject("_links");
-        if (links != null) {
-            JSONObject image = links.optJSONObject("mt:squareImage");
-            if (image == null) {
-                image = links.optJSONObject("mt:image");
-            }
-            if (image != null) {
-                imageUrl = image.optString("href", null);
-            }
-        }
-        
-        items.add(new AudiothekItem(title, imageUrl, feedUrl));
-        return items;
-    }
-
-    private static List<AudiothekItem> parseGraphQLProgramSet(JSONObject programSet) throws JSONException {
-        List<AudiothekItem> items = new ArrayList<>();
-        
-        String title = programSet.optString("title", "");
-        String id = programSet.optString("id", "");
-        String feedUrl = API_BASE_URL + "/items/" + id;
-        
-        // Try to extract image from program set
-        String imageUrl = null;
-        JSONObject links = programSet.optJSONObject("_links");
-        if (links != null) {
-            JSONObject image = links.optJSONObject("mt:squareImage");
-            if (image == null) {
-                image = links.optJSONObject("mt:image");
-            }
-            if (image != null) {
-                imageUrl = image.optString("href", null);
-            }
-        }
-        
-        items.add(new AudiothekItem(title, imageUrl, feedUrl));
-        return items;
-    }
-
-    private static List<AudiothekItem> parseProgramSetsArray(JSONArray programSetsArray) {
-        List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < programSetsArray.length(); i++) {
-            JSONObject programSet = programSetsArray.optJSONObject(i);
-            if (programSet == null) {
-                continue;
-            }
-            JSONObject links = programSet.optJSONObject("_links");
-            JSONObject self = links != null ? links.optJSONObject("self") : null;
-            String href = self != null ? self.optString("href", null) : null;
-            if (href == null) {
-                continue;
-            }
-            href = href.replace("{?order,offset,limit}", "");
-            String feedUrl = normalizeFeedUrl(href.startsWith("http") ? href : API_BASE_URL + href);
-
-            JSONObject image = links != null ? links.optJSONObject("mt:squareImage") : null;
-            if (image == null) {
-                image = links != null ? links.optJSONObject("mt:image") : null;
-            }
-            String imageUrl = image != null ? image.optString("href", null) : null;
-            if (imageUrl != null) {
-                imageUrl = imageUrl.replace("{width}", "400");
-                imageUrl = imageUrl.replace("{ratio}", "1x1");
-            }
-
-            String title = programSet.optString("title", "");
+            String feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, showId);
             items.add(new AudiothekItem(title, imageUrl, feedUrl));
         }
         return items;
-    }
-
-    private static List<AudiothekItem> parseItemsArray(JSONArray itemsArray) {
-        List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < itemsArray.length(); i++) {
-            JSONObject item = itemsArray.optJSONObject(i);
-            if (item == null) {
-                continue;
-            }
-
-            JSONObject embeddedProgramSet = null;
-            JSONObject embedded = item.optJSONObject("_embedded");
-            if (embedded != null) {
-                embeddedProgramSet = embedded.optJSONObject("mt:programSet");
-            }
-            if (embeddedProgramSet == null) {
-                continue;
-            }
-
-            JSONObject links = embeddedProgramSet.optJSONObject("_links");
-            JSONObject self = links != null ? links.optJSONObject("self") : null;
-            String href = self != null ? self.optString("href", null) : null;
-            if (href == null) {
-                continue;
-            }
-            href = href.replace("{?order,offset,limit}", "");
-            String feedUrl = normalizeFeedUrl(href.startsWith("http") ? href : API_BASE_URL + href);
-
-            JSONObject image = links != null ? links.optJSONObject("mt:squareImage") : null;
-            if (image == null) {
-                image = links != null ? links.optJSONObject("mt:image") : null;
-            }
-            String imageUrl = image != null ? image.optString("href", null) : null;
-            if (imageUrl != null) {
-                imageUrl = imageUrl.replace("{width}", "400");
-                imageUrl = imageUrl.replace("{ratio}", "1x1");
-            }
-
-            String title = embeddedProgramSet.optString("title", "");
-            items.add(new AudiothekItem(title, imageUrl, feedUrl));
-        }
-        return items;
-    }
-
-    private static String normalizeFeedUrl(String url) {
-        if (url == null) {
-            return null;
-        }
-        return url.replace("://api.ardaudiothek.de./", "://api.ardaudiothek.de/");
     }
 
     private static class AudiothekItem {
