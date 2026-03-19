@@ -489,6 +489,11 @@
     <string name="playback_pref_sum">Headphone controls, Skip intervals, Queue</string>
     <string name="downloads_pref">Downloads</string>
     <string name="downloads_pref_sum">Update interval, Mobile data, Automatic download, Automatic deletion</string>
+    <string name="search_pref">Search</string>
+    <string name="search_pref_sum">Configure podcast search providers</string>
+    <string name="search_providers_label">Search providers</string>
+    <string name="pref_search_providers_title">Active search providers</string>
+    <string name="pref_search_providers_sum">Choose which search providers to use</string>
     <string name="feed_refresh_title">Refresh podcasts</string>
     <string name="feed_refresh_sum">Specify an interval at which AntennaPod looks for new episodes automatically</string>
     <string name="feed_refresh_never">Never</string>
@@ -878,6 +883,7 @@
     <string name="search_itunes_label">Search Apple Podcasts</string>
     <string name="search_podcastindex_label">Search Podcast Index</string>
     <string name="search_fyyd_label">Search fyyd</string>
+    <string name="search_audiothek_label">Search ARD Audiothek</string>
     <string name="add_podcast_by_url">Add podcast by RSS address</string>
     <string name="rss_address">RSS address</string>
     <string name="rss_address_invalid">The RSS address you entered is not valid.</string>

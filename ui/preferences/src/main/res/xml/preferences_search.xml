@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="@string/search_providers_label">
+        <de.danoeh.antennapod.ui.preferences.preference.MaterialMultiSelectListPreference
+            android:key="prefEnabledSearchProviders"
+            android:title="@string/pref_search_providers_title"
+            android:summary="@string/pref_search_providers_sum"
+            android:entries="@array/search_provider_names"
+            android:entryValues="@array/search_provider_values"
+            android:defaultValue="@array/search_provider_defaults" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

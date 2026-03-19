@@ -101,6 +101,9 @@ public abstract class UserPreferences {
     public static final String PREF_AUTODL_GLOBAL = "prefEnableAutoDl";
     public static final String PREF_AUTODL_QUEUE = "prefEnableAutoDlQueue";
     public static final String PREF_ENABLE_AUTODL_ON_BATTERY = "prefEnableAutoDownloadOnBattery";
+    // Search
+    public static final String PREF_ENABLED_SEARCH_PROVIDERS = "prefEnabledSearchProviders";
+
     private static final String PREF_PROXY_TYPE = "prefProxyType";
     private static final String PREF_PROXY_HOST = "prefProxyHost";
     private static final String PREF_PROXY_PORT = "prefProxyPort";
@@ -888,5 +891,15 @@ public abstract class UserPreferences {
 
     public static void setPrefFilterAllEpisodes(String filter) {
         prefs.edit().putString(PREF_FILTER_ALL_EPISODES, filter).apply();
+    }
+
+    public static Set<String> getEnabledSearchProviders() {
+        Set<String> defaultValue = new HashSet<>(Arrays.asList(
+                "ItunesPodcastSearcher", "PodcastIndexPodcastSearcher", "AudiothekPodcastSearcher"));
+        return prefs.getStringSet(PREF_ENABLED_SEARCH_PROVIDERS, defaultValue);
+    }
+
+    public static void setEnabledSearchProviders(Set<String> providers) {
+        prefs.edit().putStringSet(PREF_ENABLED_SEARCH_PROVIDERS, providers).apply();
     }
 }

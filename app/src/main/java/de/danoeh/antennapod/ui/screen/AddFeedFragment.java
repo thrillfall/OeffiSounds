@@ -37,10 +37,12 @@ import de.danoeh.antennapod.storage.database.FeedDatabaseWriter;
 import de.danoeh.antennapod.model.feed.SortOrder;
 import de.danoeh.antennapod.databinding.AddfeedBinding;
 import de.danoeh.antennapod.databinding.EditTextDialogBinding;
+import de.danoeh.antennapod.net.discovery.AudiothekPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.CombinedSearcher;
 import de.danoeh.antennapod.net.discovery.FyydPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.ItunesPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.PodcastIndexPodcastSearcher;
+import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.ui.appstartintent.OnlineFeedviewActivityStarter;
 import de.danoeh.antennapod.ui.common.Keyboard;
 import de.danoeh.antennapod.ui.discovery.OnlineSearchFragment;
@@ -52,6 +54,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * Provides actions for adding new podcast subscriptions.
@@ -94,6 +97,10 @@ public class AddFeedFragment extends Fragment {
                 -> activity.loadChildFragment(OnlineSearchFragment.newInstance(FyydPodcastSearcher.class)));
         viewBinding.searchPodcastIndexButton.setOnClickListener(v
                 -> activity.loadChildFragment(OnlineSearchFragment.newInstance(PodcastIndexPodcastSearcher.class)));
+        viewBinding.searchAudiothekButton.setOnClickListener(v
+                -> activity.loadChildFragment(OnlineSearchFragment.newInstance(AudiothekPodcastSearcher.class)));
+
+        updateProviderButtonVisibility();
 
         viewBinding.combinedFeedSearchEditText.setOnEditorActionListener((v, actionId, event) -> {
             performSearch();
@@ -123,6 +130,24 @@ public class AddFeedFragment extends Fragment {
         viewBinding.searchButton.setOnClickListener(view -> performSearch());
 
         return viewBinding.getRoot();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateProviderButtonVisibility();
+    }
+
+    private void updateProviderButtonVisibility() {
+        Set<String> enabled = UserPreferences.getEnabledSearchProviders();
+        viewBinding.searchItunesButton.setVisibility(
+                enabled.contains("ItunesPodcastSearcher") ? View.VISIBLE : View.GONE);
+        viewBinding.searchFyydButton.setVisibility(
+                enabled.contains("FyydPodcastSearcher") ? View.VISIBLE : View.GONE);
+        viewBinding.searchPodcastIndexButton.setVisibility(
+                enabled.contains("PodcastIndexPodcastSearcher") ? View.VISIBLE : View.GONE);
+        viewBinding.searchAudiothekButton.setVisibility(
+                enabled.contains("AudiothekPodcastSearcher") ? View.VISIBLE : View.GONE);
     }
 
     @Override

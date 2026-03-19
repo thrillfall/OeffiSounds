@@ -290,4 +290,24 @@
         <item>@string/subscriptions_label</item>
         <item>@string/remember_last_page</item>
     </string-array>
+
+    <string-array name="search_provider_names">
+        <item>Apple (iTunes)</item>
+        <item>Podcast Index</item>
+        <item>ARD Audiothek</item>
+        <item>fyyd</item>
+    </string-array>
+
+    <string-array name="search_provider_values">
+        <item>ItunesPodcastSearcher</item>
+        <item>PodcastIndexPodcastSearcher</item>
+        <item>AudiothekPodcastSearcher</item>
+        <item>FyydPodcastSearcher</item>
+    </string-array>
+
+    <string-array name="search_provider_defaults">
+        <item>ItunesPodcastSearcher</item>
+        <item>PodcastIndexPodcastSearcher</item>
+        <item>AudiothekPodcastSearcher</item>
+    </string-array>
 </resources>
