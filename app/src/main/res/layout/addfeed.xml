@@ -148,6 +148,15 @@
                 style="@style/AddPodcastTextView" />
 
             <TextView
+                android:id="@+id/searchBbcButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/search_bbc_label"
+                app:drawableStartCompat="@drawable/ic_search"
+                app:drawableLeftCompat="@drawable/ic_search"
+                style="@style/AddPodcastTextView" />
+
+            <TextView
                 android:id="@+id/opmlImportButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

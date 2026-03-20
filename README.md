@@ -13,8 +13,9 @@ It focuses on discovering and listening to content from German public radio via 
 ## Differences vs AntennaPod
 
 - **ARD Sounds / ARD Audiothek integration**: included as a search provider, plus special home screen modules focused on public radio content.
+- **BBC Sounds integration**: search and subscribe to BBC podcasts (opt-in via Settings → Search).
 - **Nextcloud SSO**: Nextcloud sync login via the Nextcloud app account chooser (no manual username/password entry).
-
+- **Provider Choice**: user can select whoch podcast services to query (and which not).
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Screenshot" height="200">
 
 ## Downloads
@@ -22,9 +23,9 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (1.4.0)
+### Latest Release (2.0.0)
 
-- Home: "Heute wichtig" section now uses ARD Playout API for reliable, up-to-date content
+- BBC Sounds — find and subscribe to BBC sounds podcasts (opt-in via Settings → Search)
 
 ## Support / Issues
 

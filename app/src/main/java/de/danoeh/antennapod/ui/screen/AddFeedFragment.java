@@ -38,6 +38,7 @@ import de.danoeh.antennapod.model.feed.SortOrder;
 import de.danoeh.antennapod.databinding.AddfeedBinding;
 import de.danoeh.antennapod.databinding.EditTextDialogBinding;
 import de.danoeh.antennapod.net.discovery.AudiothekPodcastSearcher;
+import de.danoeh.antennapod.net.discovery.BBCSoundsPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.CombinedSearcher;
 import de.danoeh.antennapod.net.discovery.FyydPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.ItunesPodcastSearcher;
@@ -99,6 +100,8 @@ public class AddFeedFragment extends Fragment {
                 -> activity.loadChildFragment(OnlineSearchFragment.newInstance(PodcastIndexPodcastSearcher.class)));
         viewBinding.searchAudiothekButton.setOnClickListener(v
                 -> activity.loadChildFragment(OnlineSearchFragment.newInstance(AudiothekPodcastSearcher.class)));
+        viewBinding.searchBbcButton.setOnClickListener(v
+                -> activity.loadChildFragment(OnlineSearchFragment.newInstance(BBCSoundsPodcastSearcher.class)));
 
         updateProviderButtonVisibility();
 
@@ -148,6 +151,8 @@ public class AddFeedFragment extends Fragment {
                 enabled.contains("PodcastIndexPodcastSearcher") ? View.VISIBLE : View.GONE);
         viewBinding.searchAudiothekButton.setVisibility(
                 enabled.contains("AudiothekPodcastSearcher") ? View.VISIBLE : View.GONE);
+        viewBinding.searchBbcButton.setVisibility(
+                enabled.contains("BBCSoundsPodcastSearcher") ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -18,8 +18,8 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.datasource.HttpDataSource;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.cache.CacheDataSource;
 import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor;
 import androidx.media3.datasource.cache.SimpleCache;
@@ -44,7 +44,9 @@ import androidx.media3.extractor.DefaultExtractorsFactory;
 import androidx.media3.extractor.mp3.Mp3Extractor;
 import androidx.media3.ui.DefaultTrackNameProvider;
 import androidx.media3.ui.TrackNameProvider;
+import de.danoeh.antennapod.net.common.AntennapodHttpClient;
 import de.danoeh.antennapod.net.common.UserAgentInterceptor;
+import okhttp3.OkHttpClient;
 import de.danoeh.antennapod.model.feed.VolumeAdaptionSetting;
 import de.danoeh.antennapod.playback.service.R;
 import de.danoeh.antennapod.net.common.HttpCredentialEncoder;
@@ -80,6 +82,21 @@ public class ExoPlayerWrapper {
     private SimpleCache simpleCache;
     @Nullable
     private LoudnessEnhancer loudnessEnhancer = null;
+
+    private static volatile OkHttpClient playbackHttpClient;
+
+    private static OkHttpClient getPlaybackClient() {
+        if (playbackHttpClient == null) {
+            synchronized (ExoPlayerWrapper.class) {
+                if (playbackHttpClient == null) {
+                    playbackHttpClient = AntennapodHttpClient.newBuilder()
+                            .cache(null) // Handled by ExoPlayer's SimpleCache
+                            .build();
+                }
+            }
+        }
+        return playbackHttpClient;
+    }
 
     ExoPlayerWrapper(Context context) {
         this.context = context;
@@ -238,10 +255,9 @@ public class ExoPlayerWrapper {
     public void setDataSource(String s, String user, String password)
             throws IllegalArgumentException, IllegalStateException {
         Log.d(TAG, "setDataSource: " + s);
-        final DefaultHttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSource.Factory();
+        final OkHttpDataSource.Factory httpDataSourceFactory =
+                new OkHttpDataSource.Factory(getPlaybackClient());
         httpDataSourceFactory.setUserAgent(UserAgentInterceptor.USER_AGENT);
-        httpDataSourceFactory.setAllowCrossProtocolRedirects(true);
-        httpDataSourceFactory.setKeepPostFor302Redirects(true);
 
         if (!TextUtils.isEmpty(user) && !TextUtils.isEmpty(password)) {
             final HashMap<String, String> requestProperties = new HashMap<>();

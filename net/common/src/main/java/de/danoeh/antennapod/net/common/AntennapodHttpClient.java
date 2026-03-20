@@ -9,6 +9,7 @@ import okhttp3.Cache;
 import okhttp3.Credentials;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import java.io.File;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
@@ -64,6 +65,20 @@ public class AntennapodHttpClient {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.interceptors().add(new BasicAuthorizationInterceptor());
         builder.interceptors().add(new UserAgentInterceptor());
+        builder.addInterceptor(chain -> {
+            Request request = chain.request();
+            String urlString = request.url().toString();
+            if (urlString.startsWith("http://")) {
+                String host = request.url().host();
+                if (host.endsWith(".bbc.co.uk") || host.endsWith(".bbci.co.uk")) {
+                    String upgraded = urlString
+                            .replace("http://", "https://")
+                            .replace("/proto/http/", "/proto/https/");
+                    request = request.newBuilder().url(upgraded).build();
+                }
+            }
+            return chain.proceed(request);
+        });
 
         // set cookie handler
         CookieManager cm = new CookieManager();

@@ -296,6 +296,7 @@
         <item>Podcast Index</item>
         <item>ARD Audiothek</item>
         <item>fyyd</item>
+        <item>BBC Sounds</item>
     </string-array>
 
     <string-array name="search_provider_values">
@@ -303,6 +304,7 @@
         <item>PodcastIndexPodcastSearcher</item>
         <item>AudiothekPodcastSearcher</item>
         <item>FyydPodcastSearcher</item>
+        <item>BBCSoundsPodcastSearcher</item>
     </string-array>
 
     <string-array name="search_provider_defaults">
