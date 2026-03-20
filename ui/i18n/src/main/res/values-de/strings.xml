@@ -44,12 +44,12 @@
     <!--Home fragment-->
   <string name="home_surprise_title">Lass dich überraschen</string>
     <string name="home_classics_title">Genieße deine Klassiker</string>
-    <string name="home_audiothek_title">Audiothek entdecken</string>
-    <string name="home_audiothek_featured_title">Audiothek: Empfohlen</string>
-    <string name="home_audiothek_charts_title">Audiothek: Podcast-Charts</string>
-    <string name="home_audiothek_hot_title">Audiothek: Beliebt</string>
-    <string name="home_audiothek_live_title">Audiothek: Live</string>
-    <string name="home_audiothek_stage_title">Audiothek: Bühne</string>
+    <string name="home_audiothek_title">ARD Sounds entdecken</string>
+    <string name="home_audiothek_featured_title">ARD Sounds: Empfohlen</string>
+    <string name="home_audiothek_charts_title">ARD Sounds: Podcast-Charts</string>
+    <string name="home_audiothek_hot_title">ARD Sounds: Beliebt</string>
+    <string name="home_audiothek_live_title">ARD Sounds: Live</string>
+    <string name="home_audiothek_stage_title">ARD Sounds: Bühne</string>
     <string name="home_audiothek_heute_wichtig_title">Heute wichtig</string>
     <string name="home_continue_title">Höre weiter</string>
     <string name="home_new_title">Was gibt\'s Neues</string>

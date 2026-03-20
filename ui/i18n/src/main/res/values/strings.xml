@@ -64,12 +64,12 @@
     <!-- Home fragment -->
     <string name="home_surprise_title">Get surprised</string>
     <string name="home_classics_title">Check your classics</string>
-    <string name="home_audiothek_title">Discover Audiothek</string>
-    <string name="home_audiothek_featured_title">Audiothek: Featured</string>
-    <string name="home_audiothek_charts_title">Audiothek: Podcasts-Charts</string>
-    <string name="home_audiothek_hot_title">Audiothek: Hot</string>
-    <string name="home_audiothek_live_title">Audiothek: Live</string>
-    <string name="home_audiothek_stage_title">Audiothek: Stage</string>
+    <string name="home_audiothek_title">Discover ARD Sounds</string>
+    <string name="home_audiothek_featured_title">ARD Sounds: Featured</string>
+    <string name="home_audiothek_charts_title">ARD Sounds: Podcasts-Charts</string>
+    <string name="home_audiothek_hot_title">ARD Sounds: Hot</string>
+    <string name="home_audiothek_live_title">ARD Sounds: Live</string>
+    <string name="home_audiothek_stage_title">ARD Sounds: Stage</string>
     <string name="home_audiothek_heute_wichtig_title">What\'s Important Today</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
@@ -883,7 +883,7 @@
     <string name="search_itunes_label">Search Apple Podcasts</string>
     <string name="search_podcastindex_label">Search Podcast Index</string>
     <string name="search_fyyd_label">Search fyyd</string>
-    <string name="search_audiothek_label">Search ARD Audiothek</string>
+    <string name="search_audiothek_label">Search ARD Sounds</string>
     <string name="search_bbc_label">Search BBC Sounds</string>
     <string name="add_podcast_by_url">Add podcast by RSS address</string>
     <string name="rss_address">RSS address</string>

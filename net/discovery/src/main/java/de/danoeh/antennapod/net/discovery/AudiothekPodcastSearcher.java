@@ -96,6 +96,6 @@ public class AudiothekPodcastSearcher implements PodcastSearcher {
 
     @Override
     public String getName() {
-        return "ARD Audiothek";
+        return "ARD Sounds";
     }
 }
