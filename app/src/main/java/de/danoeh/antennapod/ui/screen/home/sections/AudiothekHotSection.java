@@ -44,39 +44,15 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.MediaType;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AudiothekHotSection extends HomeSection {
     public static final String TAG = "AudiothekHotSection";
 
-    private static final String API_BASE_URL = "https://api.ardaudiothek.de";
-    private static final String GRAPHQL_URL = API_BASE_URL + "/graphql";
-    private static final String PROGRAM_SET_URL_TEMPLATE = API_BASE_URL + "/programsets/%s";
+    private static final String PLAYOUT_API_URL = "https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/";
     private static final int IMAGE_WIDTH = 600;
     private static final int NUM_ITEMS = 8;
-
-    private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
-
-    private static final String HOMESCREEN_STAGE_QUERY = "query HomescreenStage {"
-            + " homescreen {"
-            + "  sections {"
-            + "   __typename "
-            + "   ... on Stage {"
-            + "    nodes {"
-            + "     __typename title "
-            + "     image { url url1X1 } "
-            + "     ... on Item { id title synopsis duration publicationStartDateAndTime audios { url downloadUrl } programSet { id title } }"
-            + "     ... on EventLivestream { id title editorialDescription broadcastStart audios { url downloadUrl } programSet { id title } }"
-            + "     ... on Extra { id title synopsis duration audios { url downloadUrl } programSet { id title } }"
-            + "     ... on CoreSection { id title synopsis audios { url downloadUrl } programSet { id title } }"
-            + "    }"
-            + "   }"
-            + "  }"
-            + " }"
-            + "}";
 
     private Disposable disposable;
     private AudiothekHorizontalAdapter listAdapter;
@@ -139,13 +115,8 @@ public class AudiothekHotSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    RequestBody body = RequestBody.create(createGraphqlRequestBody(), JSON_MEDIA_TYPE);
                     Request request = new Request.Builder()
-                            .url(GRAPHQL_URL)
-                            .addHeader("Content-Type", "application/json")
-                            .addHeader("Accept", "application/json")
-                            .addHeader("User-Agent", "AntennaPod")
-                            .post(body)
+                            .url(PLAYOUT_API_URL)
                             .build();
 
                     try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
@@ -173,111 +144,60 @@ public class AudiothekHotSection extends HomeSection {
                 });
     }
 
-    private static String createGraphqlRequestBody() throws JSONException {
-        JSONObject requestJson = new JSONObject();
-        requestJson.put("query", HOMESCREEN_STAGE_QUERY);
-        requestJson.put("variables", new JSONObject());
-        return requestJson.toString();
-    }
-
     private static List<AudiothekItem> parseStage(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        JSONArray errors = root.optJSONArray("errors");
-        if (errors != null && errors.length() > 0) {
-            throw new JSONException(errors.toString());
-        }
-
-        JSONObject data = root.optJSONObject("data");
-        if (data == null) {
-            return new ArrayList<>();
-        }
-        JSONObject homescreen = data.optJSONObject("homescreen");
-        if (homescreen == null) {
-            return new ArrayList<>();
-        }
-        JSONArray sections = homescreen.optJSONArray("sections");
-        if (sections == null) {
+        JSONArray widgets = root.optJSONArray("widgets");
+        if (widgets == null) {
             return new ArrayList<>();
         }
 
-        JSONObject stage = null;
-        for (int i = 0; i < sections.length(); i++) {
-            JSONObject section = sections.optJSONObject(i);
-            if (section == null) {
+        for (int i = 0; i < widgets.length(); i++) {
+            JSONObject widget = widgets.optJSONObject(i);
+            if (widget == null) {
                 continue;
             }
-            if ("Stage".equals(section.optString("__typename", null))) {
-                stage = section;
-                break;
+            if ("stageTeaserWidget".equals(widget.optString("widgetType"))) {
+                return parseStageTeasers(widget);
             }
         }
-        if (stage == null) {
-            return new ArrayList<>();
-        }
+        return new ArrayList<>();
+    }
 
-        JSONArray nodes = stage.optJSONArray("nodes");
-        if (nodes == null) {
-            return new ArrayList<>();
-        }
-
+    private static List<AudiothekItem> parseStageTeasers(JSONObject widget) throws JSONException {
         List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < nodes.length(); i++) {
-            JSONObject node = nodes.optJSONObject(i);
-            if (node == null) {
+        JSONArray teasers = widget.optJSONArray("teasers");
+        if (teasers == null) {
+            return items;
+        }
+
+        for (int i = 0; i < teasers.length() && i < NUM_ITEMS; i++) {
+            JSONObject teaser = teasers.optJSONObject(i);
+            if (teaser == null) {
                 continue;
             }
 
-            JSONObject programSet = node.optJSONObject("programSet");
-            if (programSet == null) {
-                continue;
-            }
-            String programSetId = programSet.optString("id", null);
-            if (programSetId == null || programSetId.isEmpty()) {
+            String assetId = teaser.optString("assetId", null);
+            if (assetId == null || assetId.isEmpty()) {
                 continue;
             }
 
-            String title = node.optString("title", "");
-            if (title.isEmpty()) {
-                title = programSet.optString("title", "");
+            String title = teaser.optString("title", "");
+            String audioUrl = teaser.optString("assetDownloadURL", null);
+            if (audioUrl != null && audioUrl.isEmpty()) {
+                audioUrl = null;
             }
 
-            String audioUrl = null;
-            JSONArray audios = node.optJSONArray("audios");
-            if (audios != null && audios.length() > 0) {
-                JSONObject audio = audios.optJSONObject(0);
-                if (audio != null) {
-                    audioUrl = audio.optString("downloadUrl", null);
-                    if (audioUrl == null || audioUrl.isEmpty()) {
-                        audioUrl = audio.optString("url", null);
-                    }
-                }
-            }
-
-            JSONObject image = node.optJSONObject("image");
-            if (image == null) {
-                image = programSet.optJSONObject("image");
-            }
-            String imageUrl = image != null ? image.optString("url1X1", null) : null;
-            if (imageUrl == null && image != null) {
-                imageUrl = image.optString("url", null);
-            }
+            JSONObject image = teaser.optJSONObject("image");
+            String imageUrl = image != null ? image.optString("templateURL", null) : null;
             if (imageUrl != null) {
                 imageUrl = imageUrl.replace("{width}", String.valueOf(IMAGE_WIDTH));
             }
 
-            String description = node.optString("synopsis", null);
-            if (description == null || description.isEmpty()) {
-                description = node.optString("editorialDescription", null);
-            }
+            String description = teaser.optString("description", null);
+            int durationSeconds = teaser.optInt("duration", 0);
 
-            int durationSeconds = node.optInt("duration", 0);
-            String publishDate = node.optString("publicationStartDateAndTime", null);
-            String itemId = node.optString("id", null);
-
-            String programSetFeedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, programSetId);
-
-            items.add(new AudiothekItem(programSetId, programSetFeedUrl, title, description, imageUrl, audioUrl,
-                    durationSeconds, publishDate, itemId));
+            items.add(new AudiothekItem(assetId, "", title, description, imageUrl, audioUrl,
+                    durationSeconds, null, assetId));
         }
         return items;
     }
