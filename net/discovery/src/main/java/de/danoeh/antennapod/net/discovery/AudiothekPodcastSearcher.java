@@ -21,6 +21,7 @@ import okhttp3.Response;
 public class AudiothekPodcastSearcher implements PodcastSearcher {
     private static final String API_BASE_URL = "https://api.ardaudiothek.de";
     private static final String GRAPHQL_URL = API_BASE_URL + "/graphql";
+    private static final String HOMESCREEN_URL = API_BASE_URL + "/homescreen";
     private static final String PROGRAM_SET_URL_TEMPLATE = API_BASE_URL + "/programsets/%s";
     private static final String USER_AGENT = "AntennaPod";
 
@@ -76,6 +77,28 @@ public class AudiothekPodcastSearcher implements PodcastSearcher {
                 }
 
                 emitter.onSuccess(AudiothekSearchResultParser.parseProgramSets(root, PROGRAM_SET_URL_TEMPLATE));
+            } catch (IOException | JSONException e) {
+                emitter.onError(e);
+            }
+        })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Single<List<PodcastSearchResult>> getSuggestions() {
+        return Single.create((SingleOnSubscribe<List<PodcastSearchResult>>) emitter -> {
+            OkHttpClient client = AntennapodHttpClient.getHttpClient();
+            Request request = new Request.Builder()
+                    .url(HOMESCREEN_URL)
+                    .addHeader("User-Agent", USER_AGENT)
+                    .build();
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    emitter.onError(new IOException(response.toString()));
+                    return;
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                emitter.onSuccess(AudiothekSearchResultParser.parseHomescreenCharts(body));
             } catch (IOException | JSONException e) {
                 emitter.onError(e);
             }

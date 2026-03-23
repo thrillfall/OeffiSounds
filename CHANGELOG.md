@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.1.0] - 2026-03-23
+
+### Changed
+- "Add Podcast" screen now shows ARD Sounds popular podcasts instead of Apple Podcasts suggestions
+
 ## [2.0.2] - 2026-03-23
 
 ### Fixed
