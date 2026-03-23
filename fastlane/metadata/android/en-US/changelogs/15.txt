@@ -1,0 +1,1 @@
+- BBC Sounds: filter out search results that have no valid podcast RSS feed

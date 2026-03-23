@@ -59,6 +59,9 @@ public class BBCSoundsPodcastSearcher implements PodcastSearcher {
                                 continue;
                             }
                             String feedUrl = String.format(FEED_URL_TEMPLATE, id);
+                            if (!feedExists(client, feedUrl)) {
+                                continue;
+                            }
                             JSONObject titles = item.optJSONObject("titles");
                             String title = titles != null ? titles.optString("primary", "") : "";
                             JSONObject network = item.optJSONObject("network");
@@ -81,6 +84,15 @@ public class BBCSoundsPodcastSearcher implements PodcastSearcher {
         })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    private static boolean feedExists(OkHttpClient client, String feedUrl) {
+        Request head = new Request.Builder().url(feedUrl).head().build();
+        try (Response r = client.newCall(head).execute()) {
+            return r.isSuccessful();
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     @Override

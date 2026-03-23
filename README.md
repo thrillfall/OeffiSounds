@@ -23,9 +23,21 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.0.0)
+### Latest Release (2.0.2)
+
+- BBC Sounds — filter out search results with no valid podcast RSS feed, reducing dead subscription links
+
+### Previous Releases
+
+#### 2.0.1
+
+- ARD Sounds — renamed from ARD Audiothek
+
+#### 2.0.0
 
 - BBC Sounds — find and subscribe to BBC sounds podcasts (opt-in via Settings → Search)
+- Search providers — user can now select which podcast services to query in settings
+- ARD Audiothek — updated to new playout API for the "Was ist heute wichtig" section
 
 ## Support / Issues
 

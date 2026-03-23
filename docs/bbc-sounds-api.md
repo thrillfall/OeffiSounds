@@ -10,20 +10,21 @@ No authentication required. The `/my/` variant of this path (`/v2/my/experience/
 
 ### Response structure
 
-The top-level `data` array contains two **modules**, not items directly:
+The top-level `data` array contains up to three **modules**, not items directly:
 
 ```json
 {
   "data": [
-    { "id": "container_search", "title": "Shows",    "data": [ ...show items... ] },
-    { "id": "playable_search",  "title": "Episodes", "data": [ ...episode items... ] }
+    { "id": "category_search",   "title": "Categories", "data": [ ...category items... ] },
+    { "id": "container_search",  "title": "Shows",      "data": [ ...show items... ] },
+    { "id": "playable_search",   "title": "Episodes",   "data": [ ...episode items... ] }
   ]
 }
 ```
 
 ### Show items (`container_search`)
 
-Each item in the Shows module represents a podcast series (subscribable via RSS):
+Each item in the Shows module represents a BBC radio show or series. **Not all results have a podcast RSS feed** — the API returns any radio programme, including local radio, school radio, and archive series that BBC has not released as podcasts. See [RSS feed availability](#rss-feed-availability) below.
 
 | Field | Description |
 |---|---|
@@ -49,6 +50,25 @@ Each item in the Episodes module represents a single broadcast episode:
 | `image_url` | Episode-specific image with `{recipe}` placeholder |
 
 We only use the `container_search` module (shows) for search results, since subscribing to the RSS feed is more useful than linking to individual episodes.
+
+### Alternative: `programmes/search/container`
+
+`GET https://rms.api.bbc.co.uk/v2/programmes/search/container?q={encoded_query}`
+
+A dedicated show-search endpoint that returns items directly (no module wrapper). Returns the same results in the same order as `container_search` above — verified to be identical for all tested queries. It does not filter to podcast-only results either.
+
+### RSS feed availability
+
+The BBC search API returns all radio shows regardless of whether a podcast RSS feed exists. In practice a significant share of results (e.g. 8/10 for the query "Garden") return HTTP 404 from `podcasts.files.bbci.co.uk`. This affects:
+
+- Local / regional radio (BBC Humberside, BBC Devon, BBC Nottingham, …)
+- World Service shows not distributed as podcasts
+- Archive series (Radio 4 Extra, …)
+- School Radio
+
+**There is no field in the search response that indicates podcast availability.** The `download` field on individual episodes (accessible via `GET /v2/programmes/playable?container={pid}`) is `null` for streaming-only shows and `"drm"` for shows with a podcast feed, but fetching this per search result is expensive.
+
+The app therefore HEAD-checks `podcasts.files.bbci.co.uk/{pid}.rss` for each result before including it in the list, and silently drops any that return a non-2xx status.
 
 ---
 
