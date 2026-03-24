@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.2.1] - 2026-03-24
+
+### Fixed
+- App crash on startup when update interval was set to a large value (>24 days)
+
 ## [2.1.0] - 2026-03-23
 
 ### Changed

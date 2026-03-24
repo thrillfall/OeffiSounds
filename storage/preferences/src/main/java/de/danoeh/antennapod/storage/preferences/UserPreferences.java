@@ -458,7 +458,7 @@ public abstract class UserPreferences {
     }
 
     public static long getUpdateInterval() {
-        return Integer.parseInt(prefs.getString(PREF_UPDATE_INTERVAL_MINUTES, "720"));
+        return Long.parseLong(prefs.getString(PREF_UPDATE_INTERVAL_MINUTES, "720"));
     }
 
     public static void setUpdateInterval(long interval) {
