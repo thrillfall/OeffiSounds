@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.2.2] - 2026-03-24
+
+### Fixed
+- Fix overflow due to wrong return type
+
 ## [2.2.1] - 2026-03-24
 
 ### Fixed

@@ -1,1 +1,1 @@
-Podcast-App mit Fokus auf ARD Sounds (ehem. Audiothek)
+Aboniere Inhalte aus ARD Sounds und BBC Sounds (und vielen anderen öffentlichen Podcast Quellen)

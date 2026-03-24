@@ -1,1 +1,1 @@
-Podcast app fork focused on ARD Sounds (formerly ARD Audiothek)
+Podcast app fork that enables subscription to content from ARD Sounds and BBC Sounds

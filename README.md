@@ -23,11 +23,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.0.2)
+### Latest Release (2.2.2)
 
-- BBC Sounds — filter out search results with no valid podcast RSS feed, reducing dead subscription links
+- Fix overflow due to wrong return type
 
 ### Previous Releases
+
+#### 2.0.2
+
+- BBC Sounds — filter out search results with no valid podcast RSS feed, reducing dead subscription links
 
 #### 2.0.1
 
