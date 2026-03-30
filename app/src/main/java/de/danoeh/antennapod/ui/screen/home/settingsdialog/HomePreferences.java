@@ -13,6 +13,8 @@ import java.util.List;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.ui.screen.home.HomeFragment;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekChartsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcAudioRecommendedTodaySection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcSoundsFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
@@ -58,6 +60,8 @@ public class HomePreferences {
         if (hiddenSectionTags.isEmpty()) {
             hiddenSectionTags.add(AudiothekStageSection.TAG);
             hiddenSectionTags.add(AudiothekLiveSection.TAG);
+            hiddenSectionTags.add(BbcSoundsFeaturedSection.TAG);
+            hiddenSectionTags.add(BbcAudioRecommendedTodaySection.TAG);
         }
         return hiddenSectionTags;
     }
@@ -77,7 +81,9 @@ public class HomePreferences {
                     SubscriptionsSection.TAG,
                     DownloadsSection.TAG,
                     AudiothekLiveSection.TAG,
-                    AudiothekStageSection.TAG))
+                    AudiothekStageSection.TAG,
+                    BbcSoundsFeaturedSection.TAG,
+                    BbcAudioRecommendedTodaySection.TAG))
                 : storedSectionTagOrder;
         List<String> hiddenSectionTags = getHiddenSectionTags(context);
         String[] sectionTags = context.getResources().getStringArray(R.array.home_section_tags);

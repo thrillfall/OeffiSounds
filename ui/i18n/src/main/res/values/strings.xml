@@ -71,6 +71,8 @@
     <string name="home_audiothek_live_title">ARD Sounds: Live</string>
     <string name="home_audiothek_stage_title">ARD Sounds: Stage</string>
     <string name="home_audiothek_heute_wichtig_title">What\'s Important Today</string>
+    <string name="home_bbc_sounds_featured_title">BBC Sounds: Recommended Today</string>
+    <string name="home_bbc_audio_recommended_today_title">BBC World Service: Recommended Today</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>

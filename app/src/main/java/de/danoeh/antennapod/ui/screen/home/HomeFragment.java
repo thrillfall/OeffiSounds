@@ -22,6 +22,8 @@ import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.ui.echo.EchoConfig;
 import de.danoeh.antennapod.ui.screen.SearchFragment;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekChartsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcAudioRecommendedTodaySection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcSoundsFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
@@ -128,6 +130,10 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
                 return new AudiothekSection();
             case AudiothekHeuteWichtigSection.TAG:
                 return new AudiothekHeuteWichtigSection();
+            case BbcSoundsFeaturedSection.TAG:
+                return new BbcSoundsFeaturedSection();
+            case BbcAudioRecommendedTodaySection.TAG:
+                return new BbcAudioRecommendedTodaySection();
             case SubscriptionsSection.TAG:
                 return new SubscriptionsSection();
             case DownloadsSection.TAG:

@@ -248,6 +248,8 @@
         <item>@string/home_audiothek_live_title</item>
         <item>@string/home_audiothek_stage_title</item>
         <item>@string/home_audiothek_heute_wichtig_title</item>
+        <item>@string/home_bbc_sounds_featured_title</item>
+        <item>@string/home_bbc_audio_recommended_today_title</item>
         <item>@string/home_classics_title</item>
         <item>@string/home_downloads_title</item>
     </string-array>
@@ -262,6 +264,8 @@
         <item>AudiothekLiveSection</item>
         <item>AudiothekStageSection</item>
         <item>AudiothekHeuteWichtigSection</item>
+        <item>BbcSoundsFeaturedSection</item>
+        <item>BbcAudioRecommendedTodaySection</item>
         <item>SubscriptionsSection</item>
         <item>DownloadsSection</item>
     </string-array>

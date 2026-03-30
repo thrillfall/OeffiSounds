@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.3.0] - 2026-03-30
+
+### Added
+- Home screen: new "BBC Audio Recommended Today" section showing today's recommended episodes
+
 ## [2.2.2] - 2026-03-24
 
 ### Fixed
