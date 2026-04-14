@@ -36,6 +36,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.EpisodesSurpriseSection;
 import de.danoeh.antennapod.ui.screen.home.sections.InboxSection;
 import de.danoeh.antennapod.ui.screen.home.sections.QueueSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SrfPlayPopularSection;
+import de.danoeh.antennapod.ui.screen.home.sections.OrfSoundPodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SubscriptionsSection;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomePreferences;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomeSectionsSettingsDialog;
@@ -137,6 +138,8 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
                 return new BbcAudioRecommendedTodaySection();
             case SrfPlayPopularSection.TAG:
                 return new SrfPlayPopularSection();
+            case OrfSoundPodcastsSection.TAG:
+                return new OrfSoundPodcastsSection();
             case SubscriptionsSection.TAG:
                 return new SubscriptionsSection();
             case DownloadsSection.TAG:

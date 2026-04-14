@@ -53,7 +53,7 @@ Base the text on the CHANGELOG entry from Step 4.
 
 If the release includes new user-facing features (not just bug fixes), update the What's New popup shown to users after updating:
 
-1. In `ui/i18n/src/main/res/values/strings.xml`, add a new string `whats_new_message_<version_underscored>` (e.g. `whats_new_message_2_5_0`) with the new features as HTML bullet points. Use `\u2022` for bullets and `<b>` for emphasis. See the existing `whats_new_message_2_4_0` as a template.
+1. In `ui/i18n/src/main/res/values/strings.xml`, add a new string `whats_new_message_<version_underscored>` (e.g. `whats_new_message_2_5_0`) using a **sliding window of the last 3 feature releases**. Format each release as a `<b>version</b>` header followed by `\u2022` bullet points. Look at the CHANGELOG to identify the 3 most recent feature releases (skip patch/bugfix-only releases). See the existing `whats_new_message_2_5_0` as a template.
 2. In `app/src/main/java/de/danoeh/antennapod/activity/MainActivity.java`:
    - Update `WHATS_NEW_VERSION` to the new `versionCode`.
    - Update the string resource reference in `showWhatsNewIfNeeded()` to point to the new message string.

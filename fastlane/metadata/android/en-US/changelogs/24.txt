@@ -1,0 +1,4 @@
+- ORF Sound integration: search and discover Austrian public radio podcasts
+- Home screen: new "ORF Sound: Podcasts" section
+- Search provider settings: individual toggles instead of multi-select dialog
+- Apple (iTunes) and Podcast Index disabled by default

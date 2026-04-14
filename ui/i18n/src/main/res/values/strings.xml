@@ -74,8 +74,10 @@
     <string name="home_bbc_sounds_featured_title">BBC Sounds: Recommended Today</string>
     <string name="home_bbc_audio_recommended_today_title">BBC World Service: Recommended Today</string>
     <string name="home_srf_play_popular_title">SRF Play: Beliebte Podcasts</string>
+    <string name="home_orf_sound_podcasts_title">ORF Sound: Podcasts</string>
     <string name="whats_new_title">What\'s New</string>
     <string name="whats_new_message_2_4_0">Öffi Sounds now supports more public broadcasters:\n\n\u2022 <b>BBC Sounds</b> — Search and discover British podcasts\n\u2022 <b>SRF Play</b> — Search and discover Swiss public radio podcasts\n\nBoth can be enabled via Settings → Search.\n\nAlso: ARD Audiothek has been renamed to <b>ARD Sounds</b>.</string>
+    <string name="whats_new_message_2_5_0"><b>2.5.0</b>\n\u2022 <b>ORF Sound</b> — Search and discover Austrian public radio podcasts\n\u2022 Search provider settings now show individual toggles\n\n<b>2.4.0</b>\n\u2022 <b>SRF Play</b> — Swiss public radio podcasts\n\u2022 Home screen: SRF Play section\n\n<b>2.0.0</b>\n\u2022 <b>BBC Sounds</b> — British podcasts\n\u2022 ARD Audiothek renamed to <b>ARD Sounds</b>\n\u2022 Search provider selection in settings</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>
@@ -494,8 +496,8 @@
     <string name="playback_pref_sum">Headphone controls, Skip intervals, Queue</string>
     <string name="downloads_pref">Downloads</string>
     <string name="downloads_pref_sum">Update interval, Mobile data, Automatic download, Automatic deletion</string>
-    <string name="search_pref">Search</string>
-    <string name="search_pref_sum">Configure podcast search providers</string>
+    <string name="search_pref">Active search providers</string>
+    <string name="search_pref_sum">Choose which search providers to use</string>
     <string name="search_providers_label">Search providers</string>
     <string name="pref_search_providers_title">Active search providers</string>
     <string name="pref_search_providers_sum">Choose which search providers to use</string>

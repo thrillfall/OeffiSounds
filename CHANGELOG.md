@@ -2,6 +2,17 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.5.0] - 2026-04-14
+
+### Added
+- ORF Sound integration: search and discover Austrian public radio podcasts (opt-in via Settings → Search)
+- Home screen: new "ORF Sound: Podcasts" section showing ORF podcasts
+
+### Changed
+- Search provider settings: individual toggles instead of multi-select dialog
+- Search provider settings renamed to "Active search providers"
+- Apple (iTunes) and Podcast Index moved down in provider list and disabled by default
+
 ## [2.4.1] - 2026-04-14
 
 ### Added

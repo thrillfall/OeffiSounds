@@ -1,0 +1,4 @@
+- ORF Sound Integration: Österreichische Podcasts suchen und entdecken
+- Startseite: neuer Bereich "ORF Sound: Podcasts"
+- Suchanbieter-Einstellungen: einzelne Schalter statt Mehrfachauswahl-Dialog
+- Apple (iTunes) und Podcast Index standardmäßig deaktiviert

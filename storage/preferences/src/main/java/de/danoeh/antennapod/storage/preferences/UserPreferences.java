@@ -895,7 +895,7 @@ public abstract class UserPreferences {
 
     public static Set<String> getEnabledSearchProviders() {
         Set<String> defaultValue = new HashSet<>(Arrays.asList(
-                "ItunesPodcastSearcher", "PodcastIndexPodcastSearcher", "AudiothekPodcastSearcher"));
+                "AudiothekPodcastSearcher"));
         return prefs.getStringSet(PREF_ENABLED_SEARCH_PROVIDERS, defaultValue);
     }
 
