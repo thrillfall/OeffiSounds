@@ -49,13 +49,29 @@ The `de-DE` file must be in German.
 
 Base the text on the CHANGELOG entry from Step 4.
 
-## Step 6 — Verify README.md
+## Step 6 — Update "What's New" dialog (feature releases only)
 
-Read `README.md`. The GitHub release badge auto-updates from tags, so no manual edit is needed — just confirm the file exists and looks correct. If the README contains a hardcoded version number anywhere (not in a badge URL), update it too.
+If the release includes new user-facing features (not just bug fixes), update the What's New popup shown to users after updating:
 
-## Step 7 — Report
+1. In `ui/i18n/src/main/res/values/strings.xml`, add a new string `whats_new_message_<version_underscored>` (e.g. `whats_new_message_2_5_0`) with the new features as HTML bullet points. Use `\u2022` for bullets and `<b>` for emphasis. See the existing `whats_new_message_2_4_0` as a template.
+2. In `app/src/main/java/de/danoeh/antennapod/activity/MainActivity.java`:
+   - Update `WHATS_NEW_VERSION` to the new `versionCode`.
+   - Update the string resource reference in `showWhatsNewIfNeeded()` to point to the new message string.
+
+For patch/bugfix-only releases, skip this step.
+
+## Step 7 — Update README.md
+
+Read `README.md`. The GitHub release badge auto-updates from tags, so no manual edit is needed. However:
+
+1. Update the "Latest Release" heading and its bullet points to reflect the new version.
+2. Move the **previous** "Latest Release" content into the "Previous Releases" section (as a new `#### <version>` entry at the top of that section). Do not drop it — every release should remain listed.
+3. If the README contains a hardcoded version number anywhere else (not in a badge URL), update it too.
+
+## Step 8 — Report
 
 Tell the user what was changed:
 - New version: `<versionName>` (versionCode `<versionCode>`)
 - Files modified: `app/build.gradle`, `CHANGELOG.md`
 - Files created: both fastlane changelog files
+- What's New dialog: updated (if applicable)

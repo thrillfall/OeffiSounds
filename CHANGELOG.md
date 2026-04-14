@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.4.1] - 2026-04-14
+
+### Added
+- "What's New" popup shown once after updating, highlighting new provider integrations
+
 ## [2.4.0] - 2026-04-14
 
 ### Added

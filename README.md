@@ -25,12 +25,16 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.4.0)
+### Latest Release (2.4.1)
+
+- "What's New" popup shown once after updating, highlighting new provider integrations
+
+### Previous Releases
+
+#### 2.4.0
 
 - SRF Play integration: search and discover Swiss public radio podcasts (opt-in via Settings → Search)
 - Home screen: new "SRF Play: Beliebte Podcasts" section showing popular SRF podcasts
-
-### Previous Releases
 
 #### 2.0.2
 

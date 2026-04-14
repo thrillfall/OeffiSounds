@@ -19,8 +19,8 @@ android {
     defaultConfig {
         applicationId "de.oeffisounds.app"
         // Version code: simple incrementing integer, bump per release
-        versionCode 22
-        versionName "2.4.0"
+        versionCode 23
+        versionName "2.4.1"
 
         javaCompileOptions {
             annotationProcessorOptions {
