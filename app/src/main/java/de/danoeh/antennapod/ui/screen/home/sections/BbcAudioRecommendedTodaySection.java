@@ -154,15 +154,16 @@ public class BbcAudioRecommendedTodaySection extends HomeSection {
                 continue;
             }
 
-            // Prefer brand id, fall back to series id
+            // Prefer brand id, fall back to series id.
+            // Note: optString converts JSON null to the string "null", so check for that too.
             String pid = null;
             JSONObject brand = item.optJSONObject("brand");
-            if (brand != null) {
+            if (brand != null && !brand.isNull("id")) {
                 pid = brand.optString("id", null);
             }
             if (pid == null || pid.isEmpty()) {
                 JSONObject series = item.optJSONObject("series");
-                if (series != null) {
+                if (series != null && !series.isNull("id")) {
                     pid = series.optString("id", null);
                 }
             }

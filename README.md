@@ -24,9 +24,9 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.3.0)
+### Latest Release (2.3.1)
 
-- Home screen: new "BBC Audio Recommended Today" section showing today's recommended episodes
+- BBC World Service Recommended Today: fix null podcast ID causing 404 when tapping certain tiles
 
 ### Previous Releases
 

@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.3.1] - 2026-04-14
+
+### Fixed
+- BBC World Service Recommended Today: fix null podcast ID causing 404 when tapping certain tiles
+
 ## [2.3.0] - 2026-03-30
 
 ### Added
