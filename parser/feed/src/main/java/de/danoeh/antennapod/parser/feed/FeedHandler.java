@@ -1,7 +1,9 @@
 package de.danoeh.antennapod.parser.feed;
 
+import de.danoeh.antennapod.net.common.AntennapodHttpClient;
 import de.danoeh.antennapod.parser.feed.util.TypeGetter;
 import org.apache.commons.io.input.XmlStreamReader;
+import org.json.JSONObject;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -23,6 +25,12 @@ public class FeedHandler {
         File file = new File(feed.getLocalFileUrl());
         if (isJsonFile(file)) {
             try {
+                String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+                JSONObject root = new JSONObject(json);
+                if (SrfPlayJsonFeedParser.canParse(root)) {
+                    return SrfPlayJsonFeedParser.parse(feed,
+                            AntennapodHttpClient.getHttpClient());
+                }
                 return AudiothekJsonFeedParser.parse(feed);
             } catch (org.json.JSONException e) {
                 throw new IOException(e);

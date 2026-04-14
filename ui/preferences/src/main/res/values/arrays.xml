@@ -250,6 +250,7 @@
         <item>@string/home_audiothek_heute_wichtig_title</item>
         <item>@string/home_bbc_sounds_featured_title</item>
         <item>@string/home_bbc_audio_recommended_today_title</item>
+        <item>@string/home_srf_play_popular_title</item>
         <item>@string/home_classics_title</item>
         <item>@string/home_downloads_title</item>
     </string-array>
@@ -266,6 +267,7 @@
         <item>AudiothekHeuteWichtigSection</item>
         <item>BbcSoundsFeaturedSection</item>
         <item>BbcAudioRecommendedTodaySection</item>
+        <item>SrfPlayPopularSection</item>
         <item>SubscriptionsSection</item>
         <item>DownloadsSection</item>
     </string-array>
@@ -301,6 +303,7 @@
         <item>ARD Sounds</item>
         <item>fyyd</item>
         <item>BBC Sounds</item>
+        <item>SRF Play</item>
     </string-array>
 
     <string-array name="search_provider_values">
@@ -309,6 +312,7 @@
         <item>AudiothekPodcastSearcher</item>
         <item>FyydPodcastSearcher</item>
         <item>BBCSoundsPodcastSearcher</item>
+        <item>SRFPlayPodcastSearcher</item>
     </string-array>
 
     <string-array name="search_provider_defaults">

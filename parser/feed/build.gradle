@@ -12,6 +12,8 @@ android {
 
 dependencies {
     implementation project(':model')
+    implementation project(':net:common')
+    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
 
     annotationProcessor "androidx.annotation:annotation:$annotationVersion"
 
