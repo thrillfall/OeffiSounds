@@ -252,6 +252,7 @@
         <item>@string/home_bbc_audio_recommended_today_title</item>
         <item>@string/home_srf_play_popular_title</item>
         <item>@string/home_orf_sound_podcasts_title</item>
+        <item>@string/home_dlf_podcasts_title</item>
         <item>@string/home_classics_title</item>
         <item>@string/home_downloads_title</item>
     </string-array>
@@ -270,6 +271,7 @@
         <item>BbcAudioRecommendedTodaySection</item>
         <item>SrfPlayPopularSection</item>
         <item>OrfSoundPodcastsSection</item>
+        <item>DlfPodcastsSection</item>
         <item>SubscriptionsSection</item>
         <item>DownloadsSection</item>
     </string-array>
@@ -304,6 +306,7 @@
         <item>BBC Sounds</item>
         <item>SRF Play</item>
         <item>ORF Sound</item>
+        <item>Deutschlandfunk</item>
         <item>fyyd</item>
         <item>Apple (iTunes)</item>
         <item>Podcast Index</item>
@@ -314,6 +317,7 @@
         <item>BBCSoundsPodcastSearcher</item>
         <item>SRFPlayPodcastSearcher</item>
         <item>ORFSoundPodcastSearcher</item>
+        <item>DLFPodcastSearcher</item>
         <item>FyydPodcastSearcher</item>
         <item>ItunesPodcastSearcher</item>
         <item>PodcastIndexPodcastSearcher</item>

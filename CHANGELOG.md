@@ -2,6 +2,12 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.6.0] - 2026-04-14
+
+### Added
+- Deutschlandfunk integration: search and discover podcasts from Deutschlandfunk and Deutschlandfunk Kultur (opt-in via Settings → Search)
+- Home screen: new "Deutschlandfunk: Beliebte Podcasts" section showing curated DLF podcasts
+
 ## [2.5.0] - 2026-04-14
 
 ### Added
