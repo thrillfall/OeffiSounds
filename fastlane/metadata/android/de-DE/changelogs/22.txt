@@ -1,0 +1,2 @@
+- SRF Play Integration: Schweizer Radiopodcasts suchen und entdecken (aktivierbar unter Einstellungen → Suche)
+- Startseite: neuer Bereich "SRF Play: Beliebte Podcasts" mit populären SRF-Podcasts

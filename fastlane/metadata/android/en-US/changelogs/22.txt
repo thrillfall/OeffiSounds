@@ -1,0 +1,2 @@
+- SRF Play integration: search and discover Swiss public radio podcasts (opt-in via Settings → Search)
+- Home screen: new "SRF Play: Beliebte Podcasts" section showing popular SRF podcasts

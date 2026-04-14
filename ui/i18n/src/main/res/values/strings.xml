@@ -73,6 +73,9 @@
     <string name="home_audiothek_heute_wichtig_title">What\'s Important Today</string>
     <string name="home_bbc_sounds_featured_title">BBC Sounds: Recommended Today</string>
     <string name="home_bbc_audio_recommended_today_title">BBC World Service: Recommended Today</string>
+    <string name="home_srf_play_popular_title">SRF Play: Beliebte Podcasts</string>
+    <string name="whats_new_title">What\'s New</string>
+    <string name="whats_new_message_2_4_0">Öffi Sounds now supports more public broadcasters:\n\n\u2022 <b>BBC Sounds</b> — Search and discover British podcasts\n\u2022 <b>SRF Play</b> — Search and discover Swiss public radio podcasts\n\nBoth can be enabled via Settings → Search.\n\nAlso: ARD Audiothek has been renamed to <b>ARD Sounds</b>.</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>

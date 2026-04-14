@@ -97,6 +97,8 @@ public class MainActivity extends CastEnabledActivity {
 
     public static final String PREF_NAME = "MainActivityPrefs";
     public static final String PREF_IS_FIRST_LAUNCH = "prefMainActivityIsFirstLaunch";
+    private static final String PREF_WHATS_NEW_SHOWN_VERSION = "prefWhatsNewShownVersion";
+    private static final int WHATS_NEW_VERSION = 22; // versionCode for 2.4.0
 
     public static final String EXTRA_REFRESH_ON_START = "refresh_on_start";
     public static final String KEY_GENERATED_VIEW_ID = "generated_view_id";
@@ -351,8 +353,25 @@ public class MainActivity extends CastEnabledActivity {
 
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean(PREF_IS_FIRST_LAUNCH, false);
+            edit.putInt(PREF_WHATS_NEW_SHOWN_VERSION, WHATS_NEW_VERSION);
             edit.apply();
         }
+    }
+
+    private void showWhatsNewIfNeeded() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        int lastShown = prefs.getInt(PREF_WHATS_NEW_SHOWN_VERSION, 0);
+        if (lastShown >= WHATS_NEW_VERSION) {
+            return;
+        }
+        prefs.edit().putInt(PREF_WHATS_NEW_SHOWN_VERSION, WHATS_NEW_VERSION).apply();
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.whats_new_title)
+                .setMessage(androidx.core.text.HtmlCompat.fromHtml(
+                        getString(R.string.whats_new_message_2_4_0),
+                        androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY))
+                .setPositiveButton(android.R.string.ok, null)
+                .show();
     }
 
     public boolean isDrawerOpen() {
@@ -573,6 +592,7 @@ public class MainActivity extends CastEnabledActivity {
         super.onStart();
         EventBus.getDefault().register(this);
         new RatingDialogManager(this).showIfNeeded();
+        showWhatsNewIfNeeded();
         getOnBackPressedDispatcher().addCallback(this, openDefaultPageBackPressedCallback);
         getOnBackPressedDispatcher().addCallback(this, bottomSheetBackPressedCallback);
     }

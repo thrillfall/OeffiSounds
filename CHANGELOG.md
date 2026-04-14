@@ -2,6 +2,12 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.4.0] - 2026-04-14
+
+### Added
+- SRF Play integration: search and discover Swiss public radio podcasts (opt-in via Settings → Search)
+- Home screen: new "SRF Play: Beliebte Podcasts" section showing popular SRF podcasts
+
 ## [2.3.1] - 2026-04-14
 
 ### Fixed

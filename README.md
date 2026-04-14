@@ -15,6 +15,7 @@ It focuses on discovering and listening to content from German public radio via 
 
 - **ARD Sounds / ARD Audiothek integration**: included as a search provider, plus special home screen modules focused on public radio content.
 - **BBC Sounds integration**: search and subscribe to BBC podcasts (opt-in via Settings → Search).
+- **SRF Play integration**: search and discover Swiss public radio podcasts (opt-in via Settings → Search).
 - **Nextcloud SSO**: Nextcloud sync login via the Nextcloud app account chooser (no manual username/password entry).
 - **Provider Choice**: user can select whoch podcast services to query (and which not).
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Screenshot" height="200">
@@ -24,9 +25,10 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.3.1)
+### Latest Release (2.4.0)
 
-- BBC World Service Recommended Today: fix null podcast ID causing 404 when tapping certain tiles
+- SRF Play integration: search and discover Swiss public radio podcasts (opt-in via Settings → Search)
+- Home screen: new "SRF Play: Beliebte Podcasts" section showing popular SRF podcasts
 
 ### Previous Releases
 
