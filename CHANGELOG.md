@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.7.1] - 2026-04-14
+
+### Fixed
+- Nextcloud sync: fix subscription upload failing with "No value for update_urls" (regression from SSO rewrite)
+
 ## [2.7.0] - 2026-04-15
 
 ### Added

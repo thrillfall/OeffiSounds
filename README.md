@@ -28,12 +28,16 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.7.0)
+### Latest Release (2.7.1)
+
+- Fix Nextcloud sync: subscription upload no longer fails with "No value for update_urls" error (regression from SSO rewrite)
+
+### Previous Releases
+
+#### 2.7.0
 
 - RTVE integration: search and discover podcasts from Spain's public broadcaster
 - Home screen: new "RTVE: Podcasts" section
-
-### Previous Releases
 
 #### 2.6.0
 
