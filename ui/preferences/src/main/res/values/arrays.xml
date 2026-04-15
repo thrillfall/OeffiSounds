@@ -253,6 +253,7 @@
         <item>@string/home_srf_play_popular_title</item>
         <item>@string/home_orf_sound_podcasts_title</item>
         <item>@string/home_dlf_podcasts_title</item>
+        <item>@string/home_rtve_podcasts_title</item>
         <item>@string/home_classics_title</item>
         <item>@string/home_downloads_title</item>
     </string-array>
@@ -272,6 +273,7 @@
         <item>SrfPlayPopularSection</item>
         <item>OrfSoundPodcastsSection</item>
         <item>DlfPodcastsSection</item>
+        <item>RtvePodcastsSection</item>
         <item>SubscriptionsSection</item>
         <item>DownloadsSection</item>
     </string-array>
@@ -307,6 +309,7 @@
         <item>SRF Play</item>
         <item>ORF Sound</item>
         <item>Deutschlandfunk</item>
+        <item>RTVE</item>
         <item>fyyd</item>
         <item>Apple (iTunes)</item>
         <item>Podcast Index</item>
@@ -318,6 +321,7 @@
         <item>SRFPlayPodcastSearcher</item>
         <item>ORFSoundPodcastSearcher</item>
         <item>DLFPodcastSearcher</item>
+        <item>RTVEPodcastSearcher</item>
         <item>FyydPodcastSearcher</item>
         <item>ItunesPodcastSearcher</item>
         <item>PodcastIndexPodcastSearcher</item>

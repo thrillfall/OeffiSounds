@@ -28,6 +28,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.QueueSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SrfPlayPopularSection;
 import de.danoeh.antennapod.ui.screen.home.sections.OrfSoundPodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DlfPodcastsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.RtvePodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SubscriptionsSection;
 
 public class HomePreferences {
@@ -68,6 +69,7 @@ public class HomePreferences {
             hiddenSectionTags.add(SrfPlayPopularSection.TAG);
             hiddenSectionTags.add(OrfSoundPodcastsSection.TAG);
             hiddenSectionTags.add(DlfPodcastsSection.TAG);
+            hiddenSectionTags.add(RtvePodcastsSection.TAG);
         }
         return hiddenSectionTags;
     }
@@ -92,7 +94,8 @@ public class HomePreferences {
                     BbcAudioRecommendedTodaySection.TAG,
                     SrfPlayPopularSection.TAG,
                     OrfSoundPodcastsSection.TAG,
-                    DlfPodcastsSection.TAG))
+                    DlfPodcastsSection.TAG,
+                    RtvePodcastsSection.TAG))
                 : storedSectionTagOrder;
         List<String> hiddenSectionTags = getHiddenSectionTags(context);
         String[] sectionTags = context.getResources().getStringArray(R.array.home_section_tags);

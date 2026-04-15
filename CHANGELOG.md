@@ -2,6 +2,12 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.7.0] - 2026-04-15
+
+### Added
+- RTVE integration: search and discover podcasts from Spain's public broadcaster (opt-in via Settings → Search)
+- Home screen: new "RTVE: Podcasts" section showing RTVE original podcasts
+
 ## [2.6.0] - 2026-04-14
 
 ### Added

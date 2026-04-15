@@ -23,6 +23,7 @@ public class PodcastSearcherRegistry {
             searchProviders.add(new SearcherInfo(new SRFPlayPodcastSearcher(), 1.0f));
             searchProviders.add(new SearcherInfo(new ORFSoundPodcastSearcher(), 1.0f));
             searchProviders.add(new SearcherInfo(new DLFPodcastSearcher(), 1.0f));
+            searchProviders.add(new SearcherInfo(new RTVEPodcastSearcher(), 1.0f));
         }
         return searchProviders;
     }

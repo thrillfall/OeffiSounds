@@ -38,6 +38,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.QueueSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SrfPlayPopularSection;
 import de.danoeh.antennapod.ui.screen.home.sections.OrfSoundPodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DlfPodcastsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.RtvePodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SubscriptionsSection;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomePreferences;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomeSectionsSettingsDialog;
@@ -143,6 +144,8 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
                 return new OrfSoundPodcastsSection();
             case DlfPodcastsSection.TAG:
                 return new DlfPodcastsSection();
+            case RtvePodcastsSection.TAG:
+                return new RtvePodcastsSection();
             case SubscriptionsSection.TAG:
                 return new SubscriptionsSection();
             case DownloadsSection.TAG:

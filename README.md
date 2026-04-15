@@ -18,6 +18,7 @@ It focuses on discovering and listening to content from German public radio via 
 - **SRF Play integration**: search and discover Swiss public radio podcasts (opt-in via Settings → Search).
 - **ORF Sound integration**: search and discover Austrian public radio podcasts (opt-in via Settings → Search).
 - **Deutschlandfunk integration**: search and discover podcasts from Deutschlandfunk and Deutschlandfunk Kultur (opt-in via Settings → Search).
+- **RTVE integration**: search and discover podcasts from Spain's public broadcaster (opt-in via Settings → Search).
 - **Nextcloud SSO**: Nextcloud sync login via the Nextcloud app account chooser (no manual username/password entry).
 - **Provider Choice**: user can select whoch podcast services to query (and which not).
 <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Screenshot" height="200">
@@ -27,12 +28,17 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.6.0)
+### Latest Release (2.7.0)
+
+- RTVE integration: search and discover podcasts from Spain's public broadcaster
+- Home screen: new "RTVE: Podcasts" section
+
+### Previous Releases
+
+#### 2.6.0
 
 - Deutschlandfunk integration: search and discover podcasts from Deutschlandfunk and Deutschlandfunk Kultur
 - Home screen: new "Deutschlandfunk: Beliebte Podcasts" section
-
-### Previous Releases
 
 #### 2.5.0
 
