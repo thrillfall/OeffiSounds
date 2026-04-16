@@ -3,6 +3,7 @@ package de.danoeh.antennapod;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.system.CrashReportWriter;
 
 public class PreferenceUpgrader {
@@ -26,6 +27,11 @@ public class PreferenceUpgrader {
         if (oldVersion == -1) {
             //New installation
             return;
+        }
+        if (oldVersion < 29) {
+            // Previous versions had a bug where upstream migrations reset streaming to false
+            // on every update. Fix by enabling streaming for all affected users.
+            UserPreferences.setStreamOverDownload(true);
         }
     }
 }
