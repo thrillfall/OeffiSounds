@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.7.1)
+### Latest Release (2.7.5)
 
-- Fix Nextcloud sync: subscription upload no longer fails with "No value for update_urls" error (regression from SSO rewrite)
+- Fix infinite sync loop: subscription sync no longer loops endlessly when non-subscribed feeds exist in the database
 
 ### Previous Releases
+
+#### 2.7.1
+
+- Fix Nextcloud sync: subscription upload no longer fails with "No value for update_urls" error (regression from SSO rewrite)
 
 #### 2.7.0
 

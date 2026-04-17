@@ -131,7 +131,9 @@ public class SyncService extends Worker {
 
     private boolean someFeedWasNotRefreshedYet() {
         for (Feed feed : DBReader.getFeedList()) {
-            if (feed.getPreferences().getKeepUpdated() && feed.getLastRefreshAttempt() == 0) {
+            if (feed.getState() == Feed.STATE_SUBSCRIBED
+                    && feed.getPreferences().getKeepUpdated()
+                    && feed.getLastRefreshAttempt() == 0) {
                 return true;
             }
         }

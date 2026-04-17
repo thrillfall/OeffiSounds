@@ -1,0 +1,1 @@
+- Fix infinite sync loop when non-subscribed feeds exist in the database

@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.7.5] - 2026-04-17
+
+### Fixed
+- Fix infinite sync loop: subscription sync no longer loops endlessly when non-subscribed feeds with keepUpdated exist in the database
+
 ## [2.7.1] - 2026-04-14
 
 ### Fixed

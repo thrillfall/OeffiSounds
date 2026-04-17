@@ -1,0 +1,1 @@
+- Endlose Synchronisierungsschleife behoben, wenn nicht abonnierte Feeds in der Datenbank vorhanden sind
