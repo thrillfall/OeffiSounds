@@ -51,6 +51,7 @@ public class AudiothekHotSection extends HomeSection {
     public static final String TAG = "AudiothekHotSection";
 
     private static final String PLAYOUT_API_URL = "https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/";
+    private static final String PROGRAMSET_URL_PREFIX = "https://api.ardaudiothek.de/programsets/";
     private static final int IMAGE_WIDTH = 600;
     private static final int NUM_ITEMS = 8;
 
@@ -196,7 +197,13 @@ public class AudiothekHotSection extends HomeSection {
             String description = teaser.optString("description", null);
             int durationSeconds = teaser.optInt("duration", 0);
 
-            items.add(new AudiothekItem(assetId, "", title, description, imageUrl, audioUrl,
+            String feedUrl = "";
+            String teaserType = teaser.optString("teaserType", "");
+            if (teaserType.contains("Show") && assetId.startsWith("urn:ard:show:")) {
+                feedUrl = PROGRAMSET_URL_PREFIX + assetId;
+            }
+
+            items.add(new AudiothekItem(assetId, feedUrl, title, description, imageUrl, audioUrl,
                     durationSeconds, null, assetId));
         }
         return items;
@@ -290,7 +297,7 @@ public class AudiothekHotSection extends HomeSection {
             holder.imageView.setOnClickListener(v -> {
                 if (item.audioUrl != null && !item.audioUrl.isEmpty()) {
                     openEpisode(activity, item);
-                } else {
+                } else if (item.programSetFeedUrl != null && !item.programSetFeedUrl.isEmpty()) {
                     activity.startActivity(new OnlineFeedviewActivityStarter(activity, item.programSetFeedUrl).getIntent());
                 }
             });

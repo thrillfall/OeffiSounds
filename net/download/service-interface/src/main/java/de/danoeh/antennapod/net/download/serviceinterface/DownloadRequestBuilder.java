@@ -102,10 +102,9 @@ public class DownloadRequestBuilder {
             }
             String programSetId = path.substring(PROGRAM_SET_PATH_PREFIX.length()).replaceAll("/.*", "");
             String variables = "{\"id\":\"" + programSetId + "\"}";
-            String query = "query=" + android.net.Uri.encode(GRAPHQL_QUERY)
+            return uri.getScheme() + "://" + uri.getAuthority() + GRAPHQL_PATH
+                    + "?query=" + android.net.Uri.encode(GRAPHQL_QUERY)
                     + "&variables=" + android.net.Uri.encode(variables);
-            URI updated = new URI(uri.getScheme(), uri.getAuthority(), GRAPHQL_PATH, query, null);
-            return updated.toString();
         } catch (URISyntaxException e) {
             return url;
         }
