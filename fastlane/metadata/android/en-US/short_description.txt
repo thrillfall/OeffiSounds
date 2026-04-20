@@ -1,1 +1,1 @@
-Podcast app fork that enables subscription to content from ARD Sounds and BBC Sounds
+Podcast app with ARD Sounds, BBC Sounds & public radio integration
