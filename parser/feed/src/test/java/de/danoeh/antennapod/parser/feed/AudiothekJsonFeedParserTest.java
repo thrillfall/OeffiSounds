@@ -2,13 +2,15 @@ package de.danoeh.antennapod.parser.feed;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedItem;
@@ -42,7 +44,9 @@ public class AudiothekJsonFeedParserTest {
                 + "}";
 
         File tmp = File.createTempFile("audiothek", ".json");
-        Files.writeString(tmp.toPath(), json, StandardCharsets.UTF_8);
+        try (OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
+            w.write(json);
+        }
 
         Feed feed = new Feed("https://api.ardaudiothek.de/programsets/8758656", null);
         feed.setLocalFileUrl(tmp.getAbsolutePath());
@@ -64,6 +68,77 @@ public class AudiothekJsonFeedParserTest {
         assertEquals("https://example.com/audio.mp3", item.getMedia().getDownloadUrl());
 
         // cleanup
+        //noinspection ResultOfMethodCallIgnored
+        tmp.delete();
+    }
+
+    @Test
+    public void parseFeed_nullDownloadUrl_fallsBackToUrl() throws Exception {
+        String json = "{"
+                + "\"data\":{"
+                + "\"programSet\":{"
+                + "\"title\":\"Test\","
+                + "\"items\":{"
+                + "\"nodes\":[{"
+                + "\"title\":\"Episode with null downloadUrl\","
+                + "\"synopsis\":\"Synopsis\","
+                + "\"audios\":[{\"url\":\"https://example.com/audio.mp3\",\"downloadUrl\":null}]"
+                + "}]"
+                + "}"
+                + "}"
+                + "}"
+                + "}";
+
+        File tmp = File.createTempFile("audiothek", ".json");
+        try (OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
+            w.write(json);
+        }
+
+        Feed feed = new Feed("https://api.ardaudiothek.de/programsets/1", null);
+        feed.setLocalFileUrl(tmp.getAbsolutePath());
+
+        FeedHandler handler = new FeedHandler();
+        FeedHandlerResult result = handler.parseFeed(feed);
+
+        FeedItem item = result.feed.getItems().get(0);
+        assertNotNull(item.getMedia());
+        assertEquals("https://example.com/audio.mp3", item.getMedia().getDownloadUrl());
+
+        //noinspection ResultOfMethodCallIgnored
+        tmp.delete();
+    }
+
+    @Test
+    public void parseFeed_bothUrlsNull_mediaIsNull() throws Exception {
+        String json = "{"
+                + "\"data\":{"
+                + "\"programSet\":{"
+                + "\"title\":\"Test\","
+                + "\"items\":{"
+                + "\"nodes\":[{"
+                + "\"title\":\"Episode with no audio\","
+                + "\"synopsis\":\"Synopsis\","
+                + "\"audios\":[{\"url\":null,\"downloadUrl\":null}]"
+                + "}]"
+                + "}"
+                + "}"
+                + "}"
+                + "}";
+
+        File tmp = File.createTempFile("audiothek", ".json");
+        try (OutputStreamWriter w = new OutputStreamWriter(new FileOutputStream(tmp), StandardCharsets.UTF_8)) {
+            w.write(json);
+        }
+
+        Feed feed = new Feed("https://api.ardaudiothek.de/programsets/1", null);
+        feed.setLocalFileUrl(tmp.getAbsolutePath());
+
+        FeedHandler handler = new FeedHandler();
+        FeedHandlerResult result = handler.parseFeed(feed);
+
+        FeedItem item = result.feed.getItems().get(0);
+        assertNull(item.getMedia());
+
         //noinspection ResultOfMethodCallIgnored
         tmp.delete();
     }

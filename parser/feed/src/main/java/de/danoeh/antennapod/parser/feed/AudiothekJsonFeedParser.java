@@ -136,9 +136,9 @@ class AudiothekJsonFeedParser {
             return null;
         }
 
-        String url = audio.optString("downloadUrl", null);
+        String url = audio.isNull("downloadUrl") ? null : audio.optString("downloadUrl", null);
         if (TextUtils.isEmpty(url)) {
-            url = audio.optString("url", null);
+            url = audio.isNull("url") ? null : audio.optString("url", null);
         }
         if (TextUtils.isEmpty(url)) {
             return null;
