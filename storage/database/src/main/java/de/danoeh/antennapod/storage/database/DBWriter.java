@@ -833,6 +833,16 @@ public class DBWriter {
         });
     }
 
+    public static Future<?> setFeedLastRefreshAttempt(final long feedId, final long timestamp) {
+        return runOnDbThread(() -> {
+            PodDBAdapter adapter = PodDBAdapter.getInstance();
+            adapter.open();
+            adapter.setFeedLastRefreshAttempt(feedId, timestamp);
+            adapter.close();
+            EventBus.getDefault().post(new FeedListUpdateEvent(feedId));
+        });
+    }
+
     public static Future<?> setFeedCustomTitle(Feed feed) {
         return runOnDbThread(() -> {
             PodDBAdapter adapter = PodDBAdapter.getInstance();

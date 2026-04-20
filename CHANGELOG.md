@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.8.1] - 2026-04-20
+
+### Fixed
+- Fix infinite sync loop: record `lastRefreshAttempt` on every refresh attempt (not just on success), so feeds whose refresh path never wrote the timestamp (e.g. local feeds, cancelled downloads) no longer trigger a perpetual SyncService ↔ FeedUpdate loop
+
 ## [2.8.0] - 2026-04-20
 
 ### Improved

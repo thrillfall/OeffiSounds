@@ -1,0 +1,1 @@
+- Fix infinite sync loop when gpodder/Nextcloud sync is enabled: feeds whose refresh never recorded a timestamp (local feeds, cancelled downloads) no longer trap sync in a perpetual SyncService ↔ FeedUpdate cycle

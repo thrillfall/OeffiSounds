@@ -28,13 +28,17 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.8.0)
+### Latest Release (2.8.1)
+
+- Fix infinite sync loop: feeds whose refresh never recorded a timestamp (local feeds, cancelled downloads) no longer trap gpodder/Nextcloud sync in a perpetual loop
+
+### Previous Releases
+
+#### 2.8.0
 
 - ARD Sounds: full episode shownotes (previously truncated)
 - ARD Sounds: fix episodes showing "Medienadresse: null"
 - ARD Sounds: fix crash when clicking show teasers on home screen
-
-### Previous Releases
 
 #### 2.7.5
 
