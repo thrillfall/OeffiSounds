@@ -75,10 +75,12 @@ public class DownloadRequestBuilder {
 
     private static final String AUDIOTHEK_HOST = "api.ardaudiothek.de";
     private static final String PROGRAM_SET_PATH_PREFIX = "/programsets/";
-    private static final String PARAM_ORDER = "order";
-    private static final String PARAM_LIMIT = "limit";
-    private static final String ORDER_DESC = "desc";
-    private static final String LIMIT_SIZE = "200";
+    private static final String GRAPHQL_PATH = "/graphql";
+    private static final String GRAPHQL_QUERY = "query($id:ID!){programSet(id:$id)"
+            + "{id title synopsis sharingUrl image{url url1X1}"
+            + " items(orderBy:PUBLISH_DATE_DESC,first:200)"
+            + "{nodes{id title synopsis description publicationStartDateAndTime duration"
+            + " sharingUrl image{url url1X1} audios{url downloadUrl}}}}}";
 
     private static String ensureAudiothekLimit(String url) {
         if (url == null) {
@@ -94,12 +96,15 @@ public class DownloadRequestBuilder {
             if (path == null || !path.startsWith(PROGRAM_SET_PATH_PREFIX)) {
                 return url;
             }
-            String query = uri.getQuery();
-            if (query != null && query.contains(PARAM_ORDER)) {
+            // Already rewritten to GraphQL
+            if (GRAPHQL_PATH.equals(path)) {
                 return url;
             }
-            String appended = PARAM_ORDER + '=' + ORDER_DESC + '&' + PARAM_LIMIT + '=' + LIMIT_SIZE;
-            URI updated = new URI(uri.getScheme(), uri.getAuthority(), uri.getPath(), appended, uri.getFragment());
+            String programSetId = path.substring(PROGRAM_SET_PATH_PREFIX.length()).replaceAll("/.*", "");
+            String variables = "{\"id\":\"" + programSetId + "\"}";
+            String query = "query=" + android.net.Uri.encode(GRAPHQL_QUERY)
+                    + "&variables=" + android.net.Uri.encode(variables);
+            URI updated = new URI(uri.getScheme(), uri.getAuthority(), GRAPHQL_PATH, query, null);
             return updated.toString();
         } catch (URISyntaxException e) {
             return url;

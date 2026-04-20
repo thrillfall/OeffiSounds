@@ -82,7 +82,11 @@ class AudiothekJsonFeedParser {
                 item.setFeed(feed);
 
                 item.setTitle(node.optString("title", null));
-                item.setDescriptionIfLonger(node.optString("synopsis", null));
+                String description = node.isNull("description") ? null : node.optString("description", null);
+                if (TextUtils.isEmpty(description)) {
+                    description = node.isNull("synopsis") ? null : node.optString("synopsis", null);
+                }
+                item.setDescriptionIfLonger(description);
                 item.setLink(node.optString("sharingUrl", null));
 
                 String publicationDate = node.optString("publicationStartDateAndTime", null);
