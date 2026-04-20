@@ -1,0 +1,3 @@
+- ARD Sounds: full episode shownotes (previously truncated to ~180 chars)
+- ARD Sounds: fix episodes showing "Medienadresse: null"
+- ARD Sounds: fix crash when clicking show teasers on home screen

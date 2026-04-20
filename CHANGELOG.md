@@ -2,6 +2,16 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.8.0] - 2026-04-20
+
+### Improved
+- ARD Sounds: full episode shownotes via GraphQL API (previously truncated to ~180 chars)
+
+### Fixed
+- ARD Sounds: episodes with null downloadUrl no longer show "Medienadresse: null"
+- ARD Sounds: clicking show teasers on home screen no longer crashes
+- Fastlane short descriptions shortened to ≤80 chars
+
 ## [2.7.5] - 2026-04-17
 
 ### Fixed
