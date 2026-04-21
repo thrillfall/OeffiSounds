@@ -1,1 +1,1 @@
-Fork von AntennaPod mit Unterstützung für ARD Sounds (ehem. ARD Audiothek)
+Podcast-App mit ARD Sounds, BBC Sounds & öffentlichem Radio
