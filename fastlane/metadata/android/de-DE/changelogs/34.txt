@@ -1,0 +1,1 @@
+• F-Droid-Eintrag: Kurzbeschreibung verweist nicht mehr auf das Upstream-Fork und hebt stattdessen die Features der App hervor

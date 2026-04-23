@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.8.2] - 2026-04-23
+
+### Changed
+- F-Droid listing: drop fork reference from summary tagline so the listing leads with the app's actual features
+
 ## [2.8.1] - 2026-04-20
 
 ### Fixed

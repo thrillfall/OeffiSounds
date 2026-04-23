@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.8.1)
+### Latest Release (2.8.2)
 
-- Fix infinite sync loop: feeds whose refresh never recorded a timestamp (local feeds, cancelled downloads) no longer trap gpodder/Nextcloud sync in a perpetual loop
+- F-Droid listing: summary tagline no longer references the upstream fork; now leads with the app's actual features
 
 ### Previous Releases
+
+#### 2.8.1
+
+- Fix infinite sync loop: feeds whose refresh never recorded a timestamp (local feeds, cancelled downloads) no longer trap gpodder/Nextcloud sync in a perpetual loop
 
 #### 2.8.0
 

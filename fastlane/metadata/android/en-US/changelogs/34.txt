@@ -1,0 +1,1 @@
+• F-Droid listing: summary tagline no longer references the upstream fork; now leads with the app's actual features
