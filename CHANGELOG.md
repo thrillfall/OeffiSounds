@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.8.3] - 2026-07-05
+
+### Fixed
+- Android Auto: restore the `com.google.android.gms.car.application` meta-data that was dropped during the rebrand, so the app is discovered and shown in the car again
+
 ## [2.8.2] - 2026-04-23
 
 ### Changed

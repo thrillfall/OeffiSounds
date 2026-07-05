@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.8.2)
+### Latest Release (2.8.3)
 
-- F-Droid listing: summary tagline no longer references the upstream fork; now leads with the app's actual features
+- Android Auto: restore the media-app descriptor that was dropped during the rebrand, so the app is discovered and shown in the car again
 
 ### Previous Releases
+
+#### 2.8.2
+
+- F-Droid listing: summary tagline no longer references the upstream fork; now leads with the app's actual features
 
 #### 2.8.1
 

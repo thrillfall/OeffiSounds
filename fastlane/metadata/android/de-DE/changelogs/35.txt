@@ -1,0 +1,1 @@
+- Android Auto behoben: Die App wird im Auto wieder angezeigt

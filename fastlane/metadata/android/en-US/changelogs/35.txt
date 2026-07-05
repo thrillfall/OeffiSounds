@@ -1,0 +1,1 @@
+- Fix Android Auto: the app now shows up in the car again
