@@ -37,15 +37,29 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class AudiothekChartsSection extends HomeSection {
     public static final String TAG = "AudiothekChartsSection";
 
-    private static final String AUDIOTHEK_HOME_URL = "https://api.ardaudiothek.de/homescreen";
     private static final int NUM_ITEMS = 8;
     private static final String API_BASE_URL = "https://api.ardaudiothek.de";
+    private static final String GRAPHQL_URL = API_BASE_URL + "/graphql";
+    private static final String PROGRAM_SET_URL_TEMPLATE = API_BASE_URL + "/programsets/%s";
+    private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
+    // The "Podcast Charts" module of the ARD Sounds home board (source: Playout).
+    private static final String CHARTS_WIDGET_TYPE = "rankedSwiperTeaserWidget";
+    private static final String CHARTS_QUERY = "query Charts($source: SourceSystem) {"
+            + " homescreen(source: $source) {"
+            + "  sections {"
+            + "   type title"
+            + "   teasers { title contentId image { url1X1 } }"
+            + "  }"
+            + " }"
+            + "}";
 
     private Disposable disposable;
     private AudiothekHorizontalAdapter listAdapter;
@@ -76,7 +90,8 @@ public class AudiothekChartsSection extends HomeSection {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onFeedListChanged(FeedListUpdateEvent event) {
-        loadItems();
+        // The charts are global ARD data, independent of the user's subscriptions.
+        // Reloading here would only flash the placeholder tiles on every feed update.
     }
 
     @Override
@@ -108,7 +123,16 @@ public class AudiothekChartsSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder().url(AUDIOTHEK_HOME_URL).build();
+                    JSONObject variables = new JSONObject().put("source", "Playout");
+                    JSONObject requestJson = new JSONObject()
+                            .put("query", CHARTS_QUERY)
+                            .put("variables", variables);
+                    RequestBody requestBody = RequestBody.create(requestJson.toString(), JSON_MEDIA_TYPE);
+                    Request request = new Request.Builder()
+                            .url(GRAPHQL_URL)
+                            .addHeader("Accept", "application/json")
+                            .post(requestBody)
+                            .build();
                     try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
                         if (!response.isSuccessful()) {
                             throw new IOException("Unexpected response: " + response);
@@ -136,76 +160,55 @@ public class AudiothekChartsSection extends HomeSection {
 
     private static List<AudiothekItem> parseCharts(String json) throws JSONException {
         JSONObject root = new JSONObject(json);
-        JSONObject embedded = root.optJSONObject("_embedded");
-        if (embedded == null) {
+        JSONObject data = root.optJSONObject("data");
+        JSONObject homescreen = data != null ? data.optJSONObject("homescreen") : null;
+        JSONArray sections = homescreen != null ? homescreen.optJSONArray("sections") : null;
+        if (sections == null) {
             return new ArrayList<>();
         }
-        JSONObject mostPlayed = embedded.optJSONObject("mt:mostPlayed");
-        if (mostPlayed == null) {
+
+        JSONObject chartsSection = null;
+        for (int i = 0; i < sections.length(); i++) {
+            JSONObject section = sections.optJSONObject(i);
+            if (section == null) {
+                continue;
+            }
+            if (CHARTS_WIDGET_TYPE.equals(section.optString("type", null))) {
+                chartsSection = section;
+                break;
+            }
+            // Fallback in case ARD renames the widget type: match the charts module by title.
+            if (chartsSection == null && section.optString("title", "").contains("Charts")) {
+                chartsSection = section;
+            }
+        }
+        JSONArray teasers = chartsSection != null ? chartsSection.optJSONArray("teasers") : null;
+        if (teasers == null) {
             return new ArrayList<>();
         }
-        JSONObject mostPlayedEmbedded = mostPlayed.optJSONObject("_embedded");
-        if (mostPlayedEmbedded == null) {
-            return new ArrayList<>();
-        }
-        Object itemsObj = mostPlayedEmbedded.opt("mt:items");
 
         List<AudiothekItem> items = new ArrayList<>();
-        if (itemsObj instanceof JSONObject) {
-            items.addAll(parseItemsArray(new JSONArray().put(itemsObj)));
-        } else if (itemsObj instanceof JSONArray) {
-            items.addAll(parseItemsArray((JSONArray) itemsObj));
-        }
-        return items;
-    }
-
-    private static List<AudiothekItem> parseItemsArray(JSONArray itemsArray) {
-        List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < itemsArray.length(); i++) {
-            JSONObject item = itemsArray.optJSONObject(i);
-            if (item == null) {
+        for (int i = 0; i < teasers.length(); i++) {
+            JSONObject teaser = teasers.optJSONObject(i);
+            if (teaser == null) {
                 continue;
             }
-
-            JSONObject embeddedProgramSet = null;
-            JSONObject embedded = item.optJSONObject("_embedded");
-            if (embedded != null) {
-                embeddedProgramSet = embedded.optJSONObject("mt:programSet");
-            }
-            if (embeddedProgramSet == null) {
+            String contentId = teaser.optString("contentId", null);
+            if (contentId == null) {
                 continue;
             }
+            String feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, contentId);
 
-            JSONObject links = embeddedProgramSet.optJSONObject("_links");
-            JSONObject self = links != null ? links.optJSONObject("self") : null;
-            String href = self != null ? self.optString("href", null) : null;
-            if (href == null) {
-                continue;
-            }
-            href = href.replace("{?order,offset,limit}", "");
-            String feedUrl = normalizeFeedUrl(href.startsWith("http") ? href : API_BASE_URL + href);
-
-            JSONObject image = links != null ? links.optJSONObject("mt:squareImage") : null;
-            if (image == null) {
-                image = links != null ? links.optJSONObject("mt:image") : null;
-            }
-            String imageUrl = image != null ? image.optString("href", null) : null;
+            JSONObject image = teaser.optJSONObject("image");
+            String imageUrl = image != null ? image.optString("url1X1", null) : null;
             if (imageUrl != null) {
                 imageUrl = imageUrl.replace("{width}", "400");
-                imageUrl = imageUrl.replace("{ratio}", "1x1");
             }
 
-            String title = embeddedProgramSet.optString("title", "");
+            String title = teaser.optString("title", "");
             items.add(new AudiothekItem(title, imageUrl, feedUrl));
         }
         return items;
-    }
-
-    private static String normalizeFeedUrl(String url) {
-        if (url == null) {
-            return null;
-        }
-        return url.replace("://api.ardaudiothek.de./", "://api.ardaudiothek.de/");
     }
 
     private static class AudiothekItem {
