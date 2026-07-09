@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.8.3)
+### Latest Release (2.8.4)
 
-- Android Auto: restore the media-app descriptor that was dropped during the rebrand, so the app is discovered and shown in the car again
+- ARD Sounds: fixed the home-screen Podcast-Charts showing only a single tile with the rest black/flickering — the charts now load from the ARD Sounds home board via GraphQL and no longer re-flash placeholders on every update
 
 ### Previous Releases
+
+#### 2.8.3
+
+- Android Auto: restore the media-app descriptor that was dropped during the rebrand, so the app is discovered and shown in the car again
 
 #### 2.8.2
 

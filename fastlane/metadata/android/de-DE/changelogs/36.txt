@@ -1,0 +1,1 @@
+- ARD-Sounds-Podcast-Charts auf dem Startbildschirm korrigiert: Bisher wurde nur eine einzige Kachel angezeigt, der Rest war schwarz oder flackerte. Die Charts werden jetzt von der ARD-Sounds-Startseite geladen und flackern nicht mehr bei jeder Aktualisierung.

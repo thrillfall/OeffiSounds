@@ -1,0 +1,1 @@
+- Fixed ARD Sounds Podcast-Charts on the home screen, which showed only a single tile with the rest black or flickering. The charts are now loaded from the ARD Sounds home board and no longer flash placeholders on every update.

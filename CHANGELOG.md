@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.8.4] - 2026-07-09
+
+### Fixed
+- ARD Sounds: Podcast-Charts on the home screen showed only a single tile with the rest black/flickering after ARD's legacy homescreen feed collapsed to one item. Fetch the charts from the ARD Sounds home board via GraphQL instead, and stop reloading (and re-flashing placeholders) on every feed update
+
 ## [2.8.3] - 2026-07-05
 
 ### Fixed
