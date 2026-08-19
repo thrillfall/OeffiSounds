@@ -40,6 +40,11 @@
                 android:key="prefPlaybackSpeedLauncher"
                 android:summary="@string/pref_playback_speed_sum"
                 android:title="@string/playback_speed"/>
+        <SwitchPreferenceCompat
+                android:defaultValue="false"
+                android:key="prefShowVolumeSlider"
+                android:summary="@string/pref_volume_slider_sum"
+                android:title="@string/pref_volume_slider_title"/>
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/reassign_hardware_buttons">

@@ -98,6 +98,7 @@ import de.danoeh.antennapod.event.playback.SleepTimerUpdatedEvent;
 import de.danoeh.antennapod.event.settings.SkipIntroEndingChangedEvent;
 import de.danoeh.antennapod.event.settings.SpeedPresetChangedEvent;
 import de.danoeh.antennapod.event.settings.VolumeAdaptionChangedEvent;
+import de.danoeh.antennapod.event.settings.VolumeAttenuationChangedEvent;
 import de.danoeh.antennapod.model.feed.Chapter;
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedItem;
@@ -1683,6 +1684,13 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     public void volumeAdaptionChanged(VolumeAdaptionChangedEvent event) {
         PlaybackVolumeUpdater playbackVolumeUpdater = new PlaybackVolumeUpdater();
         playbackVolumeUpdater.updateVolumeIfNecessary(mediaPlayer, event.getFeedId(), event.getVolumeAdaptionSetting());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
+    public void volumeAttenuationChanged(VolumeAttenuationChangedEvent event) {
+        // The attenuation is applied inside the media player, so just re-apply the current volume
+        mediaPlayer.setVolume(1.0f, 1.0f);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

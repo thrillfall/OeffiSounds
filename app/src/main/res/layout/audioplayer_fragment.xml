@@ -136,7 +136,7 @@
                 android:id="@+id/player_control"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp">
+                android:layout_marginBottom="8dp">
 
                 <de.danoeh.antennapod.ui.screen.playback.PlayButton
                     android:id="@+id/butPlay"
@@ -278,6 +278,48 @@
                     tools:srcCompat="@drawable/ic_skip_48dp" />
 
             </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/volume_control"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="24dp"
+                android:paddingRight="24dp">
+
+                <ImageView
+                    android:id="@+id/imgvVolume"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@string/player_volume"
+                    app:srcCompat="@drawable/ic_volume_adaption" />
+
+                <SeekBar
+                    android:id="@+id/sbVolume"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/player_volume"
+                    tools:progress="100" />
+
+                <TextView
+                    android:id="@+id/txtvVolume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="40dp"
+                    android:textAlignment="textEnd"
+                    android:gravity="end"
+                    android:textColor="?android:attr/textColorSecondary"
+                    android:textSize="@dimen/text_size_micro"
+                    tools:text="100%" />
+
+            </LinearLayout>
 
         </LinearLayout>
 

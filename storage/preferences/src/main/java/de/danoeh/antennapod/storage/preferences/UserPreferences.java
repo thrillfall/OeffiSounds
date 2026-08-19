@@ -104,6 +104,9 @@ public abstract class UserPreferences {
     public static final String PREF_AUTODL_GLOBAL = "prefEnableAutoDl";
     public static final String PREF_AUTODL_QUEUE = "prefEnableAutoDlQueue";
     public static final String PREF_ENABLE_AUTODL_ON_BATTERY = "prefEnableAutoDownloadOnBattery";
+    // Search
+    public static final String PREF_ENABLED_SEARCH_PROVIDERS = "prefEnabledSearchProviders";
+
     private static final String PREF_PROXY_TYPE = "prefProxyType";
     private static final String PREF_PROXY_HOST = "prefProxyHost";
     private static final String PREF_PROXY_PORT = "prefProxyPort";
@@ -125,6 +128,19 @@ public abstract class UserPreferences {
     private static final String PREF_FAST_FORWARD_SECS = "prefFastForwardSecs";
     private static final String PREF_REWIND_SECS = "prefRewindSecs";
     private static final String PREF_QUEUE_LOCKED = "prefQueueLocked";
+    private static final String PREF_VOLUME_ATTENUATION_DB = "prefVolumeAttenuationDb";
+    public static final String PREF_SHOW_VOLUME_SLIDER = "prefShowVolumeSlider";
+
+    /**
+     * Maximum additional volume reduction that is applied inside the player, in decibels.
+     * Allows going below the lowest volume step that Android itself offers.
+     */
+    public static final int VOLUME_ATTENUATION_MAX_DB = 30;
+
+    /**
+     * Size of a single step of the in-app volume slider, in decibels.
+     */
+    public static final int VOLUME_ATTENUATION_STEP_DB = 2;
 
     // Experimental
     public static final int EPISODE_CLEANUP_QUEUE = -1;
@@ -479,7 +495,7 @@ public abstract class UserPreferences {
     }
 
     public static long getUpdateInterval() {
-        return Integer.parseInt(prefs.getString(PREF_UPDATE_INTERVAL_MINUTES, "720"));
+        return Long.parseLong(prefs.getString(PREF_UPDATE_INTERVAL_MINUTES, "720"));
     }
 
     public static void setUpdateInterval(long interval) {
@@ -632,6 +648,44 @@ public abstract class UserPreferences {
 
     public static void setRewindSecs(int secs) {
         prefs.edit().putInt(PREF_REWIND_SECS, secs).apply();
+    }
+
+    /**
+     * @return True if the volume slider is shown in the player and its attenuation is applied.
+     */
+    public static boolean isVolumeSliderEnabled() {
+        return prefs.getBoolean(PREF_SHOW_VOLUME_SLIDER, false);
+    }
+
+    /**
+     * @return Additional volume reduction applied inside the player, in decibels (0 to
+     *         {@link #VOLUME_ATTENUATION_MAX_DB}). 0 means that the volume is not reduced.
+     */
+    public static int getVolumeAttenuationDb() {
+        int attenuation = prefs.getInt(PREF_VOLUME_ATTENUATION_DB, 0);
+        return Math.min(VOLUME_ATTENUATION_MAX_DB, Math.max(0, attenuation));
+    }
+
+    public static void setVolumeAttenuationDb(int attenuationDb) {
+        prefs.edit().putInt(PREF_VOLUME_ATTENUATION_DB,
+                Math.min(VOLUME_ATTENUATION_MAX_DB, Math.max(0, attenuationDb))).apply();
+    }
+
+    /**
+     * @return Factor the playback volume is multiplied with, according to {@link #getVolumeAttenuationDb()}.
+     */
+    public static float getVolumeAttenuationFactor() {
+        if (!isVolumeSliderEnabled()) {
+            return 1.0f;
+        }
+        return attenuationDbToFactor(getVolumeAttenuationDb());
+    }
+
+    public static float attenuationDbToFactor(int attenuationDb) {
+        if (attenuationDb <= 0) {
+            return 1.0f;
+        }
+        return (float) Math.pow(10, -attenuationDb / 20.0);
     }
 
     public static void setPlaybackSpeed(float speed) {
@@ -793,7 +847,7 @@ public abstract class UserPreferences {
     }
 
     public static boolean isStreamOverDownload() {
-        return prefs.getBoolean(PREF_STREAM_OVER_DOWNLOAD, false);
+        return prefs.getBoolean(PREF_STREAM_OVER_DOWNLOAD, true);
     }
 
     public static void setStreamOverDownload(boolean stream) {
@@ -912,5 +966,15 @@ public abstract class UserPreferences {
 
     public static void setPrefFilterAllEpisodes(String filter) {
         prefs.edit().putString(PREF_FILTER_ALL_EPISODES, filter).apply();
+    }
+
+    public static Set<String> getEnabledSearchProviders() {
+        Set<String> defaultValue = new HashSet<>(Arrays.asList(
+                "AudiothekPodcastSearcher"));
+        return prefs.getStringSet(PREF_ENABLED_SEARCH_PROVIDERS, defaultValue);
+    }
+
+    public static void setEnabledSearchProviders(Set<String> providers) {
+        prefs.edit().putStringSet(PREF_ENABLED_SEARCH_PROVIDERS, providers).apply();
     }
 }

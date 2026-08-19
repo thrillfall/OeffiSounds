@@ -30,6 +30,7 @@ import de.danoeh.antennapod.event.FeedItemEvent;
 import de.danoeh.antennapod.event.PlayerErrorEvent;
 import de.danoeh.antennapod.event.StreamingConfirmationEvent;
 import de.danoeh.antennapod.event.settings.VolumeAdaptionChangedEvent;
+import de.danoeh.antennapod.event.settings.VolumeAttenuationChangedEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
 import de.danoeh.antennapod.event.playback.BufferUpdateEvent;
 import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
@@ -836,6 +837,12 @@ public class Media3PlaybackService extends MediaLibraryService {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
+    public void volumeAttenuationChanged(VolumeAttenuationChangedEvent event) {
+        applyVolumeAdaption(1.0f);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    @SuppressWarnings("unused")
     public void feedItemsUpdated(FeedItemEvent event) {
         if (currentPlayable == null || !currentPlayable.localFileAvailable()) {
             return;
@@ -873,7 +880,8 @@ public class Media3PlaybackService extends MediaLibraryService {
     }
 
     private void applyVolumeAdaption(float baseVolume) {
-        float v = baseVolume * volumeAdaptionFactor;
+        float v = baseVolume * volumeAdaptionFactor * UserPreferences.getVolumeAttenuationFactor();
+        Log.d(TAG, "Media player volume was set to " + v);
         if (v > 1) {
             player.setVolume(1.0f);
             try {

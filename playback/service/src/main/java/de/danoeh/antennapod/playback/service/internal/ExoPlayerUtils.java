@@ -12,7 +12,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.media3.database.StandaloneDatabaseProvider;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.DefaultHttpDataSource;
+import androidx.media3.datasource.okhttp.OkHttpDataSource;
 import androidx.media3.datasource.HttpDataSource;
 import androidx.media3.datasource.ResolvingDataSource;
 import androidx.media3.datasource.cache.CacheDataSource;
@@ -28,11 +28,14 @@ import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.upstream.LoadErrorHandlingPolicy;
 import androidx.media3.extractor.DefaultExtractorsFactory;
 import androidx.media3.extractor.mp3.Mp3Extractor;
+import de.danoeh.antennapod.net.common.AntennapodHttpClient;
 import de.danoeh.antennapod.net.common.NetworkUtils;
 import de.danoeh.antennapod.net.common.UserAgentInterceptor;
 import de.danoeh.antennapod.playback.base.MediaItemAdapter;
 import de.danoeh.antennapod.playback.service.R;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
+
+import okhttp3.OkHttpClient;
 
 import java.io.File;
 import java.util.Collections;
@@ -42,6 +45,24 @@ import java.util.concurrent.TimeUnit;
 @OptIn(markerClass = UnstableApi.class)
 public class ExoPlayerUtils {
     private static volatile SimpleCache simpleCache;
+    private static volatile OkHttpClient playbackHttpClient;
+
+    /**
+     * Playback uses the AntennaPod http client, so that streaming behaves like the rest of the app
+     * (user agent, redirects, proxy and TLS settings). Caching is left to ExoPlayer's SimpleCache.
+     */
+    private static OkHttpClient getPlaybackClient() {
+        if (playbackHttpClient == null) {
+            synchronized (ExoPlayerUtils.class) {
+                if (playbackHttpClient == null) {
+                    playbackHttpClient = AntennapodHttpClient.newBuilder()
+                            .cache(null)
+                            .build();
+                }
+            }
+        }
+        return playbackHttpClient;
+    }
 
     @OptIn(markerClass = UnstableApi.class)
     public static ExoPlayer buildPlayer(Context context) {
@@ -148,11 +169,9 @@ public class ExoPlayerUtils {
         }
 
         private DataSource.Factory buildDataSourceFactory(MediaItem mediaItem) {
-            DefaultHttpDataSource.Factory httpDataSourceFactory =
-                    new DefaultHttpDataSource.Factory();
+            OkHttpDataSource.Factory httpDataSourceFactory =
+                    new OkHttpDataSource.Factory(getPlaybackClient());
             httpDataSourceFactory.setUserAgent(UserAgentInterceptor.USER_AGENT);
-            httpDataSourceFactory.setAllowCrossProtocolRedirects(true);
-            httpDataSourceFactory.setKeepPostFor302Redirects(true);
             String authHeader = mediaItem.requestMetadata.extras != null
                     ? mediaItem.requestMetadata.extras.getString(
                             MediaItemAdapter.KEY_AUTHORIZATION_HEADER)
