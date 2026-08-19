@@ -12,6 +12,24 @@ import java.util.List;
 
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.ui.screen.home.HomeFragment;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekChartsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcAudioRecommendedTodaySection;
+import de.danoeh.antennapod.ui.screen.home.sections.BbcSoundsFeaturedSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekFeaturedSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHeuteWichtigSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
+import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.EpisodesSurpriseSection;
+import de.danoeh.antennapod.ui.screen.home.sections.InboxSection;
+import de.danoeh.antennapod.ui.screen.home.sections.QueueSection;
+import de.danoeh.antennapod.ui.screen.home.sections.SrfPlayPopularSection;
+import de.danoeh.antennapod.ui.screen.home.sections.OrfSoundPodcastsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.DlfPodcastsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.RtvePodcastsSection;
+import de.danoeh.antennapod.ui.screen.home.sections.SubscriptionsSection;
 
 public class HomePreferences {
     private static final String PREF_HIDDEN_SECTIONS = "PrefHomeSectionsString";
@@ -42,11 +60,43 @@ public class HomePreferences {
     }
 
     public static List<String> getHiddenSectionTags(Context context) {
-        return getListPreference(context, PREF_HIDDEN_SECTIONS);
+        List<String> hiddenSectionTags = getListPreference(context, PREF_HIDDEN_SECTIONS);
+        if (hiddenSectionTags.isEmpty()) {
+            hiddenSectionTags.add(AudiothekStageSection.TAG);
+            hiddenSectionTags.add(AudiothekLiveSection.TAG);
+            hiddenSectionTags.add(BbcSoundsFeaturedSection.TAG);
+            hiddenSectionTags.add(BbcAudioRecommendedTodaySection.TAG);
+            hiddenSectionTags.add(SrfPlayPopularSection.TAG);
+            hiddenSectionTags.add(OrfSoundPodcastsSection.TAG);
+            hiddenSectionTags.add(DlfPodcastsSection.TAG);
+            hiddenSectionTags.add(RtvePodcastsSection.TAG);
+        }
+        return hiddenSectionTags;
     }
 
     public static List<String> getSortedSectionTags(Context context) {
-        List<String> sectionTagOrder = getListPreference(context, PREF_SECTION_ORDER);
+        List<String> storedSectionTagOrder = getListPreference(context, PREF_SECTION_ORDER);
+        final List<String> sectionTagOrder = storedSectionTagOrder.isEmpty()
+                ? new ArrayList<>(Arrays.asList(
+                    AudiothekHotSection.TAG,
+                    AudiothekChartsSection.TAG,
+                    AudiothekHeuteWichtigSection.TAG,
+                    AudiothekFeaturedSection.TAG,
+                    AudiothekSection.TAG,
+                    QueueSection.TAG,
+                    InboxSection.TAG,
+                    EpisodesSurpriseSection.TAG,
+                    SubscriptionsSection.TAG,
+                    DownloadsSection.TAG,
+                    AudiothekLiveSection.TAG,
+                    AudiothekStageSection.TAG,
+                    BbcSoundsFeaturedSection.TAG,
+                    BbcAudioRecommendedTodaySection.TAG,
+                    SrfPlayPopularSection.TAG,
+                    OrfSoundPodcastsSection.TAG,
+                    DlfPodcastsSection.TAG,
+                    RtvePodcastsSection.TAG))
+                : storedSectionTagOrder;
         List<String> hiddenSectionTags = getHiddenSectionTags(context);
         String[] sectionTags = context.getResources().getStringArray(R.array.home_section_tags);
         Arrays.sort(sectionTags, (String a, String b) -> Integer.signum(

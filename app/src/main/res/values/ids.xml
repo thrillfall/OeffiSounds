@@ -25,6 +25,19 @@
     <item name="home_section_surprise" type="id"/>
     <item name="home_section_subscriptions" type="id"/>
     <item name="home_section_downloads" type="id"/>
+    <item name="home_section_audiothek_featured" type="id"/>
+    <item name="home_section_audiothek_charts" type="id"/>
+    <item name="home_section_audiothek_hot" type="id"/>
+    <item name="home_section_audiothek_live" type="id"/>
+    <item name="home_section_audiothek_stage" type="id"/>
+    <item name="home_section_audiothek" type="id"/>
+    <item name="home_section_audiothek_heute_wichtig" type="id"/>
+    <item name="home_section_bbc_featured" type="id"/>
+    <item name="home_section_bbc_recommended" type="id"/>
+    <item name="home_section_srf_popular" type="id"/>
+    <item name="home_section_orf_podcasts" type="id"/>
+    <item name="home_section_dlf_podcasts" type="id"/>
+    <item name="home_section_rtve_podcasts" type="id"/>
 
     <!-- Bottom navigation -->
     <item name="bottom_navigation_home" type="id"/>
