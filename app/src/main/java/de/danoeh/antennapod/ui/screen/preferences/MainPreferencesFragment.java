@@ -1,11 +1,8 @@
 package de.danoeh.antennapod.ui.screen.preferences;
 
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.os.UserManager;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.preference.Preference;
 
 import com.bytehamster.lib.preferencesearch.SearchConfiguration;
 import com.bytehamster.lib.preferencesearch.SearchPreference;

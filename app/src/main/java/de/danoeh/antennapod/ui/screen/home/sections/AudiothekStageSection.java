@@ -107,15 +107,15 @@ public class AudiothekStageSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder().url(AUDIOTHEK_HOME_URL).build();
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String body = response.body() != null ? response.body().string() : "";
-                        return parseStage(body);
-                    }
-                })
+            Request request = new Request.Builder().url(AUDIOTHEK_HOME_URL).build();
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                return parseStage(body);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {

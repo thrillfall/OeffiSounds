@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BBCSoundsPodcastSearcher implements PodcastSearcher {
+public class BbcSoundsPodcastSearcher implements PodcastSearcher {
     private static final String API_URL = "https://rms.api.bbc.co.uk/v2/experience/inline/search?q=%s&limit=24";
     private static final String FEED_URL_TEMPLATE = "https://podcasts.files.bbci.co.uk/%s.rss";
 

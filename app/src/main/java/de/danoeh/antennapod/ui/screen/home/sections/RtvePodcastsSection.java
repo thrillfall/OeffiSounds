@@ -110,15 +110,15 @@ public class RtvePodcastsSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder().url(API_URL).build();
-                    try (Response response = AntennapodHttpClient.getHttpClient()
+            Request request = new Request.Builder().url(API_URL).build();
+            try (Response response = AntennapodHttpClient.getHttpClient()
                             .newCall(request).execute()) {
-                        if (!response.isSuccessful() || response.body() == null) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        return parsePodcasts(response.body().string());
-                    }
-                })
+                if (!response.isSuccessful() || response.body() == null) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                return parsePodcasts(response.body().string());
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {

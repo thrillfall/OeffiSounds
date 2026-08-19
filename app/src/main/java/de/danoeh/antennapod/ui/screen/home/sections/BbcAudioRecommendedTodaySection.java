@@ -53,6 +53,7 @@ public class BbcAudioRecommendedTodaySection extends HomeSection {
 
     private Disposable disposable;
     private BbcAudioHorizontalAdapter listAdapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -111,15 +112,15 @@ public class BbcAudioRecommendedTodaySection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder().url(BBC_AUDIO_RECOMMENDED_URL).build();
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String body = response.body() != null ? response.body().string() : "";
-                        return parseRecommended(body);
-                    }
-                })
+            Request request = new Request.Builder().url(BBC_AUDIO_RECOMMENDED_URL).build();
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                return parseRecommended(body);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {

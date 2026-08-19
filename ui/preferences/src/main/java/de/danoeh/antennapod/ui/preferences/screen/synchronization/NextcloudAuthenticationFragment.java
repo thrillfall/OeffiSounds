@@ -27,8 +27,7 @@ import de.danoeh.antennapod.ui.preferences.databinding.NextcloudAuthDialogBindin
 /**
  * Guides the user through the authentication process.
  */
-public class NextcloudAuthenticationFragment extends DialogFragment
-        {
+public class NextcloudAuthenticationFragment extends DialogFragment {
     public static final String TAG = "NextcloudAuthenticationFragment";
     private static final int COLOR_SECONDARY_TEXT = 0x88888888;
     private NextcloudAuthDialogBinding viewBinding;

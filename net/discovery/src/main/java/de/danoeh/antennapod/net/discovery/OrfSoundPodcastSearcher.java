@@ -18,7 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-public class ORFSoundPodcastSearcher implements PodcastSearcher {
+public class OrfSoundPodcastSearcher implements PodcastSearcher {
     private static final String API_URL = "https://audioapi.orf.at/radiothek/api/2.0/podcasts";
 
     @Override

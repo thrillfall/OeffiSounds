@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DLFPodcastSearcher implements PodcastSearcher {
+public class DlfPodcastSearcher implements PodcastSearcher {
     private static final String DLF_PODCASTS_PAGE = "https://www.deutschlandfunk.de/podcasts";
     private static final String API_URL = "https://dlf-audiothek-appapi.deutschlandradio.de/broadcasts";
     private static final String KULTUR_DOMAIN = "www.deutschlandfunkkultur.de";
@@ -84,6 +84,7 @@ public class DLFPodcastSearcher implements PodcastSearcher {
                                 podcasts.add(PodcastSearchResult.fromExternalSource(
                                         title, imageUrl, feedUrl, "Deutschlandfunk"));
                             } catch (JSONException ignored) {
+                                // Skip entries that do not have the expected shape
                             }
                         }
                     }
@@ -150,6 +151,7 @@ public class DLFPodcastSearcher implements PodcastSearcher {
                 }
             }
         } catch (IOException | JSONException ignored) {
+            // Feed url lookup is optional, the search result stays usable without it
         }
         return map;
     }

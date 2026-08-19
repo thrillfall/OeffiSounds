@@ -112,15 +112,15 @@ public class SrfPlayPopularSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder().url(SRF_POPULAR_PODCASTS_URL).build();
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String body = response.body() != null ? response.body().string() : "";
-                        return parsePopularShows(body);
-                    }
-                })
+            Request request = new Request.Builder().url(SRF_POPULAR_PODCASTS_URL).build();
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                return parsePopularShows(body);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {

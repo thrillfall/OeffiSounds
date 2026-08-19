@@ -116,18 +116,18 @@ public class AudiothekHotSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder()
-                            .url(PLAYOUT_API_URL)
-                            .build();
+            Request request = new Request.Builder()
+                    .url(PLAYOUT_API_URL)
+                    .build();
 
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String responseBody = response.body() != null ? response.body().string() : "";
-                        return parseStage(responseBody);
-                    }
-                })
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String responseBody = response.body() != null ? response.body().string() : "";
+                return parseStage(responseBody);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {
@@ -182,7 +182,7 @@ public class AudiothekHotSection extends HomeSection {
                 continue;
             }
 
-            String title = teaser.optString("title", "");
+            final String title = teaser.optString("title", "");
             String audioUrl = teaser.optString("assetDownloadURL", null);
             if (audioUrl != null && audioUrl.isEmpty()) {
                 audioUrl = null;
@@ -298,7 +298,8 @@ public class AudiothekHotSection extends HomeSection {
                 if (item.audioUrl != null && !item.audioUrl.isEmpty()) {
                     openEpisode(activity, item);
                 } else if (item.programSetFeedUrl != null && !item.programSetFeedUrl.isEmpty()) {
-                    activity.startActivity(new OnlineFeedviewActivityStarter(activity, item.programSetFeedUrl).getIntent());
+                    activity.startActivity(new OnlineFeedviewActivityStarter(
+                            activity, item.programSetFeedUrl).getIntent());
                 }
             });
 
@@ -334,45 +335,46 @@ public class AudiothekHotSection extends HomeSection {
 
         private static void openEpisode(MainActivity activity, AudiothekItem item) {
             Observable.fromCallable(() -> {
-                        Feed feed = new Feed("audiothek:hot:" + item.programSetId, null, "ARD Audiothek");
-                        feed.setType(Feed.TYPE_RSS2);
-                        feed.setTitle("ARD Audiothek");
-                        feed.setState(Feed.STATE_NOT_SUBSCRIBED);
-                        feed.setImageUrl(item.imageUrl);
+                Feed feed = new Feed("audiothek:hot:" + item.programSetId, null, "ARD Audiothek");
+                feed.setType(Feed.TYPE_RSS2);
+                feed.setTitle("ARD Audiothek");
+                feed.setState(Feed.STATE_NOT_SUBSCRIBED);
+                feed.setImageUrl(item.imageUrl);
 
-                        FeedItem feedItem = new FeedItem();
-                        feedItem.setFeed(feed);
-                        feedItem.setTitle(item.title);
-                        feedItem.setDescriptionIfLonger(item.description);
-                        feedItem.setImageUrl(item.imageUrl);
-                        if (item.itemId != null && !item.itemId.isEmpty()) {
-                            feedItem.setItemIdentifier(item.itemId);
-                        }
-                        if (item.publishDate != null && !item.publishDate.isEmpty()) {
-                            try {
-                                // Very rough parsing; ok if it fails
-                                feedItem.setPubDate(new Date(Date.parse(item.publishDate)));
-                            } catch (Exception ignored) {
-                            }
-                        }
+                FeedItem feedItem = new FeedItem();
+                feedItem.setFeed(feed);
+                feedItem.setTitle(item.title);
+                feedItem.setDescriptionIfLonger(item.description);
+                feedItem.setImageUrl(item.imageUrl);
+                if (item.itemId != null && !item.itemId.isEmpty()) {
+                    feedItem.setItemIdentifier(item.itemId);
+                }
+                if (item.publishDate != null && !item.publishDate.isEmpty()) {
+                    try {
+                        // Very rough parsing; ok if it fails
+                        feedItem.setPubDate(new Date(Date.parse(item.publishDate)));
+                    } catch (Exception ignored) {
+                        // Item just keeps no publication date
+                    }
+                }
 
-                        FeedMedia media = new FeedMedia(feedItem, item.audioUrl, 0, "audio/*");
-                        if (item.durationSeconds > 0) {
-                            long durationMs = item.durationSeconds * 1000L;
-                            if (durationMs <= Integer.MAX_VALUE) {
-                                media.setDuration((int) durationMs);
-                            }
-                        }
-                        feedItem.setMedia(media);
+                FeedMedia media = new FeedMedia(feedItem, item.audioUrl, 0, "audio/*");
+                if (item.durationSeconds > 0) {
+                    long durationMs = item.durationSeconds * 1000L;
+                    if (durationMs <= Integer.MAX_VALUE) {
+                        media.setDuration((int) durationMs);
+                    }
+                }
+                feedItem.setMedia(media);
 
-                        feed.setItems(Collections.singletonList(feedItem));
+                feed.setItems(Collections.singletonList(feedItem));
 
-                        Feed storedFeed = FeedDatabaseWriter.updateFeed(activity, feed, false);
-                        if (storedFeed == null || storedFeed.getItems() == null || storedFeed.getItems().isEmpty()) {
-                            return null;
-                        }
-                        return storedFeed.getItems().get(0);
-                    })
+                Feed storedFeed = FeedDatabaseWriter.updateFeed(activity, feed, false);
+                if (storedFeed == null || storedFeed.getItems() == null || storedFeed.getItems().isEmpty()) {
+                    return null;
+                }
+                return storedFeed.getItems().get(0);
+            })
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(createdItem -> {

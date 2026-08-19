@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class RTVEPodcastSearcher implements PodcastSearcher {
+public class RtvePodcastSearcher implements PodcastSearcher {
     private static final String API_URL =
             "https://api.rtve.es/api/agr-programas/18690/programas.json?size=100";
     private static final String FEED_URL_TEMPLATE =

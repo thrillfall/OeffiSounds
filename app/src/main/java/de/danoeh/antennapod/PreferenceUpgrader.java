@@ -6,6 +6,11 @@ import android.content.SharedPreferences;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.system.CrashReportWriter;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class PreferenceUpgrader {
     private static final String PREF_CONFIGURED_VERSION = "version_code";
     private static final String PREF_NAME = "app_version";
@@ -32,6 +37,31 @@ public class PreferenceUpgrader {
             // Previous versions had a bug where upstream migrations reset streaming to false
             // on every update. Fix by enabling streaming for all affected users.
             UserPreferences.setStreamOverDownload(true);
+        }
+        if (oldVersion < 38) {
+            renameSearchProviders();
+        }
+    }
+
+    /**
+     * Search providers are stored by class name. Some of those classes were renamed
+     * (BBCSounds... -> BbcSounds...), so the stored names have to follow.
+     */
+    private static void renameSearchProviders() {
+        Map<String, String> renamed = new HashMap<>();
+        renamed.put("BBCSoundsPodcastSearcher", "BbcSoundsPodcastSearcher");
+        renamed.put("SRFPlayPodcastSearcher", "SrfPlayPodcastSearcher");
+        renamed.put("ORFSoundPodcastSearcher", "OrfSoundPodcastSearcher");
+        renamed.put("DLFPodcastSearcher", "DlfPodcastSearcher");
+        renamed.put("RTVEPodcastSearcher", "RtvePodcastSearcher");
+
+        Set<String> enabled = new HashSet<>(UserPreferences.getEnabledSearchProviders());
+        Set<String> updated = new HashSet<>();
+        for (String provider : enabled) {
+            updated.add(renamed.containsKey(provider) ? renamed.get(provider) : provider);
+        }
+        if (!updated.equals(enabled)) {
+            UserPreferences.setEnabledSearchProviders(updated);
         }
     }
 }

@@ -18,7 +18,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SRFPlayPodcastSearcher implements PodcastSearcher {
+public class SrfPlayPodcastSearcher implements PodcastSearcher {
     private static final String API_URL =
             "https://il.srgssr.ch/integrationlayer/2.0/srf/searchResultShowList?q=%s&pageSize=20&vector=APPPLAY";
     private static final String FEED_URL_TEMPLATE = "https://www.srf.ch/feed/podcast/sd/%s.xml";

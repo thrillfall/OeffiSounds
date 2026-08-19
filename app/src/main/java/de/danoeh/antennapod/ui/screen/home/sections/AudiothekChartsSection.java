@@ -123,24 +123,24 @@ public class AudiothekChartsSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    JSONObject variables = new JSONObject().put("source", "Playout");
-                    JSONObject requestJson = new JSONObject()
+            JSONObject variables = new JSONObject().put("source", "Playout");
+            JSONObject requestJson = new JSONObject()
                             .put("query", CHARTS_QUERY)
                             .put("variables", variables);
-                    RequestBody requestBody = RequestBody.create(requestJson.toString(), JSON_MEDIA_TYPE);
-                    Request request = new Request.Builder()
+            RequestBody requestBody = RequestBody.create(requestJson.toString(), JSON_MEDIA_TYPE);
+            Request request = new Request.Builder()
                             .url(GRAPHQL_URL)
                             .addHeader("Accept", "application/json")
                             .post(requestBody)
                             .build();
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String body = response.body() != null ? response.body().string() : "";
-                        return parseCharts(body);
-                    }
-                })
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                return parseCharts(body);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {
