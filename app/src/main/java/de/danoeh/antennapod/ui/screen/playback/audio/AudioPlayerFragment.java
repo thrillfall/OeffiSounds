@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.snackbar.Snackbar;
 
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.playback.service.PlaybackController;
@@ -57,6 +59,7 @@ import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
 import de.danoeh.antennapod.event.playback.PlaybackServiceEvent;
 import de.danoeh.antennapod.event.playback.SleepTimerUpdatedEvent;
 import de.danoeh.antennapod.event.playback.SpeedChangedEvent;
+import de.danoeh.antennapod.event.settings.VolumeAttenuationChangedEvent;
 import de.danoeh.antennapod.ui.episodeslist.FeedItemMenuHandler;
 import de.danoeh.antennapod.model.feed.Chapter;
 import de.danoeh.antennapod.model.feed.FeedItem;
@@ -95,6 +98,10 @@ public class AudioPlayerFragment extends Fragment implements
     private ProgressBar progressIndicator;
     private CardView cardViewSeek;
     private TextView txtvSeek;
+    private View volumeControl;
+    private SeekBar sbVolume;
+    private TextView txtvVolume;
+    private ImageView imgvVolume;
 
     private PlaybackController controller;
     private Disposable disposable;
@@ -135,9 +142,14 @@ public class AudioPlayerFragment extends Fragment implements
         progressIndicator = root.findViewById(R.id.progLoading);
         cardViewSeek = root.findViewById(R.id.cardViewSeek);
         txtvSeek = root.findViewById(R.id.txtvSeek);
+        volumeControl = root.findViewById(R.id.volume_control);
+        sbVolume = root.findViewById(R.id.sbVolume);
+        txtvVolume = root.findViewById(R.id.txtvVolume);
+        imgvVolume = root.findViewById(R.id.imgvVolume);
 
         setupLengthTextView();
         setupControlButtons();
+        setupVolumeControl();
         butPlaybackSpeed.setOnClickListener(v -> new VariableSpeedDialog().show(getChildFragmentManager(), null));
         sbPosition.setOnSeekBarChangeListener(this);
 
@@ -210,6 +222,59 @@ public class AudioPlayerFragment extends Fragment implements
         });
         butSkip.setOnClickListener(v -> getActivity().sendBroadcast(
                 MediaButtonStarter.createIntent(getContext(), KeyEvent.KEYCODE_MEDIA_NEXT)));
+    }
+
+    /**
+     * Sets up the in-app volume slider. It attenuates the volume inside the player, which allows
+     * playing back more quietly than the lowest volume step of the system allows.
+     */
+    private void setupVolumeControl() {
+        updateVolumeControlVisibility();
+        sbVolume.setMax(UserPreferences.VOLUME_ATTENUATION_MAX_DB / UserPreferences.VOLUME_ATTENUATION_STEP_DB);
+        sbVolume.setProgress(attenuationToProgress(UserPreferences.getVolumeAttenuationDb()));
+        updateVolumeLabel(UserPreferences.getVolumeAttenuationDb());
+        sbVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                int attenuationDb = progressToAttenuation(progress);
+                updateVolumeLabel(attenuationDb);
+                if (fromUser) {
+                    UserPreferences.setVolumeAttenuationDb(attenuationDb);
+                    EventBus.getDefault().post(new VolumeAttenuationChangedEvent());
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        imgvVolume.setOnClickListener(v -> sbVolume.setProgress(sbVolume.getMax()));
+        imgvVolume.setOnLongClickListener(v -> {
+            Snackbar.make(v, R.string.player_volume_summary, Snackbar.LENGTH_LONG).show();
+            return true;
+        });
+    }
+
+    private void updateVolumeControlVisibility() {
+        volumeControl.setVisibility(UserPreferences.isVolumeSliderEnabled() ? View.VISIBLE : View.GONE);
+    }
+
+    private int attenuationToProgress(int attenuationDb) {
+        return sbVolume.getMax() - attenuationDb / UserPreferences.VOLUME_ATTENUATION_STEP_DB;
+    }
+
+    private int progressToAttenuation(int progress) {
+        return (sbVolume.getMax() - progress) * UserPreferences.VOLUME_ATTENUATION_STEP_DB;
+    }
+
+    private void updateVolumeLabel(int attenuationDb) {
+        NumberFormat format = NumberFormat.getPercentInstance();
+        format.setMaximumFractionDigits(0);
+        txtvVolume.setText(format.format(UserPreferences.attenuationDbToFactor(attenuationDb)));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -324,6 +389,7 @@ public class AudioPlayerFragment extends Fragment implements
         EventBus.getDefault().register(this);
         txtvRev.setText(NumberFormat.getInstance().format(UserPreferences.getRewindSecs()));
         txtvFF.setText(NumberFormat.getInstance().format(UserPreferences.getFastForwardSecs()));
+        updateVolumeControlVisibility();
     }
 
     @Override

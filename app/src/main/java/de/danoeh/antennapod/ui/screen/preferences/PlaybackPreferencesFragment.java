@@ -4,15 +4,20 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import de.danoeh.antennapod.R;
+import de.danoeh.antennapod.event.settings.VolumeAttenuationChangedEvent;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import de.danoeh.antennapod.ui.preferences.screen.AnimatedPreferenceFragment;
 import de.danoeh.antennapod.ui.screen.feed.preferences.SkipPreferenceDialog;
 import de.danoeh.antennapod.ui.screen.playback.VariableSpeedDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
@@ -48,6 +53,12 @@ public class PlaybackPreferencesFragment extends AnimatedPreferenceFragment {
         });
         findPreference(PREF_PLAYBACK_FAST_FORWARD_DELTA_LAUNCHER).setOnPreferenceClickListener(preference -> {
             SkipPreferenceDialog.showSkipPreference(activity, SkipPreferenceDialog.SkipDirection.SKIP_FORWARD, null);
+            return true;
+        });
+        findPreference(UserPreferences.PREF_SHOW_VOLUME_SLIDER).setOnPreferenceChangeListener((preference, newValue) -> {
+            // Posted, so that the new value is already stored when the player applies it
+            new Handler(Looper.getMainLooper())
+                    .post(() -> EventBus.getDefault().post(new VolumeAttenuationChangedEvent()));
             return true;
         });
         if (Build.VERSION.SDK_INT >= 31) {

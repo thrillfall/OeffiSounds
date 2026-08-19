@@ -944,6 +944,10 @@
     <!-- Audio controls -->
     <string name="audio_controls">Audio controls</string>
     <string name="playback_speed">Playback speed</string>
+    <string name="player_volume">Volume</string>
+    <string name="player_volume_summary">Lowers the volume below the smallest step Android offers</string>
+    <string name="pref_volume_slider_title">Volume slider in player</string>
+    <string name="pref_volume_slider_sum">Show a slider in the player that can lower the volume below the smallest step Android offers</string>
     <string name="player_switch_to_audio_only">Switch to audio only</string>
 
     <!-- proxy settings -->

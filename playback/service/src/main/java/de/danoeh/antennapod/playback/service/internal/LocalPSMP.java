@@ -505,6 +505,9 @@ public class LocalPSMP extends PlaybackServiceMediaPlayer {
             volumeLeft *= adaptionFactor;
             volumeRight *= adaptionFactor;
         }
+        float attenuationFactor = UserPreferences.getVolumeAttenuationFactor();
+        volumeLeft *= attenuationFactor;
+        volumeRight *= attenuationFactor;
         mediaPlayer.setVolume(volumeLeft, volumeRight);
         Log.d(TAG, "Media player volume was set to " + volumeLeft + " " + volumeRight);
     }

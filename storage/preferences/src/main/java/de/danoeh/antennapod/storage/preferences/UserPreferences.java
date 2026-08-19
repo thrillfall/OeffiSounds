@@ -125,6 +125,19 @@ public abstract class UserPreferences {
     private static final String PREF_FAST_FORWARD_SECS = "prefFastForwardSecs";
     private static final String PREF_REWIND_SECS = "prefRewindSecs";
     private static final String PREF_QUEUE_LOCKED = "prefQueueLocked";
+    private static final String PREF_VOLUME_ATTENUATION_DB = "prefVolumeAttenuationDb";
+    public static final String PREF_SHOW_VOLUME_SLIDER = "prefShowVolumeSlider";
+
+    /**
+     * Maximum additional volume reduction that is applied inside the player, in decibels.
+     * Allows going below the lowest volume step that Android itself offers.
+     */
+    public static final int VOLUME_ATTENUATION_MAX_DB = 30;
+
+    /**
+     * Size of a single step of the in-app volume slider, in decibels.
+     */
+    public static final int VOLUME_ATTENUATION_STEP_DB = 2;
 
     // Experimental
     public static final int EPISODE_CLEANUP_QUEUE = -1;
@@ -611,6 +624,44 @@ public abstract class UserPreferences {
 
     public static void setRewindSecs(int secs) {
         prefs.edit().putInt(PREF_REWIND_SECS, secs).apply();
+    }
+
+    /**
+     * @return True if the volume slider is shown in the player and its attenuation is applied.
+     */
+    public static boolean isVolumeSliderEnabled() {
+        return prefs.getBoolean(PREF_SHOW_VOLUME_SLIDER, false);
+    }
+
+    /**
+     * @return Additional volume reduction applied inside the player, in decibels (0 to
+     *         {@link #VOLUME_ATTENUATION_MAX_DB}). 0 means that the volume is not reduced.
+     */
+    public static int getVolumeAttenuationDb() {
+        int attenuation = prefs.getInt(PREF_VOLUME_ATTENUATION_DB, 0);
+        return Math.min(VOLUME_ATTENUATION_MAX_DB, Math.max(0, attenuation));
+    }
+
+    public static void setVolumeAttenuationDb(int attenuationDb) {
+        prefs.edit().putInt(PREF_VOLUME_ATTENUATION_DB,
+                Math.min(VOLUME_ATTENUATION_MAX_DB, Math.max(0, attenuationDb))).apply();
+    }
+
+    /**
+     * @return Factor the playback volume is multiplied with, according to {@link #getVolumeAttenuationDb()}.
+     */
+    public static float getVolumeAttenuationFactor() {
+        if (!isVolumeSliderEnabled()) {
+            return 1.0f;
+        }
+        return attenuationDbToFactor(getVolumeAttenuationDb());
+    }
+
+    public static float attenuationDbToFactor(int attenuationDb) {
+        if (attenuationDb <= 0) {
+            return 1.0f;
+        }
+        return (float) Math.pow(10, -attenuationDb / 20.0);
     }
 
     public static void setPlaybackSpeed(float speed) {
