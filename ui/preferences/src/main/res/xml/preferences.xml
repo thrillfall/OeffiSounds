@@ -42,6 +42,12 @@
             android:icon="@drawable/ic_storage" />
 
     <Preference
+            android:key="prefScreenSearch"
+            android:title="@string/search_pref"
+            android:summary="@string/search_pref_sum"
+            android:icon="@drawable/ic_search" />
+
+    <Preference
             android:key="notifications"
             android:title="@string/notification_pref_fragment"
             android:icon="@drawable/ic_notifications"/>

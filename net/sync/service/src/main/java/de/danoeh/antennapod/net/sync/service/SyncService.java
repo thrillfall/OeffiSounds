@@ -130,7 +130,9 @@ public class SyncService extends Worker {
 
     private boolean someFeedWasNotRefreshedYet() {
         for (Feed feed : DBReader.getFeedList()) {
-            if (feed.getPreferences().getKeepUpdated() && feed.getLastRefreshAttempt() == 0) {
+            if (feed.getState() == Feed.STATE_SUBSCRIBED
+                    && feed.getPreferences().getKeepUpdated()
+                    && feed.getLastRefreshAttempt() == 0) {
                 return true;
             }
         }
@@ -361,9 +363,8 @@ public class SyncService extends Worker {
                         SynchronizationCredentials.getHosturl(), SynchronizationCredentials.getDeviceId(),
                         SynchronizationCredentials.getUsername(), SynchronizationCredentials.getPassword());
             case NEXTCLOUD_GPODDER:
-                return new NextcloudSyncService(AntennapodHttpClient.getHttpClient(),
-                        SynchronizationCredentials.getHosturl(), SynchronizationCredentials.getUsername(),
-                        SynchronizationCredentials.getPassword());
+                return new NextcloudSyncService(getApplicationContext(),
+                        SynchronizationCredentials.getNextcloudAccountName());
             default:
                 return null;
         }

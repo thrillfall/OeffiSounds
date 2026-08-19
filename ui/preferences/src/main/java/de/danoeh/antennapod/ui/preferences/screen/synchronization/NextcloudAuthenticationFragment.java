@@ -2,6 +2,7 @@ package de.danoeh.antennapod.ui.preferences.screen.synchronization;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -11,12 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import androidx.fragment.app.DialogFragment;
-import de.danoeh.antennapod.net.common.AntennapodHttpClient;
+import com.nextcloud.android.sso.AccountImporter;
+import com.nextcloud.android.sso.exceptions.AccountImportCancelledException;
+import com.nextcloud.android.sso.exceptions.AndroidGetAccountsPermissionNotGranted;
+import com.nextcloud.android.sso.exceptions.NextcloudFilesAppNotInstalledException;
+import com.nextcloud.android.sso.model.SingleSignOnAccount;
 import de.danoeh.antennapod.net.sync.serviceinterface.SynchronizationProvider;
 import de.danoeh.antennapod.net.sync.serviceinterface.SynchronizationQueue;
 import de.danoeh.antennapod.storage.preferences.SynchronizationCredentials;
 import de.danoeh.antennapod.storage.preferences.SynchronizationSettings;
-import de.danoeh.antennapod.net.sync.nextcloud.NextcloudLoginFlow;
 import de.danoeh.antennapod.ui.preferences.R;
 import de.danoeh.antennapod.ui.preferences.databinding.NextcloudAuthDialogBinding;
 
@@ -24,12 +28,12 @@ import de.danoeh.antennapod.ui.preferences.databinding.NextcloudAuthDialogBindin
  * Guides the user through the authentication process.
  */
 public class NextcloudAuthenticationFragment extends DialogFragment
-        implements NextcloudLoginFlow.AuthenticationCallback {
+        {
     public static final String TAG = "NextcloudAuthenticationFragment";
-    private static final String EXTRA_LOGIN_FLOW = "LoginFlow";
+    private static final int COLOR_SECONDARY_TEXT = 0x88888888;
     private NextcloudAuthDialogBinding viewBinding;
-    private NextcloudLoginFlow nextcloudLoginFlow;
     private boolean shouldDismiss = false;
+    private boolean didRequestAccountChooser = false;
 
     @NonNull
     @Override
@@ -43,59 +47,60 @@ public class NextcloudAuthenticationFragment extends DialogFragment
         viewBinding = NextcloudAuthDialogBinding.inflate(getLayoutInflater());
         dialog.setView(viewBinding.getRoot());
 
-        viewBinding.chooseHostButton.setOnClickListener(v -> {
-            nextcloudLoginFlow = new NextcloudLoginFlow(AntennapodHttpClient.getHttpClient(),
-                    viewBinding.serverUrlText.getText().toString(), getContext(), this);
-            startLoginFlow();
-        });
-        if (savedInstanceState != null && savedInstanceState.getStringArrayList(EXTRA_LOGIN_FLOW) != null) {
-            nextcloudLoginFlow = NextcloudLoginFlow.fromInstanceState(AntennapodHttpClient.getHttpClient(),
-                    getContext(), this, savedInstanceState.getStringArrayList(EXTRA_LOGIN_FLOW));
-            startLoginFlow();
-        }
+        viewBinding.serverUrlTextInput.setVisibility(View.GONE);
+        viewBinding.chooseHostButton.setVisibility(View.GONE);
+        viewBinding.loginWithNextcloudAppButton.setOnClickListener(v -> openAccountChooser());
         return dialog.create();
     }
 
+    private void openAccountChooser() {
+        try {
+            AccountImporter.pickNewAccount(this);
+        } catch (NextcloudFilesAppNotInstalledException | AndroidGetAccountsPermissionNotGranted e) {
+            showErrorDialog(e.getLocalizedMessage());
+        }
+    }
+
     private void startLoginFlow() {
-        viewBinding.chooseHostButton.setVisibility(View.GONE);
+        viewBinding.loginWithNextcloudAppButton.setVisibility(View.GONE);
         viewBinding.loginProgressContainer.setVisibility(View.VISIBLE);
-        viewBinding.serverUrlText.setEnabled(false);
-        nextcloudLoginFlow.start();
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        if (nextcloudLoginFlow != null) {
-            outState.putStringArrayList(EXTRA_LOGIN_FLOW, nextcloudLoginFlow.saveInstanceState());
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            AccountImporter.onActivityResult(requestCode, resultCode, data, this, account -> {
+                if (account == null) {
+                    showErrorDialog(getString(R.string.nextcloud_login_error_generic));
+                    return;
+                }
+                onNextcloudAccountSelected(account);
+            });
+        } catch (AccountImportCancelledException e) {
+            if (isResumed()) {
+                dismiss();
+            } else {
+                shouldDismiss = true;
+            }
         }
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
-        if (nextcloudLoginFlow != null) {
-            nextcloudLoginFlow.cancel();
-        }
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        AccountImporter.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (shouldDismiss) {
-            dismiss();
-        }
-    }
-
-    @Override
-    public void onNextcloudAuthenticated(String server, String username, String password) {
+    private void onNextcloudAccountSelected(@NonNull SingleSignOnAccount account) {
+        startLoginFlow();
         SynchronizationSettings.setSelectedSyncProvider(
                 SynchronizationProvider.NEXTCLOUD_GPODDER.getIdentifier());
         SynchronizationCredentials.clear();
         SynchronizationQueue.getInstance().clear();
-        SynchronizationCredentials.setPassword(password);
-        SynchronizationCredentials.setHosturl(server);
-        SynchronizationCredentials.setUsername(username);
+        SynchronizationCredentials.setHosturl(account.url);
+        SynchronizationCredentials.setNextcloudAccountName(account.name);
         SynchronizationQueue.getInstance().fullSync();
         if (isResumed()) {
             dismiss();
@@ -105,17 +110,35 @@ public class NextcloudAuthenticationFragment extends DialogFragment
     }
 
     @Override
-    public void onNextcloudAuthError(String errorMessage) {
-        viewBinding.loginProgressContainer.setVisibility(View.GONE);
-        viewBinding.chooseHostButton.setVisibility(View.VISIBLE);
-        viewBinding.serverUrlText.setEnabled(true);
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!didRequestAccountChooser) {
+            didRequestAccountChooser = true;
+            startLoginFlow();
+            openAccountChooser();
+        }
+        if (shouldDismiss) {
+            dismiss();
+        }
+    }
+
+    private void showErrorDialog(@Nullable String errorMessage) {
         final MaterialAlertDialogBuilder errorDialog = new MaterialAlertDialogBuilder(getContext());
         errorDialog.setTitle(R.string.error_label);
         String genericMessage = getString(R.string.nextcloud_login_error_generic);
-        SpannableString combinedMessage = new SpannableString(genericMessage + "\n\n" + errorMessage);
-        combinedMessage.setSpan(new ForegroundColorSpan(0x88888888),
-                genericMessage.length(), combinedMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        String message = (errorMessage == null || errorMessage.trim().isEmpty())
+                ? genericMessage
+                : genericMessage + "\n\n" + errorMessage;
+        SpannableString combinedMessage = new SpannableString(message);
+        if (errorMessage != null && !errorMessage.trim().isEmpty()) {
+            combinedMessage.setSpan(new ForegroundColorSpan(COLOR_SECONDARY_TEXT),
+                    genericMessage.length(), combinedMessage.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
         errorDialog.setMessage(combinedMessage);
         errorDialog.setPositiveButton(android.R.string.ok, null);
         errorDialog.show();

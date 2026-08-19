@@ -27,6 +27,7 @@ public class MainPreferencesFragment extends AnimatedPreferenceFragment {
     private static final String PREF_SCREEN_DOWNLOADS = "prefScreenDownloads";
     private static final String PREF_SCREEN_IMPORT_EXPORT = "prefScreenImportExport";
     private static final String PREF_SCREEN_SYNCHRONIZATION = "prefScreenSynchronization";
+    private static final String PREF_SCREEN_SEARCH = "prefScreenSearch";
     private static final String PREF_DOCUMENTATION = "prefDocumentation";
     private static final String PREF_VIEW_FORUM = "prefViewForum";
     private static final String PREF_SEND_BUG_REPORT = "prefSendBugReport";
@@ -42,32 +43,6 @@ public class MainPreferencesFragment extends AnimatedPreferenceFragment {
         setupMainScreen();
         setupSearch();
         setParentalControlsVisibility();
-
-        // If you are writing a spin-off, please update the details on screens like "About" and "Report bug"
-        // and afterwards remove the following lines. Please keep in mind that AntennaPod is licensed under the GPL.
-        // This means that your application needs to be open-source under the GPL, too.
-        // It must also include a prominent copyright notice.
-        int packageHash = getContext().getPackageName().hashCode();
-        if (packageHash != 1790437538 && packageHash != -1190467065) {
-            findPreference(PREF_CATEGORY_PROJECT).setVisible(false);
-            Preference copyrightNotice = new Preference(getContext());
-            copyrightNotice.setIcon(R.drawable.ic_info_white);
-            copyrightNotice.getIcon().mutate()
-                    .setColorFilter(new PorterDuffColorFilter(0xffcc0000, PorterDuff.Mode.MULTIPLY));
-            copyrightNotice.setSummary("This application is based on AntennaPod."
-                    + " The AntennaPod team does NOT provide support for this unofficial version."
-                    + " If you can read this message, the developers of this modification"
-                    + " violate the GNU General Public License (GPL).");
-            findPreference(PREF_CATEGORY_PROJECT).getParent().addPreference(copyrightNotice);
-        } else if (packageHash == -1190467065) {
-            Preference debugNotice = new Preference(getContext());
-            debugNotice.setIcon(R.drawable.ic_info_white);
-            debugNotice.getIcon().mutate()
-                    .setColorFilter(new PorterDuffColorFilter(0xffcc0000, PorterDuff.Mode.MULTIPLY));
-            debugNotice.setOrder(-1);
-            debugNotice.setSummary("This is a development version of AntennaPod and not meant for daily use");
-            findPreference(PREF_CATEGORY_PROJECT).getParent().addPreference(debugNotice);
-        }
     }
 
     @Override
@@ -95,6 +70,10 @@ public class MainPreferencesFragment extends AnimatedPreferenceFragment {
         });
         findPreference(PREF_SCREEN_IMPORT_EXPORT).setOnPreferenceClickListener(preference -> {
             ((PreferenceActivity) getActivity()).openScreen(R.xml.preferences_import_export);
+            return true;
+        });
+        findPreference(PREF_SCREEN_SEARCH).setOnPreferenceClickListener(preference -> {
+            ((PreferenceActivity) getActivity()).openScreen(R.xml.preferences_search);
             return true;
         });
         findPreference(PREF_NOTIFICATION).setOnPreferenceClickListener(preference -> {
@@ -171,6 +150,8 @@ public class MainPreferencesFragment extends AnimatedPreferenceFragment {
                 .addBreadcrumb(PreferenceActivity.getTitleOfPage(R.xml.preferences_synchronization));
         config.index(R.xml.preferences_notifications)
                 .addBreadcrumb(PreferenceActivity.getTitleOfPage(R.xml.preferences_notifications));
+        config.index(R.xml.preferences_search)
+                .addBreadcrumb(PreferenceActivity.getTitleOfPage(R.xml.preferences_search));
         config.index(R.xml.feed_settings)
                 .addBreadcrumb(PreferenceActivity.getTitleOfPage(R.xml.feed_settings));
         config.index(R.xml.preferences_swipe)

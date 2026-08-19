@@ -66,6 +66,26 @@
     <!-- Home fragment -->
     <string name="home_surprise_title">Get surprised</string>
     <string name="home_classics_title">Check your classics</string>
+    <string name="home_audiothek_title">Discover ARD Sounds</string>
+    <string name="home_audiothek_featured_title">ARD Sounds: Featured</string>
+    <string name="home_audiothek_charts_title">ARD Sounds: Podcasts-Charts</string>
+    <string name="home_audiothek_hot_title">ARD Sounds: Hot</string>
+    <string name="home_audiothek_live_title">ARD Sounds: Live</string>
+    <string name="home_audiothek_stage_title">ARD Sounds: Stage</string>
+    <string name="home_audiothek_heute_wichtig_title">What\'s Important Today</string>
+    <string name="home_bbc_sounds_featured_title">BBC Sounds: Recommended Today</string>
+    <string name="home_bbc_audio_recommended_today_title">BBC World Service: Recommended Today</string>
+    <string name="home_srf_play_popular_title">SRF Play: Beliebte Podcasts</string>
+    <string name="home_orf_sound_podcasts_title">ORF Sound: Podcasts</string>
+    <string name="home_dlf_podcasts_title">Deutschlandfunk: Beliebte Podcasts</string>
+    <string name="home_rtve_podcasts_title">RTVE: Podcasts</string>
+    <string name="whats_new_title">What\'s New</string>
+    <string name="whats_new_message_2_4_0">Öffi Sounds now supports more public broadcasters:\n\n\u2022 <b>BBC Sounds</b> — Search and discover British podcasts\n\u2022 <b>SRF Play</b> — Search and discover Swiss public radio podcasts\n\nBoth can be enabled via Settings → Search.\n\nAlso: ARD Audiothek has been renamed to <b>ARD Sounds</b>.</string>
+    <string name="whats_new_message_2_5_0"><b>Version 2.5.0</b>\n\n\u2022 <b>ORF Sound</b> — Search and discover Austrian public radio podcasts\n\u2022 Search provider settings now show individual toggles\n\n\n<b>Version 2.4.0</b>\n\n\u2022 <b>SRF Play</b> — Swiss public radio podcasts\n\u2022 Home screen: SRF Play section\n\n\n<b>Version 2.0.0</b>\n\n\u2022 <b>BBC Sounds</b> — British podcasts\n\u2022 ARD Audiothek renamed to <b>ARD Sounds</b>\n\u2022 Search provider selection in settings</string>
+    <string name="whats_new_message_2_6_0"><b>Version 2.6.0</b>\n\n\u2022 <b>Deutschlandfunk</b> — Search and discover podcasts from DLF and DLF Kultur\n\u2022 Home screen: Deutschlandfunk section\n\n\n<b>Version 2.5.0</b>\n\n\u2022 <b>ORF Sound</b> — Austrian public radio podcasts\n\u2022 Search provider settings: individual toggles\n\n\n<b>Version 2.4.0</b>\n\n\u2022 <b>SRF Play</b> — Swiss public radio podcasts\n\u2022 Home screen: SRF Play section</string>
+    <string name="whats_new_message_2_7_0"><b>Version 2.7.0</b>\n\n\u2022 <b>RTVE</b> — Search and discover Spanish public radio podcasts\n\u2022 Home screen: RTVE section\n\n\n<b>Version 2.6.0</b>\n\n\u2022 <b>Deutschlandfunk</b> — DLF and DLF Kultur podcasts\n\u2022 Home screen: Deutschlandfunk section\n\n\n<b>Version 2.5.0</b>\n\n\u2022 <b>ORF Sound</b> — Austrian public radio podcasts\n\u2022 Search provider settings: individual toggles</string>
+    <string name="whats_new_message_2_9_0"><b>Version 2.9.0</b>\n\n\u2022 <b>Volume slider</b> — Play back more quietly than the lowest Android volume step\n\u2022 Enable it in Settings \u2192 Playback\n\n\n<b>Version 2.8.0</b>\n\n\u2022 <b>ARD Sounds</b> — Full episode shownotes (no longer truncated)\n\u2022 Fix: episodes with missing media URL\n\n\n<b>Version 2.7.0</b>\n\n\u2022 <b>RTVE</b> — Spanish public radio podcasts\n\u2022 Home screen: RTVE section</string>
+    <string name="whats_new_message_2_8_0"><b>Version 2.8.0</b>\n\n\u2022 <b>ARD Sounds</b> — Full episode shownotes (no longer truncated)\n\u2022 Fix: episodes with missing media URL\n\u2022 Fix: crash on home screen show teasers\n\n\n<b>Version 2.7.0</b>\n\n\u2022 <b>RTVE</b> — Spanish public radio podcasts\n\u2022 Home screen: RTVE section\n\n\n<b>Version 2.6.0</b>\n\n\u2022 <b>Deutschlandfunk</b> — DLF and DLF Kultur podcasts\n\u2022 Home screen: Deutschlandfunk section</string>
     <string name="home_continue_title">Continue listening</string>
     <string name="home_new_title">See what\'s new</string>
     <string name="home_downloads_title">Manage downloads</string>
@@ -493,6 +513,11 @@
     <string name="playback_pref_sum">Headphone controls, Skip intervals, Queue</string>
     <string name="downloads_pref">Downloads</string>
     <string name="downloads_pref_sum">Update interval, Mobile data, Automatic download, Automatic deletion</string>
+    <string name="search_pref">Active search providers</string>
+    <string name="search_pref_sum">Choose which search providers to use</string>
+    <string name="search_providers_label">Search providers</string>
+    <string name="pref_search_providers_title">Active search providers</string>
+    <string name="pref_search_providers_sum">Choose which search providers to use</string>
     <string name="feed_refresh_title">Refresh podcasts</string>
     <string name="feed_refresh_sum">Specify an interval at which AntennaPod looks for new episodes automatically</string>
     <string name="feed_refresh_never">Never</string>
@@ -631,15 +656,19 @@
 
     <!-- About screen -->
     <string name="about_pref">About</string>
-    <string name="antennapod_version">AntennaPod version</string>
+    <string name="antennapod_version">Öffi Sounds version (based on AntennaPod)</string>
     <string name="contributors">Contributors</string>
-    <string name="contributors_summary">Everyone can help to make AntennaPod better - with code, translations or by helping users in our forum</string>
+    <string name="contributors_summary">Everyone can help to make Öffi Sounds better - with code, translations or by helping users in our forum. Öffi Sounds is based on AntennaPod.</string>
     <string name="developers">Developers</string>
     <string name="translators">Translators</string>
     <string name="special_thanks">Special thanks</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="licenses">Licenses</string>
     <string name="licenses_summary">AntennaPod uses other great software</string>
+    <string name="oeffisounds_source_code_title">Source code</string>
+    <string name="oeffisounds_source_code_summary">github.com/thrillfall/OeffiSounds</string>
+    <string name="oeffisounds_report_issues_title">Report issues</string>
+    <string name="oeffisounds_report_issues_summary">github.com/thrillfall/OeffiSounds/issues</string>
 
     <!-- Search -->
     <string name="search_status_no_results">No results were found</string>
@@ -750,6 +779,7 @@
     <string name="synchronization_host_label">Server address</string>
     <string name="proceed_to_login_butLabel">Proceed to login</string>
     <string name="synchronization_nextcloud_authenticate_browser">Grant access using the opened web browser and come back to AntennaPod.</string>
+    <string name="synchronization_nextcloud_login_with_app">Login with Nextcloud app</string>
     <string name="gpodnetauth_login_butLabel">Login</string>
     <string name="synchronization_credentials_explanation">Please provide the credentials of your account on the synchronization server.</string>
     <string name="gpodnetauth_encryption_warning">Password and data are not encrypted!</string>
@@ -886,6 +916,8 @@
     <string name="search_itunes_label">Search Apple Podcasts</string>
     <string name="search_podcastindex_label">Search Podcast Index</string>
     <string name="search_fyyd_label">Search fyyd</string>
+    <string name="search_audiothek_label">Search ARD Sounds</string>
+    <string name="search_bbc_label">Search BBC Sounds</string>
     <string name="add_podcast_by_url">Add podcast by RSS address</string>
     <string name="rss_address">RSS address</string>
     <string name="rss_address_invalid">The RSS address you entered is not valid.</string>
@@ -894,6 +926,7 @@
     <string name="discover_is_hidden">You selected to hide suggestions.</string>
     <string name="discover_more">Discover more »</string>
     <string name="discover_powered_by_itunes">Suggestions by Apple Podcasts</string>
+    <string name="discover_powered_by_ard">Suggestions by ARD Sounds</string>
     <string name="discover_confirm">Show suggestions</string>
     <string name="search_powered_by">Results by %1$s</string>
     <string name="select_country">Select country</string>
@@ -933,6 +966,10 @@
     <!-- Audio controls -->
     <string name="audio_controls">Audio controls</string>
     <string name="playback_speed">Playback speed</string>
+    <string name="player_volume">Volume</string>
+    <string name="player_volume_summary">Lowers the volume below the smallest step Android offers</string>
+    <string name="pref_volume_slider_title">Volume slider in player</string>
+    <string name="pref_volume_slider_sum">Show a slider in the player that can lower the volume below the smallest step Android offers</string>
     <string name="player_switch_to_audio_only">Switch to audio only</string>
 
     <!-- proxy settings -->

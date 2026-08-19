@@ -202,6 +202,9 @@ public class FeedUpdateWorker extends Worker {
     }
 
     Feed refreshFeed(Feed feed, boolean force) throws Exception {
+        if (feed.getId() != 0) {
+            DBWriter.setFeedLastRefreshAttempt(feed.getId(), System.currentTimeMillis());
+        }
         boolean nextPage = getInputData().getBoolean(FeedUpdateManagerImpl.EXTRA_NEXT_PAGE, false)
                 && feed.getNextPageLink() != null;
         if (nextPage) {

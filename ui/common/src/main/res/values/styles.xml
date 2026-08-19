@@ -253,7 +253,7 @@
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:enforceNavigationBarContrast" tools:targetApi="q">false</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/launcher_animate</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground_sounds_bottom</item>
     </style>
 
     <style name="Theme.AntennaPod.Splash.Translucent" parent="Theme.AntennaPod.Splash">

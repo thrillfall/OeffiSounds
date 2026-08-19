@@ -2,12 +2,12 @@
 <resources>
     <string-array name="nav_drawer_section_tags">
         <item>HomeFragment</item>
+        <item>EpisodesFragment</item>
+        <item>SubscriptionFragment</item>
+        <item>PlaybackHistoryFragment</item>
         <item>QueueFragment</item>
         <item>NewEpisodesFragment</item>
-        <item>SubscriptionFragment</item>
-        <item>EpisodesFragment</item>
         <item>DownloadsFragment</item>
-        <item>PlaybackHistoryFragment</item>
         <item>FavoritesFragment</item>
         <item>StatisticsFragment</item>
         <item>AddFeedFragment</item>

@@ -813,6 +813,13 @@ public class PodDBAdapter {
         db.execSQL(sql);
     }
 
+    public void setFeedLastRefreshAttempt(long feedId, long timestamp) {
+        final String sql = "UPDATE " + TABLE_NAME_FEEDS
+                + " SET " + KEY_LAST_REFRESH_ATTEMPT + "=" + timestamp
+                + " WHERE " + KEY_ID + "=" + feedId;
+        db.execSQL(sql);
+    }
+
     public void setFeedCustomTitle(long feedId, String customTitle) {
         ContentValues values = new ContentValues();
         values.put(KEY_CUSTOM_TITLE, customTitle);
