@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.9.0] - 2026-08-19
+
+### Added
+- Player: optional volume slider that can lower the playback volume below the smallest step Android offers (down to -30 dB in 2 dB steps). Enable it via Settings → Playback → "Volume slider in player"
+
 ## [2.8.4] - 2026-07-09
 
 ### Fixed

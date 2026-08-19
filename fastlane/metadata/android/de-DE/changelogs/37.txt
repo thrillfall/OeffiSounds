@@ -1,0 +1,2 @@
+- Neu: optionaler Lautstärkeregler im Player. Er kann die Wiedergabe leiser machen, als es die kleinste Android-Stufe erlaubt – bis zu -30 dB.
+- Aktivierbar über Einstellungen -> Wiedergabe -> „Lautstärkeregler im Player“.

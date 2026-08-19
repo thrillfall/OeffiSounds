@@ -1,0 +1,2 @@
+- New: optional volume slider in the player. It can lower the playback volume below the smallest step Android offers, down to -30 dB.
+- Enable it via Settings -> Playback -> "Volume slider in player".

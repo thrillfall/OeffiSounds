@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.8.4)
+### Latest Release (2.9.0)
 
-- ARD Sounds: fixed the home-screen Podcast-Charts showing only a single tile with the rest black/flickering — the charts now load from the ARD Sounds home board via GraphQL and no longer re-flash placeholders on every update
+- Player: optional volume slider that plays back more quietly than the lowest Android volume step allows (down to -30 dB), enabled via Settings → Playback
 
 ### Previous Releases
+
+#### 2.8.4
+
+- ARD Sounds: fixed the home-screen Podcast-Charts showing only a single tile with the rest black/flickering — the charts now load from the ARD Sounds home board via GraphQL and no longer re-flash placeholders on every update
 
 #### 2.8.3
 
