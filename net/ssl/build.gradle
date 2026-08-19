@@ -13,8 +13,6 @@ dependencies {
     implementation libs.androidx.appcompat
 
     implementation libs.okhttp
-
-    playImplementation libs.google.play.services.base
     // This version should be updated regularly.
     freeImplementation libs.conscrypt.android
 }

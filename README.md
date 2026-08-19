@@ -1,44 +1,126 @@
-# AntennaPod
+# Öffi Sounds
 
-[![GitHub check runs](https://img.shields.io/github/check-runs/AntennaPod/AntennaPod/develop)](https://github.com/AntennaPod/AntennaPod/actions/workflows/checks.yml?query=branch%3Adevelop)
-[![License: GPL v3](https://img.shields.io/github/license/AntennaPod/AntennaPod)](https://www.gnu.org/licenses/gpl-3.0)
-[![GitHub Release](https://img.shields.io/github/v/release/AntennaPod/AntennaPod)](https://github.com/AntennaPod/AntennaPod/releases)
-[![https://img.shields.io/github/commits-since/AntennaPod/AntennaPod/latest/develop](https://img.shields.io/github/commits-since/AntennaPod/AntennaPod/latest/develop)](https://github.com/AntennaPod/AntennaPod/commits/develop/)
+[![License: GPL-3.0](https://img.shields.io/github/license/thrillfall/OeffiSounds)](https://www.gnu.org/licenses/gpl-3.0)
+[![GitHub Release](https://img.shields.io/github/v/release/thrillfall/OeffiSounds)](https://github.com/thrillfall/OeffiSounds/releases)
+[![Issues](https://img.shields.io/github/issues/thrillfall/OeffiSounds)](https://github.com/thrillfall/OeffiSounds/issues)
 [![Translations on Weblate](https://hosted.weblate.org/widget/antennapod/app/svg-badge.svg?native=1)](https://hosted.weblate.org/engage/antennapod/)
-[![Good first issue](https://img.shields.io/github/issues-search?query=repo%3AAntennaPod%2FAntennaPod%20is%3Aopen%20is%3Aissue%20label%3A%22Good%20first%20issue%22&label=Good%20first%20issue&labelColor=grey&color=%235F1984)](https://github.com/AntennaPod/AntennaPod/labels/Good%20first%20issue)
+[![IzzyOnDroid monthly downloads](https://img.shields.io/badge/dynamic/json?url=https://dlstats.izzyondroid.org/iod-stats-collector/stats/basic/monthly/rolling.json&query=$.['de.oeffisounds.app']&label=IzzyOnDroid%20monthly%20downloads)](https://apt.izzysoft.de/packages/de.oeffisounds.app)
+[![IzzyOnDroid yearly downloads](https://img.shields.io/badge/dynamic/json?url=https://dlstats.izzyondroid.org/iod-stats-collector/stats/basic/yearly/rolling.json&query=$.['de.oeffisounds.app']&label=IzzyOnDroid%20yearly%20downloads)](https://apt.izzysoft.de/packages/de.oeffisounds.app)
 
-This is the official repository of AntennaPod, the easy-to-use, flexible and open-source podcast manager for Android.
+Öffi Sounds is a fork of [AntennaPod](https://github.com/AntennaPod/AntennaPod), the free and open-source podcast manager for Android.
 
-[<img src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png"
-      alt="Get it on Google Play"
-      height="70">](https://play.google.com/store/apps/details?id=de.danoeh.antennapod)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
-      alt="Get it on F-Droid"
-      height="70">](https://f-droid.org/app/de.danoeh.antennapod)
+It focuses on discovering and listening to content from German public radio via **ARD Sounds** (formerly **ARD Audiothek**), while keeping the core AntennaPod podcast management and playback experience.
 
-<img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/00.png" alt="Screenshot 0" height="200"> <img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/01.png" alt="Screenshot 1" height="200"> <img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/02.png" alt="Screenshot 2" height="200"> <img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/03.png" alt="Screenshot 3" height="200"> <img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/04.png" alt="Screenshot 4" height="200"> <img src="https://raw.githubusercontent.com/AntennaPod/StoreMetadata/main/listings/en-US/graphics/phone-screenshots/05.png" alt="Screenshot 5" height="200">
+## Differences vs AntennaPod
 
+- **ARD Sounds / ARD Audiothek integration**: included as a search provider, plus special home screen modules focused on public radio content.
+- **BBC Sounds integration**: search and subscribe to BBC podcasts (opt-in via Settings → Search).
+- **SRF Play integration**: search and discover Swiss public radio podcasts (opt-in via Settings → Search).
+- **ORF Sound integration**: search and discover Austrian public radio podcasts (opt-in via Settings → Search).
+- **Deutschlandfunk integration**: search and discover podcasts from Deutschlandfunk and Deutschlandfunk Kultur (opt-in via Settings → Search).
+- **RTVE integration**: search and discover podcasts from Spain's public broadcaster (opt-in via Settings → Search).
+- **Nextcloud SSO**: Nextcloud sync login via the Nextcloud app account chooser (no manual username/password entry).
+- **Provider Choice**: user can select whoch podcast services to query (and which not).
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" alt="Screenshot" height="200">
 
-## Feedback
-You can use the [AntennaPod Forum](https://forum.antennapod.org/) for discussions about the app or just podcasting in general.
+## Downloads
 
-Bug reports and feature requests can be submitted [here](https://github.com/AntennaPod/AntennaPod/issues) (please read the [instructions](https://github.com/AntennaPod/AntennaPod/blob/develop/CONTRIBUTING.md) on how to report a bug and how to submit a feature request first!).
+APK releases are published on GitHub:
+https://github.com/thrillfall/OeffiSounds/releases
 
-We also hold regular community calls to discuss anything AntennaPod-related. [Come join the next call](https://forum.antennapod.org/t/monthly-community-call/1869)!
+### Latest Release (2.9.0)
 
-## Help to test AntennaPod
-AntennaPod has many users and we don't want them to run into trouble when we add a new feature. It's important that we have a significant group test our app, so that we know all possible combinations of phones, Android versions and use cases work as expected. Check out our wiki on how to join our [Beta testing program](https://antennapod.org/documentation/general/beta)! If a bug is reported during the beta period, chances are high that it will be fixed before the upcoming stable version. If it is reported later, fixing might take another full beta cycle. So definitely let us know if something is not right.
+- Player: optional volume slider that plays back more quietly than the lowest Android volume step allows (down to -30 dB), enabled via Settings → Playback
+
+### Previous Releases
+
+#### 2.8.4
+
+- ARD Sounds: fixed the home-screen Podcast-Charts showing only a single tile with the rest black/flickering — the charts now load from the ARD Sounds home board via GraphQL and no longer re-flash placeholders on every update
+
+#### 2.8.3
+
+- Android Auto: restore the media-app descriptor that was dropped during the rebrand, so the app is discovered and shown in the car again
+
+#### 2.8.2
+
+- F-Droid listing: summary tagline no longer references the upstream fork; now leads with the app's actual features
+
+#### 2.8.1
+
+- Fix infinite sync loop: feeds whose refresh never recorded a timestamp (local feeds, cancelled downloads) no longer trap gpodder/Nextcloud sync in a perpetual loop
+
+#### 2.8.0
+
+- ARD Sounds: full episode shownotes (previously truncated)
+- ARD Sounds: fix episodes showing "Medienadresse: null"
+- ARD Sounds: fix crash when clicking show teasers on home screen
+
+#### 2.7.5
+
+- Fix infinite sync loop when non-subscribed feeds exist in the database
+
+#### 2.7.1
+
+- Fix Nextcloud sync: subscription upload no longer fails with "No value for update_urls" error (regression from SSO rewrite)
+
+#### 2.7.0
+
+- RTVE integration: search and discover podcasts from Spain's public broadcaster
+- Home screen: new "RTVE: Podcasts" section
+
+#### 2.6.0
+
+- Deutschlandfunk integration: search and discover podcasts from Deutschlandfunk and Deutschlandfunk Kultur
+- Home screen: new "Deutschlandfunk: Beliebte Podcasts" section
+
+#### 2.5.0
+
+- ORF Sound integration: search and discover Austrian public radio podcasts
+- Home screen: new "ORF Sound: Podcasts" section
+- Search provider settings: individual toggles instead of multi-select dialog
+- Apple (iTunes) and Podcast Index disabled by default
+
+#### 2.4.1
+
+- "What's New" popup shown once after updating, highlighting new provider integrations
+
+#### 2.4.0
+
+- SRF Play integration: search and discover Swiss public radio podcasts (opt-in via Settings → Search)
+- Home screen: new "SRF Play: Beliebte Podcasts" section showing popular SRF podcasts
+
+#### 2.0.2
+
+- BBC Sounds — filter out search results with no valid podcast RSS feed, reducing dead subscription links
+
+#### 2.0.1
+
+- ARD Sounds — renamed from ARD Audiothek
+
+#### 2.0.0
+
+- BBC Sounds — find and subscribe to BBC sounds podcasts (opt-in via Settings → Search)
+- Search providers — user can now select which podcast services to query in settings
+- ARD Audiothek — updated to new playout API for the "Was ist heute wichtig" section
+
+## Support / Issues
+
+Please report bugs and feature requests here:
+https://github.com/thrillfall/OeffiSounds/issues
 
 ## License
 
-AntennaPod is licensed under the GNU General Public License (GPL-3.0). You can find the license text in the [LICENSE](https://github.com/AntennaPod/AntennaPod/blob/develop/LICENSE) file.
+Öffi Sounds (and upstream AntennaPod) is licensed under the GNU General Public License (GPL-3.0). You can find the license text in the `LICENSE` file.
 
-## Translating AntennaPod
+## Translations
 
-If you want to translate AntennaPod into another language, you can visit our [Weblate page](https://hosted.weblate.org/projects/antennapod/).
+Translations are handled on Weblate:
+https://hosted.weblate.org/projects/antennapod/
 
+## Building
 
-## Building AntennaPod
+Build like a standard Android/Gradle project. The release artifact used for distribution is built via:
 
-You can build AntennaPod just like any other Android project. Refer to the [instructions](https://github.com/AntennaPod/AntennaPod/blob/develop/CONTRIBUTING.md) for more details.
+`./gradlew :app:assembleFreeRelease`
 

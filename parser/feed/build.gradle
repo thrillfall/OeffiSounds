@@ -5,10 +5,15 @@ apply from: "../../common.gradle"
 
 android {
     namespace "de.danoeh.antennapod.parser.feed"
+    lint {
+        disable 'DuplicatePlatformClasses'
+    }
 }
 
 dependencies {
     implementation project(':model')
+    implementation project(':net:common')
+    implementation libs.okhttp
 
     annotationProcessor libs.androidx.annotation
 
@@ -17,6 +22,7 @@ dependencies {
     implementation libs.commons.lang3
     implementation libs.commons.io
     implementation libs.jsoup
+    implementation libs.json
 
     testImplementation libs.junit
     testImplementation libs.robolectric

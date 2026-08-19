@@ -18,8 +18,5 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.eventbus
 
-    playApi libs.androidx.mediarouter
-    playApi libs.google.play.services.cast.framework
     implementation libs.androidx.media3.exoplayer
-    playImplementation libs.androidx.media3.cast
 }

@@ -1,0 +1,2 @@
+- Nextcloud sync: simplified login via Nextcloud app (SSO) account chooser
+- Nextcloud sync: fixed invalid request URL handling

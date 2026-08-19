@@ -1,0 +1,1 @@
+- Endlose Synchronisationsschleife behoben: Feeds, bei denen der Aktualisierungszeitpunkt nie gespeichert wurde (lokale Feeds, abgebrochene Downloads), führten bei aktivierter gpodder-/Nextcloud-Synchronisation zu einer Dauerschleife zwischen Synchronisation und Feed-Aktualisierung

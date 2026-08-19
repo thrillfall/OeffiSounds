@@ -1,0 +1,1 @@
+- Nextcloud-Synchronisierung repariert: Abonnement-Upload schlug mit Fehler "No value for update_urls" fehl

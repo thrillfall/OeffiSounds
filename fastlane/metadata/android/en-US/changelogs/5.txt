@@ -1,0 +1,4 @@
+- Settings: removed upstream fork/GPL warning notice
+- About/Report bug: updated links to Öffi Sounds source code and issue tracker
+- Security: disabled cleartext traffic and removed Google dependency metadata block
+- Store metadata: completed fastlane listing details

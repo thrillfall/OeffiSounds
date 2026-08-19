@@ -1,0 +1,1 @@
+- Branding: show ÖffiSounds app logo on startup instead of AntennaPod logo

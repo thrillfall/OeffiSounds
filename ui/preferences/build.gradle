@@ -54,4 +54,5 @@ dependencies {
     implementation libs.okhttp.urlconnection
     implementation libs.eventbus
     implementation libs.preferencesearch
+    implementation libs.nextcloud.sso
 }

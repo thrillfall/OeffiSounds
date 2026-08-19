@@ -1,0 +1,3 @@
+- Settings: Choose which podcast search providers to use (Settings → Search)
+- Privacy: Apple Podcasts search is now opt-out — disable it if you don't want to share search queries with Apple
+- Add podcast: ARD Audiothek search now has its own button in the "Add Podcast" screen

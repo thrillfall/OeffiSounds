@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="256dp"
+    android:height="64dp"
+    android:viewportWidth="512"
+    android:viewportHeight="128">
+
+    <path
+        android:fillColor="#F2FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="
+            M20,24 h60 v18 h-60 z
+            M20,24 h18 v40 h-18 z
+            M20,55 h60 v18 h-60 z
+            M62,55 h18 v40 h-18 z
+            M20,87 h60 v18 h-60 z
+
+            M110,24 h78 v81 h-78 z
+
+            M206,24 h18 v63 h42 v18 h-60 z
+            M248,24 h18 v81 h-18 z
+
+            M292,24 h18 v81 h-18 z
+            M292,24 h60 v18 h-60 z
+            M334,24 h18 v81 h-18 z
+            M292,87 h60 v18 h-60 z
+
+            M372,24 h60 v18 h-60 z
+            M372,24 h18 v81 h-18 z
+            M372,87 h60 v18 h-60 z
+            M414,55 h18 v32 h-18 z
+            M414,55 h18 v18 h-18 z
+            M372,55 h60 v18 h-60 z
+
+            M452,24 h60 v18 h-60 z
+            M452,24 h18 v40 h-18 z
+            M452,55 h60 v18 h-60 z
+            M494,55 h18 v40 h-18 z
+            M452,87 h60 v18 h-60 z" />
+</vector>

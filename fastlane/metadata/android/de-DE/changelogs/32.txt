@@ -1,0 +1,3 @@
+- ARD Sounds: vollständige Shownotes (bisher auf ~180 Zeichen gekürzt)
+- ARD Sounds: Episoden mit fehlender Medienadresse behoben
+- ARD Sounds: Absturz beim Klick auf Sendungs-Teaser auf dem Startbildschirm behoben

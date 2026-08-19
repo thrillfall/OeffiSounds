@@ -19,5 +19,8 @@ dependencies {
     implementation libs.rxandroid
     implementation libs.rxjava
 
+    implementation libs.nextcloud.sso
+    implementation libs.gson
+
     testImplementation libs.junit
 }

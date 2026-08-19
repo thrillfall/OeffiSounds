@@ -1,0 +1,1 @@
+- "What's New" popup shown once after updating, highlighting new provider integrations

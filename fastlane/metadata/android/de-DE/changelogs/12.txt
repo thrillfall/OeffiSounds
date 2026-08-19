@@ -1,0 +1,3 @@
+- Einstellungen: Podcast-Suchanbieter können jetzt ausgewählt werden (Einstellungen → Suche)
+- Datenschutz: Apple-Podcasts-Suche ist jetzt opt-out – deaktivierbar, um keine Suchanfragen an Apple zu senden
+- Podcast hinzufügen: ARD-Audiothek-Suche hat jetzt einen eigenen Button im „Podcast hinzufügen"-Bereich

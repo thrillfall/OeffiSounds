@@ -1,0 +1,1 @@
+- Startseite: „Heute wichtig"-Bereich verwendet jetzt die ARD Playout-API für zuverlässige, aktuelle Inhalte

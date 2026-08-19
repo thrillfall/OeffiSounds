@@ -1,0 +1,1 @@
+- Fix Nextcloud sync: subscription upload no longer fails with "No value for update_urls" error

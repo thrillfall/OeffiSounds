@@ -9,9 +9,9 @@ android {
         vectorDrawables.useSupportLibrary true
         vectorDrawables.generatedDensities = []
 
-        testApplicationId "de.danoeh.antennapod.core.tests"
+        testApplicationId "de.oeffisounds.app.core.tests"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        resourceConfigurations += ["en", "ar", "br", "ca", "cs", "da", "de", "el", "es", "et", "eu", "fa", "fi", "fr", "gl", "hi", "hu", "in", "it", "iw", "ja", "ko", "lt", "nb", "nl", "pl", "pt", "pt-rBR", "ro", "ru", "sc", "sk", "sl", "sr", "sv", "tr", "uk", "zh-rCN", "zh-rTW"]
+        resourceConfigurations += ["de"]
 
         buildConfigField "boolean", "USE_MEDIA3_PLAYBACK_SERVICE", "true"
         manifestPlaceholders = [oldServiceEnabled: "false", newServiceEnabled: "true"]
@@ -20,10 +20,10 @@ android {
     buildTypes {
         release {
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard.cfg"
-            resValue "string", "app_name", "AntennaPod"
+            resValue "string", "app_name", "Öffi Sounds"
         }
         debug {
-            resValue "string", "app_name", "AntennaPod Debug"
+            resValue "string", "app_name", "Öffi Sounds Debug"
         }
     }
 
@@ -100,13 +100,9 @@ gradle.taskGraph.whenReady { taskGraph ->
         if (task.name.toLowerCase().contains('spotbugs')) {
             task.doLast {
                 def reportFile = task.project.file("build/reports/spotbugs/debug.xml")
-                def reportFilePlay = task.project.file("build/reports/spotbugs/playDebug.xml")
 
                 if (reportFile.exists()) {
                     parseSpotBugsXml(task, reportFile)
-                }
-                if (reportFilePlay.exists()) {
-                    parseSpotBugsXml(task, reportFilePlay)
                 }
             }
         }
