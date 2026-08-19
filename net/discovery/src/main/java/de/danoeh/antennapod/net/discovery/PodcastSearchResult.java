@@ -34,6 +34,11 @@ public class PodcastSearchResult {
         this.author = author;
     }
 
+    public static PodcastSearchResult fromExternalSource(String title, @Nullable String imageUrl,
+                                                        @Nullable String feedUrl, @Nullable String author) {
+        return new PodcastSearchResult(title, imageUrl, feedUrl, author);
+    }
+
     public static PodcastSearchResult dummy() {
         return new PodcastSearchResult("", "", "", "");
     }

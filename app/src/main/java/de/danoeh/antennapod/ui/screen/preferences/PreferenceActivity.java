@@ -20,6 +20,7 @@ import de.danoeh.antennapod.ui.preferences.databinding.SettingsActivityBinding;
 import de.danoeh.antennapod.ui.preferences.screen.AutoDownloadPreferencesFragment;
 import de.danoeh.antennapod.ui.preferences.screen.AutomaticDeletionPreferencesFragment;
 import de.danoeh.antennapod.ui.preferences.screen.NotificationPreferencesFragment;
+import de.danoeh.antennapod.ui.preferences.screen.SearchPreferencesFragment;
 import de.danoeh.antennapod.ui.preferences.screen.synchronization.SynchronizationPreferencesFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -84,6 +85,8 @@ public class PreferenceActivity extends ToolbarActivity implements SearchPrefere
             prefFragment = new AutomaticDeletionPreferencesFragment();
         } else if (screen == R.xml.preferences_parental_control) {
             prefFragment = new ParentalControlPreferencesFragment();
+        } else if (screen == R.xml.preferences_search) {
+            prefFragment = new SearchPreferencesFragment();
         }
         return prefFragment;
     }
@@ -111,6 +114,8 @@ public class PreferenceActivity extends ToolbarActivity implements SearchPrefere
             return R.string.pref_auto_delete_title;
         } else if (preferences == R.xml.preferences_parental_control) {
             return R.string.pref_parental_control_title;
+        } else if (preferences == R.xml.preferences_search) {
+            return R.string.search_pref;
         }
         return R.string.settings_label;
     }

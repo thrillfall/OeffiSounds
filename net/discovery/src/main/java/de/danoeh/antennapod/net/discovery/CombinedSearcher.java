@@ -2,6 +2,7 @@ package de.danoeh.antennapod.net.discovery;
 
 import android.text.TextUtils;
 import android.util.Log;
+import de.danoeh.antennapod.storage.preferences.UserPreferences;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.core.SingleOnSubscribe;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -13,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 public class CombinedSearcher implements PodcastSearcher {
@@ -30,7 +32,10 @@ public class CombinedSearcher implements PodcastSearcher {
             PodcastSearcherRegistry.SearcherInfo searchProviderInfo
                     = PodcastSearcherRegistry.getSearchProviders().get(i);
             PodcastSearcher searcher = searchProviderInfo.searcher;
-            if (searchProviderInfo.weight <= 0.00001f || searcher.getClass() == CombinedSearcher.class) {
+            Set<String> enabledClassNames = UserPreferences.getEnabledSearchProviders();
+            if (searchProviderInfo.weight <= 0.00001f
+                    || searcher.getClass() == CombinedSearcher.class
+                    || !enabledClassNames.contains(searcher.getClass().getSimpleName())) {
                 latch.countDown();
                 continue;
             }
@@ -104,12 +109,14 @@ public class CombinedSearcher implements PodcastSearcher {
 
     @Override
     public String getName() {
+        Set<String> enabledClassNames = UserPreferences.getEnabledSearchProviders();
         ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < PodcastSearcherRegistry.getSearchProviders().size(); i++) {
             PodcastSearcherRegistry.SearcherInfo searchProviderInfo
                     = PodcastSearcherRegistry.getSearchProviders().get(i);
             PodcastSearcher searcher = searchProviderInfo.searcher;
-            if (searchProviderInfo.weight > 0.00001f && searcher.getClass() != CombinedSearcher.class) {
+            if (searchProviderInfo.weight > 0.00001f && searcher.getClass() != CombinedSearcher.class
+                    && enabledClassNames.contains(searcher.getClass().getSimpleName())) {
                 names.add(searcher.getName());
             }
         }
