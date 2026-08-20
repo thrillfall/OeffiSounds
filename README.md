@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.10.1)
+### Latest Release (2.10.2)
 
-- Fix: ARD Sounds and SRF Play entries without audio are no longer imported — they showed up in the episode list without a play button
+- Fix: the app no longer crashes on startup after installing or updating — the release build's code shrinker had stripped a constructor WorkManager creates by reflection and miscompiled the preferences class
 
 ### Previous Releases
+
+#### 2.10.1
+
+- Fix: ARD Sounds and SRF Play entries without audio are no longer imported — they showed up in the episode list without a play button
 
 #### 2.10.0
 

@@ -1,0 +1,1 @@
+- Fixed the app crashing on startup so it no longer fails to launch after installing or updating.

@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.10.2] - 2026-08-20
+
+### Fixed
+- The app no longer crashes on startup right after installing or updating. The release build's code shrinker stripped a constructor that WorkManager creates by reflection, and miscompiled the preferences class, so the app died before the first screen appeared
+
 ## [2.10.1] - 2026-08-20
 
 ### Fixed
