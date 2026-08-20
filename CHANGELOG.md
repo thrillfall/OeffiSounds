@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.10.1] - 2026-08-20
+
+### Fixed
+- ARD Sounds and SRF Play: entries without any audio are no longer imported. They used to sit in the episode list as items that could only be marked as played, never played
+
 ## [2.10.0] - 2026-08-20
 
 ### Changed
