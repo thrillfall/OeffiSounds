@@ -2,10 +2,11 @@ package de.danoeh.antennapod.parser.feed;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedItem;
 
+@RunWith(RobolectricTestRunner.class)
 public class AudiothekJsonFeedParserTest {
 
     @Test
@@ -109,7 +111,7 @@ public class AudiothekJsonFeedParserTest {
     }
 
     @Test
-    public void parseFeed_bothUrlsNull_mediaIsNull() throws Exception {
+    public void parseFeed_bothUrlsNull_itemIsSkipped() throws Exception {
         String json = "{"
                 + "\"data\":{"
                 + "\"programSet\":{"
@@ -136,8 +138,7 @@ public class AudiothekJsonFeedParserTest {
         FeedHandler handler = new FeedHandler();
         FeedHandlerResult result = handler.parseFeed(feed);
 
-        FeedItem item = result.feed.getItems().get(0);
-        assertNull(item.getMedia());
+        assertTrue(result.feed.getItems().isEmpty());
 
         //noinspection ResultOfMethodCallIgnored
         tmp.delete();

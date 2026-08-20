@@ -93,9 +93,11 @@ class SrfPlayJsonFeedParser {
                 }
 
                 FeedMedia media = resolveMedia(item, episode, httpClient);
-                if (media != null) {
-                    item.setMedia(media);
+                if (media == null) {
+                    // Nothing to play, so the item would only show up as an unplayable list entry
+                    continue;
                 }
+                item.setMedia(media);
 
                 items.add(item);
             }
