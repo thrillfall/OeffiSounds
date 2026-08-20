@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Spanned;
 import android.text.format.DateUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -53,6 +52,7 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
         super.onStart();
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.synchronization_pref);
         updateScreen();
+        updateActionBar();
         EventBus.getDefault().register(this);
     }
 
@@ -107,6 +107,7 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
             Snackbar.make(getView(), R.string.pref_synchronization_logout_toast, Snackbar.LENGTH_LONG).show();
             SynchronizationSettings.setSelectedSyncProvider(null);
             updateScreen();
+            updateActionBar();
             return true;
         });
     }
@@ -148,10 +149,17 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
                     username, SynchronizationCredentials.getHosturl());
             Spanned formattedSummary = HtmlCompat.fromHtml(summary, HtmlCompat.FROM_HTML_MODE_LEGACY);
             findPreference(PREFERENCE_LOGOUT).setSummary(formattedSummary);
+        } else {
+            findPreference(PREFERENCE_LOGOUT).setSummary(null);
+        }
+    }
+
+    private void updateActionBar() {
+        // Do not call from onCreate; ActionBar is not yet available at that point
+        if (SynchronizationSettings.isProviderConnected()) {
             updateLastSyncReport(SynchronizationSettings.isLastSyncSuccessful(),
                     SynchronizationSettings.getLastSyncAttempt());
         } else {
-            findPreference(PREFERENCE_LOGOUT).setSummary(null);
             ((AppCompatActivity) getActivity()).getSupportActionBar().setSubtitle(null);
         }
     }
@@ -170,10 +178,10 @@ public class SynchronizationPreferencesFragment extends AnimatedPreferenceFragme
                 TextView title;
             }
 
+            @NonNull
             public View getView(int position, View convertView, ViewGroup parent) {
-                final LayoutInflater inflater = LayoutInflater.from(getContext());
                 if (convertView == null) {
-                    convertView = inflater.inflate(R.layout.alertdialog_sync_provider_chooser, null);
+                    convertView = View.inflate(getContext(), R.layout.alertdialog_sync_provider_chooser, null);
                     holder = new ViewHolder();
                     holder.icon = convertView.findViewById(R.id.icon);
                     holder.title = convertView.findViewById(R.id.title);

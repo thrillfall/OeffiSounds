@@ -25,7 +25,6 @@ import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.event.EpisodeDownloadEvent;
 import de.danoeh.antennapod.event.FeedItemEvent;
 import de.danoeh.antennapod.event.FeedListUpdateEvent;
-import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.model.feed.FeedItem;
 import de.danoeh.antennapod.model.feed.FeedItemFilter;
 import de.danoeh.antennapod.storage.database.DBReader;
@@ -55,7 +54,6 @@ public class InboxSection extends HomeSection {
         viewBinding.recyclerView.setPadding(0, 0, 0, 0);
         viewBinding.recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        viewBinding.recyclerView.setRecycledViewPool(((MainActivity) requireActivity()).getRecycledViewPool());
         adapter = new EpisodeItemListAdapter(requireActivity()) {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -80,13 +78,16 @@ public class InboxSection extends HomeSection {
     }
 
     @Override
-    protected void handleMoreClick() {
-        ((MainActivity) requireActivity()).loadChildFragment(new InboxFragment());
+    public void onStop() {
+        super.onStop();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnreadItemsChanged(UnreadItemsUpdateEvent event) {
-        loadItems();
+    @Override
+    protected void handleMoreClick() {
+        ((MainActivity) requireActivity()).loadChildFragment(new InboxFragment());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -116,7 +117,7 @@ public class InboxSection extends HomeSection {
 
     @Override
     protected String getMoreLinkTitle() {
-        return getString(R.string.inbox_label_more);
+        return getString(R.string.inbox_label);
     }
 
     private void loadItems() {
@@ -127,7 +128,7 @@ public class InboxSection extends HomeSection {
                         new Pair<>(DBReader.getEpisodes(0, NUM_EPISODES,
                                 new FeedItemFilter(FeedItemFilter.NEW), UserPreferences.getInboxSortedOrder()),
                                 DBReader.getTotalEpisodeCount(new FeedItemFilter(FeedItemFilter.NEW))))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(data -> {
                     items = data.first;

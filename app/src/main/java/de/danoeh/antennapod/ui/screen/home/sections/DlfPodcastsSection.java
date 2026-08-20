@@ -34,7 +34,7 @@ import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.event.FeedListUpdateEvent;
 import de.danoeh.antennapod.net.common.AntennapodHttpClient;
-import de.danoeh.antennapod.net.discovery.DLFPodcastSearcher;
+import de.danoeh.antennapod.net.discovery.DlfPodcastSearcher;
 import de.danoeh.antennapod.ui.appstartintent.OnlineFeedviewActivityStarter;
 import de.danoeh.antennapod.ui.common.SquareImageView;
 import de.danoeh.antennapod.ui.screen.home.HomeSection;
@@ -121,72 +121,73 @@ public class DlfPodcastsSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    OkHttpClient client = AntennapodHttpClient.getHttpClient();
+            OkHttpClient client = AntennapodHttpClient.getHttpClient();
 
-                    // Build ext_id → feedUrl lookup from DLF website
-                    Map<String, String> extIdToFeed = new HashMap<>();
-                    Request pageReq = new Request.Builder().url(DLF_PODCASTS_PAGE).build();
-                    try (Response resp = client.newCall(pageReq).execute()) {
-                        if (resp.isSuccessful() && resp.body() != null) {
-                            String html = resp.body().string();
-                            Matcher m = DATA_JSON_PATTERN.matcher(html);
-                            while (m.find()) {
-                                String decoded = m.group(1)
-                                        .replace("&quot;", "\"")
-                                        .replace("&amp;", "&")
-                                        .replace("&lt;", "<")
-                                        .replace("&gt;", ">");
-                                try {
-                                    JSONObject data = new JSONObject(decoded);
-                                    JSONObject val = data.optJSONObject("value");
-                                    if (val == null) {
-                                        continue;
-                                    }
-                                    String feed = val.optString("pathPodcast", "");
-                                    String extId = val.optString("sophoraExternalId", "");
-                                    if (!feed.isEmpty() && feed.endsWith(".xml") && !extId.isEmpty()) {
-                                        extIdToFeed.put(extId, feed);
-                                    }
-                                } catch (JSONException ignored) {
-                                }
+            // Build ext_id → feedUrl lookup from DLF website
+            Map<String, String> extIdToFeed = new HashMap<>();
+            Request pageReq = new Request.Builder().url(DLF_PODCASTS_PAGE).build();
+            try (Response resp = client.newCall(pageReq).execute()) {
+                if (resp.isSuccessful() && resp.body() != null) {
+                    String html = resp.body().string();
+                    Matcher m = DATA_JSON_PATTERN.matcher(html);
+                    while (m.find()) {
+                        String decoded = m.group(1)
+                                .replace("&quot;", "\"")
+                                .replace("&amp;", "&")
+                                .replace("&lt;", "<")
+                                .replace("&gt;", ">");
+                        try {
+                            JSONObject data = new JSONObject(decoded);
+                            JSONObject val = data.optJSONObject("value");
+                            if (val == null) {
+                                continue;
                             }
+                            String feed = val.optString("pathPodcast", "");
+                            String extId = val.optString("sophoraExternalId", "");
+                            if (!feed.isEmpty() && feed.endsWith(".xml") && !extId.isEmpty()) {
+                                extIdToFeed.put(extId, feed);
+                            }
+                        } catch (JSONException ignored) {
+                            // Skip entries that do not have the expected shape
                         }
                     }
+                }
+            }
 
-                    // Build ext_id → (stationId, sophoraId, imageUrl) from API for Kultur fallback
-                    Map<String, BroadcastInfo> apiLookup = new HashMap<>();
-                    Map<String, String> titleToImage = new HashMap<>();
-                    Request apiReq = new Request.Builder().url(BROADCASTS_URL).build();
-                    try (Response resp = client.newCall(apiReq).execute()) {
-                        if (resp.isSuccessful() && resp.body() != null) {
-                            JSONArray broadcasts = new JSONArray(resp.body().string());
-                            for (int i = 0; i < broadcasts.length(); i++) {
-                                JSONObject b = broadcasts.getJSONObject(i);
-                                String extId = b.optString("broadcast_external_id", "");
-                                if (!extId.isEmpty()) {
-                                    apiLookup.put(extId, new BroadcastInfo(
+            // Build ext_id → (stationId, sophoraId, imageUrl) from API for Kultur fallback
+            Map<String, BroadcastInfo> apiLookup = new HashMap<>();
+            Map<String, String> titleToImage = new HashMap<>();
+            Request apiReq = new Request.Builder().url(BROADCASTS_URL).build();
+            try (Response resp = client.newCall(apiReq).execute()) {
+                if (resp.isSuccessful() && resp.body() != null) {
+                    JSONArray broadcasts = new JSONArray(resp.body().string());
+                    for (int i = 0; i < broadcasts.length(); i++) {
+                        JSONObject b = broadcasts.getJSONObject(i);
+                        String extId = b.optString("broadcast_external_id", "");
+                        if (!extId.isEmpty()) {
+                            apiLookup.put(extId, new BroadcastInfo(
                                             b.optString("station_id"),
                                             b.optString("sophora_id")));
-                                }
-                                String title = b.optString("broadcast_title", "");
-                                String img = b.optString("broadcast_image_logo", null);
-                                if (!title.isEmpty() && img != null && !img.isEmpty()) {
-                                    titleToImage.put(title, img);
-                                }
-                            }
+                        }
+                        String title = b.optString("broadcast_title", "");
+                        String img = b.optString("broadcast_image_logo", null);
+                        if (!title.isEmpty() && img != null && !img.isEmpty()) {
+                            titleToImage.put(title, img);
                         }
                     }
+                }
+            }
 
-                    // Fetch selected (curated) podcasts and resolve feed URLs
-                    Request selectedReq = new Request.Builder().url(SELECTED_URL).build();
-                    try (Response resp = client.newCall(selectedReq).execute()) {
-                        if (!resp.isSuccessful() || resp.body() == null) {
-                            throw new IOException("Unexpected response: " + resp);
-                        }
-                        return parseSelectedPodcasts(resp.body().string(),
+            // Fetch selected (curated) podcasts and resolve feed URLs
+            Request selectedReq = new Request.Builder().url(SELECTED_URL).build();
+            try (Response resp = client.newCall(selectedReq).execute()) {
+                if (!resp.isSuccessful() || resp.body() == null) {
+                    throw new IOException("Unexpected response: " + resp);
+                }
+                return parseSelectedPodcasts(resp.body().string(),
                                 extIdToFeed, apiLookup, titleToImage);
-                    }
-                })
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {
@@ -229,7 +230,7 @@ public class DlfPodcastsSection extends HomeSection {
             if (feedUrl == null) {
                 BroadcastInfo info = apiLookup.get(extId);
                 if (info != null) {
-                    feedUrl = DLFPodcastSearcher.feedUrlForBroadcast(info.stationId, info.sophoraId);
+                    feedUrl = DlfPodcastSearcher.feedUrlForBroadcast(info.stationId, info.sophoraId);
                 }
             }
 

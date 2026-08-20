@@ -4,12 +4,12 @@ import android.text.TextUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -41,7 +41,7 @@ class SrfPlayJsonFeedParser {
     static FeedHandlerResult parse(Feed feed, OkHttpClient httpClient)
             throws IOException, JSONException, UnsupportedFeedtypeException {
         File file = new File(feed.getLocalFileUrl());
-        String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+        String json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
         JSONObject root = new JSONObject(json);
 
         if (!canParse(root)) {

@@ -8,6 +8,8 @@
         <item>QueueFragment</item>
         <item>NewEpisodesFragment</item>
         <item>DownloadsFragment</item>
+        <item>FavoritesFragment</item>
+        <item>StatisticsFragment</item>
         <item>AddFeedFragment</item>
         <item>SubscriptionList</item>
     </string-array>

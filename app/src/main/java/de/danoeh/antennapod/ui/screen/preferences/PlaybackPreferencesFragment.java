@@ -55,12 +55,13 @@ public class PlaybackPreferencesFragment extends AnimatedPreferenceFragment {
             SkipPreferenceDialog.showSkipPreference(activity, SkipPreferenceDialog.SkipDirection.SKIP_FORWARD, null);
             return true;
         });
-        findPreference(UserPreferences.PREF_SHOW_VOLUME_SLIDER).setOnPreferenceChangeListener((preference, newValue) -> {
-            // Posted, so that the new value is already stored when the player applies it
-            new Handler(Looper.getMainLooper())
-                    .post(() -> EventBus.getDefault().post(new VolumeAttenuationChangedEvent()));
-            return true;
-        });
+        findPreference(UserPreferences.PREF_SHOW_VOLUME_SLIDER)
+                .setOnPreferenceChangeListener((preference, newValue) -> {
+                    // Posted, so that the new value is already stored when the player applies it
+                    new Handler(Looper.getMainLooper()).post(
+                            () -> EventBus.getDefault().post(new VolumeAttenuationChangedEvent()));
+                    return true;
+                });
         if (Build.VERSION.SDK_INT >= 31) {
             findPreference(UserPreferences.PREF_UNPAUSE_ON_HEADSET_RECONNECT).setVisible(false);
             findPreference(UserPreferences.PREF_UNPAUSE_ON_BLUETOOTH_RECONNECT).setVisible(false);

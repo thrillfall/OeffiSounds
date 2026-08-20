@@ -36,7 +36,7 @@ public abstract class MediaSizeLoader {
                 // only query the network if we haven't already checked
 
                 String url = media.getDownloadUrl();
-                if (TextUtils.isEmpty(url)) {
+                if (TextUtils.isEmpty(url) || !url.startsWith("http")) {
                     emitter.onSuccess(0L);
                     return;
                 }
@@ -70,7 +70,7 @@ public abstract class MediaSizeLoader {
                 media.setSize(size);
             }
             emitter.onSuccess(size);
-            DBWriter.setFeedMedia(media);
+            DBWriter.setMediaDownloadInformation(media);
         })
         .subscribeOn(Schedulers.io())
         .observeOn(AndroidSchedulers.mainThread());

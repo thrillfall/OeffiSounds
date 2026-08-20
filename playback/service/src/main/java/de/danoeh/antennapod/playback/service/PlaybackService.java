@@ -56,6 +56,7 @@ import androidx.media.utils.MediaConstants;
 
 import de.danoeh.antennapod.event.PlayerStatusEvent;
 import de.danoeh.antennapod.net.sync.serviceinterface.SynchronizationQueue;
+import de.danoeh.antennapod.playback.base.BuildConfig;
 import de.danoeh.antennapod.playback.service.internal.ClockSleepTimer;
 import de.danoeh.antennapod.playback.service.internal.EpisodeSleepTimer;
 import de.danoeh.antennapod.playback.service.internal.LocalPSMP;
@@ -238,6 +239,9 @@ public class PlaybackService extends MediaBrowserServiceCompat {
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "Service created.");
+        if (BuildConfig.USE_MEDIA3_PLAYBACK_SERVICE) {
+            throw new IllegalStateException("Media3PlaybackService should be used instead of PlaybackService");
+        }
         isRunning = true;
 
         stateManager = new PlaybackServiceStateManager(this);
@@ -373,7 +377,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
             }
             emitter.onSuccess(queueItems);
         })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(queueItems -> mediaSession.setQueue(queueItems), Throwable::printStackTrace);
         singleShotDisposables.add(d);
@@ -433,7 +437,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
             result.sendResult(loadChildrenSynchronous(parentId));
             emitter.onComplete();
         })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     () -> {
@@ -575,7 +579,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                             return playable;
                         }
                     })
-                    .subscribeOn(Schedulers.io())
+                    .subscribeOn(Schedulers.computation())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             loadedPlayable -> startPlaying(loadedPlayable, allowStreamThisTime),
@@ -607,8 +611,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
             if (skipIntro * 1000 < duration || duration <= 0) {
                 Log.d(TAG, "skipIntro " + playable.getEpisodeTitle());
                 mediaPlayer.seekTo(skipIntro * 1000);
-                String skipIntroMesg = context.getString(R.string.pref_feed_skip_intro_toast,
-                        skipIntro);
+                String skipIntroMesg = context.getResources().getQuantityString(
+                        R.plurals.pref_feed_skip_intro_snackbar, skipIntro, skipIntro);
                 Toast toast = Toast.makeText(context, skipIntroMesg,
                         Toast.LENGTH_LONG);
                 toast.show();
@@ -634,8 +638,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         } else {
             pendingIntentAllowThisTime = PendingIntent.getService(this,
-                    R.id.pending_intent_allow_stream_this_time, intentAllowThisTime, PendingIntent.FLAG_UPDATE_CURRENT
-                            | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+                    R.id.pending_intent_allow_stream_this_time, intentAllowThisTime,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         }
 
         Intent intentAlwaysAllow = new Intent(intentAllowThisTime);
@@ -648,8 +652,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                     PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         } else {
             pendingIntentAlwaysAllow = PendingIntent.getService(this,
-                    R.id.pending_intent_allow_stream_always, intentAlwaysAllow, PendingIntent.FLAG_UPDATE_CURRENT
-                            | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+                    R.id.pending_intent_allow_stream_always, intentAlwaysAllow,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this,
@@ -772,7 +776,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
 
     private void startPlayingFromPreferences() {
         Disposable d = Observable.fromCallable(() -> DBReader.getFeedMedia(PlaybackPreferences.getCurrentlyPlayingFeedMediaId()))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         playable -> startPlaying(playable, false),
@@ -1207,7 +1211,8 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                     || (skipped && !UserPreferences.shouldSkipKeepEpisode())) {
                 // only mark the item as played if we're not keeping it anyways
                 positionJustResetAfterPlayback = item.getIdentifyingValue();
-                DBWriter.markItemPlayed(FeedItem.PLAYED, ended || (skipped && almostEnded), item);
+                DBWriter.markItemsPlayed(FeedItem.PLAYED, ended || (skipped && almostEnded),
+                        Collections.singletonList(item));
                 // don't know if it actually matters to not autodownload when smart mark as played is triggered
                 DBWriter.removeQueueItem(PlaybackService.this, ended, item);
                 // Delete episode if enabled
@@ -1281,8 +1286,9 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                 && ((remainingTime - skipEnd * 1000) < (getCurrentPlaybackSpeed() * 1000))) {
             Log.d(TAG, "skipEndingIfNecessary: Skipping the remaining " + remainingTime + " " + skipEnd * 1000 + " speed " + getCurrentPlaybackSpeed());
             Context context = getApplicationContext();
-            String skipMesg = context.getString(R.string.pref_feed_skip_ending_toast, skipEnd);
-            Toast toast = Toast.makeText(context, skipMesg, Toast.LENGTH_LONG);
+            String skipMsg = context.getResources().getQuantityString(
+                    R.plurals.pref_feed_skip_ending_snackbar, skipEnd, skipEnd);
+            Toast toast = Toast.makeText(context, skipMsg, Toast.LENGTH_LONG);
             toast.show();
 
             this.autoSkippedFeedMediaId = feedMedia.getItem().getIdentifyingValue();
@@ -1916,7 +1922,7 @@ public class PlaybackService extends MediaBrowserServiceCompat {
                 return;
             }
 
-            List<FeedItem> results = DBReader.searchFeedItems(0, query, Feed.STATE_SUBSCRIBED);
+            List<FeedItem> results = DBReader.searchFeedItems(0, query, FeedItemFilter.unfiltered());
             if (results.size() > 0 && results.get(0).getMedia() != null) {
                 FeedMedia media = results.get(0).getMedia();
                 startPlaying(media, false);

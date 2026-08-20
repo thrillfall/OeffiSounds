@@ -3,7 +3,6 @@ package de.danoeh.antennapod.ui.appstartintent;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 
 /**
@@ -14,6 +13,7 @@ public class MainActivityStarter {
     public static final String INTENT = "de.danoeh.antennapod.intents.MAIN_ACTIVITY";
     public static final String EXTRA_OPEN_PLAYER = "open_player";
     public static final String EXTRA_FEED_ID = "fragment_feed_id";
+    public static final String EXTRA_EPISODE_ID = "episode_id";
     public static final String EXTRA_CLEAR_BACK_STACK = "clear_back_stack";
     public static final String EXTRA_FRAGMENT_TAG = "fragment_tag";
     public static final String EXTRA_OPEN_DRAWER = "open_drawer";
@@ -40,7 +40,7 @@ public class MainActivityStarter {
 
     public PendingIntent getPendingIntent() {
         return PendingIntent.getActivity(context, R.id.pending_intent_player_activity, getIntent(),
-                PendingIntent.FLAG_UPDATE_CURRENT | (Build.VERSION.SDK_INT >= 23 ? PendingIntent.FLAG_IMMUTABLE : 0));
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
     }
 
     public void start() {
@@ -54,6 +54,11 @@ public class MainActivityStarter {
 
     public MainActivityStarter withOpenFeed(long feedId) {
         intent.putExtra(EXTRA_FEED_ID, feedId);
+        return this;
+    }
+
+    public MainActivityStarter withOpenEpisode(long episodeId) {
+        intent.putExtra(EXTRA_EPISODE_ID, episodeId);
         return this;
     }
 

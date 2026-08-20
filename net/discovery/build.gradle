@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
 }
 apply from: "../../common.gradle"
 apply from: "../../playFlavor.gradle"
@@ -24,14 +24,12 @@ dependencies {
     implementation project(':storage:preferences')
     implementation project(':ui:i18n')
 
-    annotationProcessor "androidx.annotation:annotation:$annotationVersion"
+    annotationProcessor libs.androidx.annotation
 
-    implementation 'com.github.mfietz:fyydlin:e1d25f347641fe5e26c4c2b9756d4e9001a398dd'
+    implementation libs.rxandroid
+    implementation libs.rxjava
+    implementation libs.okhttp
 
-    implementation "io.reactivex.rxjava3:rxandroid:$rxAndroidVersion"
-    implementation "io.reactivex.rxjava3:rxjava:$rxJavaVersion"
-    implementation "com.squareup.okhttp3:okhttp:$okhttpVersion"
-
-    testImplementation "junit:junit:$junitVersion"
-    testImplementation 'org.json:json:20230618'
+    testImplementation libs.junit
+    testImplementation libs.json
 }

@@ -32,7 +32,6 @@ import de.danoeh.antennapod.ui.screen.feed.ItemSortDialog;
 import de.danoeh.antennapod.event.EpisodeDownloadEvent;
 import de.danoeh.antennapod.event.FeedItemEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
-import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeMultiSelectActionHandler;
 import de.danoeh.antennapod.ui.swipeactions.SwipeActions;
@@ -42,10 +41,10 @@ import de.danoeh.antennapod.model.feed.FeedItemFilter;
 import de.danoeh.antennapod.model.feed.SortOrder;
 import de.danoeh.antennapod.net.download.serviceinterface.DownloadServiceInterface;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
-import de.danoeh.antennapod.ui.view.EmptyViewHandler;
+import de.danoeh.antennapod.ui.common.EmptyViewHandler;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeItemListRecyclerView;
 import de.danoeh.antennapod.ui.view.FloatingSelectMenu;
-import de.danoeh.antennapod.ui.view.LiftOnScrollListener;
+import de.danoeh.antennapod.ui.common.LiftOnScrollListener;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeItemViewHolder;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -107,7 +106,6 @@ public class CompletedDownloadsFragment extends Fragment
         swipeRefreshLayout.setOnRefreshListener(() -> FeedUpdateManager.getInstance().runOnceOrAsk(requireContext()));
 
         recyclerView = root.findViewById(R.id.recyclerView);
-        recyclerView.setRecycledViewPool(((MainActivity) getActivity()).getRecycledViewPool());
         adapter = new CompletedDownloadsListAdapter(getActivity());
         adapter.setOnSelectModeListener(this);
         recyclerView.setAdapter(adapter);
@@ -191,9 +189,10 @@ public class CompletedDownloadsFragment extends Fragment
                 public void onConfirmButtonPressed(DialogInterface clickedDialog) {
                     clickedDialog.dismiss();
                     Observable.fromCallable(() -> DBReader.getEpisodes(0, Integer.MAX_VALUE,
-                                    new FeedItemFilter(FeedItemFilter.DOWNLOADED, FeedItemFilter.INCLUDE_NOT_SUBSCRIBED,
+                                    new FeedItemFilter(FeedItemFilter.DOWNLOADED,
+                                            FeedItemFilter.INCLUDE_ALL_FEED_STATES,
                                             FeedItemFilter.PLAYED), SortOrder.DATE_OLD_NEW))
-                            .subscribeOn(Schedulers.io())
+                            .subscribeOn(Schedulers.computation())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(items -> new EpisodeMultiSelectActionHandler(getActivity(), R.id.remove_item)
                                     .handleAction(items), error -> Log.e(TAG, Log.getStackTraceString(error)));
@@ -251,6 +250,10 @@ public class CompletedDownloadsFragment extends Fragment
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(FeedItemEvent event) {
         Log.d(TAG, "onEventMainThread() called with: " + "event = [" + event + "]");
+        if (event.unreadStatusChanged && event.items.isEmpty()) {
+            loadItems();
+            return;
+        }
         if (items == null) {
             return;
         } else if (adapter == null) {
@@ -295,11 +298,6 @@ public class CompletedDownloadsFragment extends Fragment
         loadItems();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnreadItemsChanged(UnreadItemsUpdateEvent event) {
-        loadItems();
-    }
-
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onEventMainThread(FeedUpdateRunningEvent event) {
         swipeRefreshLayout.setRefreshing(event.isFeedUpdateRunning);
@@ -313,7 +311,7 @@ public class CompletedDownloadsFragment extends Fragment
         disposable = Observable.fromCallable(() -> {
             SortOrder sortOrder = UserPreferences.getDownloadsSortedOrder();
             List<FeedItem> downloadedItems = DBReader.getEpisodes(0, Integer.MAX_VALUE,
-                    new FeedItemFilter(FeedItemFilter.DOWNLOADED, FeedItemFilter.INCLUDE_NOT_SUBSCRIBED), sortOrder);
+                    new FeedItemFilter(FeedItemFilter.DOWNLOADED, FeedItemFilter.INCLUDE_ALL_FEED_STATES), sortOrder);
 
             List<String> mediaUrls = new ArrayList<>();
             if (runningDownloads == null) {
@@ -329,7 +327,7 @@ public class CompletedDownloadsFragment extends Fragment
             currentDownloads.addAll(downloadedItems);
             return currentDownloads;
         })
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(Schedulers.computation())
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(
                 result -> {

@@ -291,6 +291,7 @@
         <item>NewEpisodesFragment</item>
         <item>EpisodesFragment</item>
         <item>SubscriptionFragment</item>
+        <item>StatisticsFragment</item>
         <item>remember</item>
     </string-array>
 
@@ -300,6 +301,7 @@
         <item>@string/inbox_label</item>
         <item>@string/episodes_label</item>
         <item>@string/subscriptions_label</item>
+        <item>@string/statistics_label</item>
         <item>@string/remember_last_page</item>
     </string-array>
 
@@ -317,11 +319,11 @@
 
     <string-array name="search_provider_values">
         <item>AudiothekPodcastSearcher</item>
-        <item>BBCSoundsPodcastSearcher</item>
-        <item>SRFPlayPodcastSearcher</item>
-        <item>ORFSoundPodcastSearcher</item>
-        <item>DLFPodcastSearcher</item>
-        <item>RTVEPodcastSearcher</item>
+        <item>BbcSoundsPodcastSearcher</item>
+        <item>SrfPlayPodcastSearcher</item>
+        <item>OrfSoundPodcastSearcher</item>
+        <item>DlfPodcastSearcher</item>
+        <item>RtvePodcastSearcher</item>
         <item>FyydPodcastSearcher</item>
         <item>ItunesPodcastSearcher</item>
         <item>PodcastIndexPodcastSearcher</item>

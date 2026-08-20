@@ -109,17 +109,17 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
         listAdapter.setDummyViews(NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-                    Request request = new Request.Builder()
+            Request request = new Request.Builder()
                             .url(PLAYOUT_API_URL)
                             .build();
-                    try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
-                        if (!response.isSuccessful()) {
-                            throw new IOException("Unexpected response: " + response);
-                        }
-                        String body = response.body() != null ? response.body().string() : "";
-                        return parseHeuteWichtig(body);
-                    }
-                })
+            try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected response: " + response);
+                }
+                String body = response.body() != null ? response.body().string() : "";
+                return parseHeuteWichtig(body);
+            }
+        })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(items -> {

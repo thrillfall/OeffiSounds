@@ -1,5 +1,6 @@
 package de.danoeh.antennapod.net.discovery;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import static org.junit.Assert.assertNotNull;
 public class AudiothekSearchResultParserTest {
 
     @Test
-    public void parseProgramSets_createsProgramSetUrlAndMapsFields() {
+    public void parseProgramSets_createsProgramSetUrlAndMapsFields() throws JSONException {
         String json = "{\n"
                 + "  \"data\": {\n"
                 + "    \"search\": {\n"

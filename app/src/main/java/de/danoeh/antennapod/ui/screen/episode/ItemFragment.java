@@ -1,9 +1,6 @@
 package de.danoeh.antennapod.ui.screen.episode;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Layout;
 import android.text.TextUtils;
@@ -24,6 +21,7 @@ import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.ArrowOrientationRules;
 import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
+import de.danoeh.antennapod.BuildConfig;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.actionbutton.CancelDownloadActionButton;
 import de.danoeh.antennapod.actionbutton.DeleteActionButton;
@@ -37,11 +35,12 @@ import de.danoeh.antennapod.actionbutton.StreamActionButton;
 import de.danoeh.antennapod.actionbutton.VisitWebsiteActionButton;
 import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.databinding.FeeditemFragmentBinding;
+import de.danoeh.antennapod.ui.common.ClipboardUtils;
 import de.danoeh.antennapod.event.EpisodeDownloadEvent;
 import de.danoeh.antennapod.event.FeedItemEvent;
+import de.danoeh.antennapod.event.FeedListUpdateEvent;
 import de.danoeh.antennapod.event.MessageEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
-import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedItem;
 import de.danoeh.antennapod.model.feed.FeedMedia;
@@ -61,13 +60,14 @@ import de.danoeh.antennapod.ui.common.ThemeUtils;
 import de.danoeh.antennapod.ui.episodes.ImageResourceUtils;
 import de.danoeh.antennapod.ui.screen.feed.FeedItemlistFragment;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -116,14 +116,17 @@ public class ItemFragment extends Fragment {
         viewBinding = FeeditemFragmentBinding.inflate(inflater, container, false);
         viewBinding.header.setVisibility(View.INVISIBLE);
         viewBinding.txtvPodcast.setOnClickListener(v -> openPodcast());
-        if (Build.VERSION.SDK_INT >= 23) {
-            viewBinding.txtvTitle.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_FULL);
-        }
+        viewBinding.txtvTitle.setHyphenationFrequency(Layout.HYPHENATION_FREQUENCY_FULL);
         viewBinding.txtvTitle.setEllipsize(TextUtils.TruncateAt.END);
         viewBinding.webvDescription.setTimecodeSelectedListener(time -> {
             if (!PlaybackService.isRunning) {
                 EventBus.getDefault().post(
                         new MessageEvent(getString(R.string.play_this_to_seek_position_message)));
+                return;
+            }
+            if (BuildConfig.USE_MEDIA3_PLAYBACK_SERVICE) {
+                PlaybackController.bindToMedia3Service(getActivity(), controller ->
+                        controller.seekTo(time));
                 return;
             }
             PlaybackController.bindToService(getActivity(), playbackService -> {
@@ -160,25 +163,14 @@ public class ItemFragment extends Fragment {
             actionButton2.onClick(getContext());
         });
         viewBinding.txtvPodcast.setOnLongClickListener(v -> {
-            copyToClipboard(requireContext(), viewBinding.txtvPodcast.getText().toString());
+            ClipboardUtils.copyText(viewBinding.txtvPodcast);
             return true;
         });
         viewBinding.txtvTitle.setOnLongClickListener(v -> {
-            copyToClipboard(requireContext(), viewBinding.txtvTitle.getText().toString());
+            ClipboardUtils.copyText(viewBinding.txtvTitle);
             return true;
         });
         return viewBinding.getRoot();
-    }
-
-    public void copyToClipboard(Context context, String text) {
-        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-        if (clipboard != null) {
-            ClipData clip = ClipData.newPlainText(text, text);
-            clipboard.setPrimaryClip(clip);
-            if (Build.VERSION.SDK_INT <= 32) {
-                EventBus.getDefault().post(new MessageEvent(getString(R.string.copied_to_clipboard)));
-            }
-        }
     }
 
     private void showOnDemandConfigBalloon(boolean offerStreaming) {
@@ -205,7 +197,7 @@ public class ItemFragment extends Fragment {
         positiveButton.setOnClickListener(v1 -> {
             UserPreferences.setStreamOverDownload(offerStreaming);
             // Update all visible lists to reflect new streaming action button
-            EventBus.getDefault().post(new UnreadItemsUpdateEvent());
+            EventBus.getDefault().post(new FeedItemEvent(Collections.emptyList(), true));
             EventBus.getDefault().post(new MessageEvent(getString(R.string.on_demand_config_setting_changed)));
             balloon.dismiss();
         });
@@ -328,10 +320,10 @@ public class ItemFragment extends Fragment {
             }
             if (DownloadServiceInterface.get().isDownloadingEpisode(media.getDownloadUrl())) {
                 actionButton2 = new CancelDownloadActionButton(item);
-            } else if (!media.isDownloaded()) {
-                actionButton2 = new DownloadActionButton(item);
-            } else {
+            } else if (item.getFeed().isLocalFeed() || media.isDownloaded()) {
                 actionButton2 = new DeleteActionButton(item);
+            } else {
+                actionButton2 = new DownloadActionButton(item);
             }
         }
 
@@ -367,11 +359,22 @@ public class ItemFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(FeedItemEvent event) {
         Log.d(TAG, "onEventMainThread() called with: " + "event = [" + event + "]");
+        if (event.unreadStatusChanged && event.items.isEmpty()) {
+            load();
+            return;
+        }
         for (FeedItem item : event.items) {
-            if (this.item.getId() == item.getId()) {
+            if (this.item != null && this.item.getId() == item.getId()) {
                 load();
                 return;
             }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(FeedListUpdateEvent event) {
+        if (item != null && item.getFeed() != null && event.contains(item.getFeed())) {
+            load();
         }
     }
 
@@ -393,11 +396,6 @@ public class ItemFragment extends Fragment {
         updateButtons();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnreadItemsChanged(UnreadItemsUpdateEvent event) {
-        load();
-    }
-
     private void load() {
         if (disposable != null) {
             disposable.dispose();
@@ -405,8 +403,8 @@ public class ItemFragment extends Fragment {
         if (!itemsLoaded) {
             viewBinding.progbarLoading.setVisibility(View.VISIBLE);
         }
-        disposable = Observable.fromCallable(this::loadInBackground)
-            .subscribeOn(Schedulers.io())
+        disposable = Maybe.fromCallable(this::loadInBackground)
+            .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(result -> {
                 viewBinding.progbarLoading.setVisibility(View.GONE);
@@ -414,7 +412,8 @@ public class ItemFragment extends Fragment {
                 item = result;
                 onFragmentLoaded();
                 itemsLoaded = true;
-            }, error -> Log.e(TAG, Log.getStackTraceString(error)));
+            }, error -> Log.e(TAG, Log.getStackTraceString(error)),
+                    () -> requireActivity().getSupportFragmentManager().popBackStack());
     }
 
     @Nullable

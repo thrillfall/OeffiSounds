@@ -17,7 +17,7 @@ import de.danoeh.antennapod.event.DownloadLogEvent;
 import de.danoeh.antennapod.model.download.DownloadResult;
 import de.danoeh.antennapod.storage.database.DBReader;
 import de.danoeh.antennapod.storage.database.DBWriter;
-import de.danoeh.antennapod.ui.view.EmptyViewHandler;
+import de.danoeh.antennapod.ui.common.EmptyViewHandler;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.disposables.Disposable;
@@ -80,6 +80,7 @@ public class DownloadLogFragment extends BottomSheetDialogFragment
     public void onDestroyView() {
         EventBus.getDefault().unregister(this);
         super.onDestroyView();
+        viewBinding = null;
     }
 
     @Override
@@ -110,7 +111,7 @@ public class DownloadLogFragment extends BottomSheetDialogFragment
             disposable.dispose();
         }
         disposable = Observable.fromCallable(DBReader::getDownloadLog)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
                     if (result != null) {

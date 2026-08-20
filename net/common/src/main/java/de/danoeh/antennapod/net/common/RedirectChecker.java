@@ -1,6 +1,8 @@
 package de.danoeh.antennapod.net.common;
 
+import android.text.TextUtils;
 import android.util.Log;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -49,5 +51,21 @@ public abstract class RedirectChecker {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @NonNull
+    public static String getFinalUrl(@NonNull String url) {
+        if (TextUtils.isEmpty(url) || !url.startsWith("http")) {
+            return url;
+        }
+        try {
+            Request httpReq = new Request.Builder().url(url).head().build();
+            Response response = AntennapodHttpClient.getHttpClient().newCall(httpReq).execute();
+            response.close();
+            return response.request().url().toString();
+        } catch (IOException e) {
+            Log.e(TAG, "Failed to follow redirects for " + url + ": " + e.getMessage());
+            return url;
+        }
     }
 }

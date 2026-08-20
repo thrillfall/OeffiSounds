@@ -21,8 +21,8 @@ import de.danoeh.antennapod.ui.screen.feed.RemoveFeedDialog;
 import de.danoeh.antennapod.ui.screen.feed.preferences.TagSettingsDialog;
 import de.danoeh.antennapod.model.feed.Feed;
 import de.danoeh.antennapod.model.feed.FeedPreferences;
-import de.danoeh.antennapod.ui.screen.preferences.PreferenceListDialog;
-import de.danoeh.antennapod.ui.screen.preferences.PreferenceSwitchDialog;
+import de.danoeh.antennapod.ui.preferences.screen.PreferenceListDialog;
+import de.danoeh.antennapod.ui.preferences.screen.PreferenceSwitchDialog;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -168,7 +168,7 @@ public class FeedMultiSelectActionHandler {
                         DBWriter.removeFeedNewFlag(selectedFeed.getId());
                     }
                 })
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.computation())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(result -> { }, error -> Log.e(TAG, Log.getStackTraceString(error)));
             }

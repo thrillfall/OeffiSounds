@@ -3,7 +3,6 @@ package de.danoeh.antennapod.ui.screen.home;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +41,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.RtvePodcastsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.SubscriptionsSection;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomePreferences;
 import de.danoeh.antennapod.ui.screen.home.settingsdialog.HomeSectionsSettingsDialog;
-import de.danoeh.antennapod.ui.view.LiftOnScrollListener;
+import de.danoeh.antennapod.ui.common.LiftOnScrollListener;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,63 +95,71 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
 
         SharedPreferences prefs = getContext().getSharedPreferences(HomeFragment.PREF_NAME, Context.MODE_PRIVATE);
         if (EchoConfig.isCurrentlyVisible() && prefs.getInt(PREF_HIDE_ECHO, 0) != EchoConfig.RELEASE_YEAR) {
-            addSection(new EchoSection());
+            addSection(new EchoSection(), R.id.home_section_echo);
         }
 
         List<String> sectionTags = HomePreferences.getSortedSectionTags(getContext());
         for (String sectionTag : sectionTags) {
-            addSection(getSection(sectionTag));
+            addSection(getSection(sectionTag), getSectionContainerId(sectionTag));
         }
     }
 
-    private void addSection(Fragment section) {
+    private void addSection(Fragment section, int id) {
+        if (section == null) { // Can happen when stored settings reference a section that no longer exists
+            return;
+        }
         FragmentContainerView containerView = new FragmentContainerView(getContext());
-        containerView.setId(View.generateViewId());
+        containerView.setId(id);
         viewBinding.homeContainer.addView(containerView);
         getChildFragmentManager().beginTransaction().replace(containerView.getId(), section).commit();
     }
 
+    private int getSectionContainerId(String sectionTag) {
+        return switch (sectionTag) {
+            case QueueSection.TAG -> R.id.home_section_queue;
+            case InboxSection.TAG -> R.id.home_section_inbox;
+            case EpisodesSurpriseSection.TAG -> R.id.home_section_surprise;
+            case SubscriptionsSection.TAG -> R.id.home_section_subscriptions;
+            case DownloadsSection.TAG -> R.id.home_section_downloads;
+            case AudiothekFeaturedSection.TAG -> R.id.home_section_audiothek_featured;
+            case AudiothekChartsSection.TAG -> R.id.home_section_audiothek_charts;
+            case AudiothekHotSection.TAG -> R.id.home_section_audiothek_hot;
+            case AudiothekLiveSection.TAG -> R.id.home_section_audiothek_live;
+            case AudiothekStageSection.TAG -> R.id.home_section_audiothek_stage;
+            case AudiothekSection.TAG -> R.id.home_section_audiothek;
+            case AudiothekHeuteWichtigSection.TAG -> R.id.home_section_audiothek_heute_wichtig;
+            case BbcSoundsFeaturedSection.TAG -> R.id.home_section_bbc_featured;
+            case BbcAudioRecommendedTodaySection.TAG -> R.id.home_section_bbc_recommended;
+            case SrfPlayPopularSection.TAG -> R.id.home_section_srf_popular;
+            case OrfSoundPodcastsSection.TAG -> R.id.home_section_orf_podcasts;
+            case DlfPodcastsSection.TAG -> R.id.home_section_dlf_podcasts;
+            case RtvePodcastsSection.TAG -> R.id.home_section_rtve_podcasts;
+            default -> throw new IllegalArgumentException("Unknown section tag: " + sectionTag);
+        };
+    }
+
     private Fragment getSection(String tag) {
-        switch (tag) {
-            case QueueSection.TAG:
-                return new QueueSection();
-            case InboxSection.TAG:
-                return new InboxSection();
-            case EpisodesSurpriseSection.TAG:
-                return new EpisodesSurpriseSection();
-            case AudiothekFeaturedSection.TAG:
-                return new AudiothekFeaturedSection();
-            case AudiothekChartsSection.TAG:
-                return new AudiothekChartsSection();
-            case AudiothekHotSection.TAG:
-                return new AudiothekHotSection();
-            case AudiothekLiveSection.TAG:
-                return new AudiothekLiveSection();
-            case AudiothekStageSection.TAG:
-                return new AudiothekStageSection();
-            case AudiothekSection.TAG:
-                return new AudiothekSection();
-            case AudiothekHeuteWichtigSection.TAG:
-                return new AudiothekHeuteWichtigSection();
-            case BbcSoundsFeaturedSection.TAG:
-                return new BbcSoundsFeaturedSection();
-            case BbcAudioRecommendedTodaySection.TAG:
-                return new BbcAudioRecommendedTodaySection();
-            case SrfPlayPopularSection.TAG:
-                return new SrfPlayPopularSection();
-            case OrfSoundPodcastsSection.TAG:
-                return new OrfSoundPodcastsSection();
-            case DlfPodcastsSection.TAG:
-                return new DlfPodcastsSection();
-            case RtvePodcastsSection.TAG:
-                return new RtvePodcastsSection();
-            case SubscriptionsSection.TAG:
-                return new SubscriptionsSection();
-            case DownloadsSection.TAG:
-                return new DownloadsSection();
-            default:
-                return null;
-        }
+        return switch (tag) {
+            case QueueSection.TAG -> new QueueSection();
+            case InboxSection.TAG -> new InboxSection();
+            case EpisodesSurpriseSection.TAG -> new EpisodesSurpriseSection();
+            case SubscriptionsSection.TAG -> new SubscriptionsSection();
+            case DownloadsSection.TAG -> new DownloadsSection();
+            case AudiothekFeaturedSection.TAG -> new AudiothekFeaturedSection();
+            case AudiothekChartsSection.TAG -> new AudiothekChartsSection();
+            case AudiothekHotSection.TAG -> new AudiothekHotSection();
+            case AudiothekLiveSection.TAG -> new AudiothekLiveSection();
+            case AudiothekStageSection.TAG -> new AudiothekStageSection();
+            case AudiothekSection.TAG -> new AudiothekSection();
+            case AudiothekHeuteWichtigSection.TAG -> new AudiothekHeuteWichtigSection();
+            case BbcSoundsFeaturedSection.TAG -> new BbcSoundsFeaturedSection();
+            case BbcAudioRecommendedTodaySection.TAG -> new BbcAudioRecommendedTodaySection();
+            case SrfPlayPopularSection.TAG -> new SrfPlayPopularSection();
+            case OrfSoundPodcastsSection.TAG -> new OrfSoundPodcastsSection();
+            case DlfPodcastsSection.TAG -> new DlfPodcastsSection();
+            case RtvePodcastsSection.TAG -> new RtvePodcastsSection();
+            default -> null;
+        };
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -191,6 +198,15 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        viewBinding = null;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

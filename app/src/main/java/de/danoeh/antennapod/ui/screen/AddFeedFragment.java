@@ -36,9 +36,9 @@ import de.danoeh.antennapod.net.download.serviceinterface.FeedUpdateManager;
 import de.danoeh.antennapod.storage.database.FeedDatabaseWriter;
 import de.danoeh.antennapod.model.feed.SortOrder;
 import de.danoeh.antennapod.databinding.AddfeedBinding;
-import de.danoeh.antennapod.databinding.EditTextDialogBinding;
+import de.danoeh.antennapod.ui.common.databinding.EditTextDialogBinding;
 import de.danoeh.antennapod.net.discovery.AudiothekPodcastSearcher;
-import de.danoeh.antennapod.net.discovery.BBCSoundsPodcastSearcher;
+import de.danoeh.antennapod.net.discovery.BbcSoundsPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.CombinedSearcher;
 import de.danoeh.antennapod.net.discovery.FyydPodcastSearcher;
 import de.danoeh.antennapod.net.discovery.ItunesPodcastSearcher;
@@ -48,9 +48,10 @@ import de.danoeh.antennapod.ui.appstartintent.OnlineFeedviewActivityStarter;
 import de.danoeh.antennapod.ui.common.Keyboard;
 import de.danoeh.antennapod.ui.discovery.OnlineSearchFragment;
 import de.danoeh.antennapod.ui.screen.feed.FeedItemlistFragment;
-import de.danoeh.antennapod.ui.view.LiftOnScrollListener;
+import de.danoeh.antennapod.ui.common.LiftOnScrollListener;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.greenrobot.eventbus.EventBus;
 
@@ -66,6 +67,7 @@ public class AddFeedFragment extends Fragment {
     private static final String KEY_UP_ARROW = "up_arrow";
 
     private AddfeedBinding viewBinding;
+    private Disposable disposable;
     private MainActivity activity;
     private boolean displayUpArrow;
 
@@ -101,7 +103,7 @@ public class AddFeedFragment extends Fragment {
         viewBinding.searchAudiothekButton.setOnClickListener(v
                 -> activity.loadChildFragment(OnlineSearchFragment.newInstance(AudiothekPodcastSearcher.class)));
         viewBinding.searchBbcButton.setOnClickListener(v
-                -> activity.loadChildFragment(OnlineSearchFragment.newInstance(BBCSoundsPodcastSearcher.class)));
+                -> activity.loadChildFragment(OnlineSearchFragment.newInstance(BbcSoundsPodcastSearcher.class)));
 
         updateProviderButtonVisibility();
 
@@ -152,13 +154,22 @@ public class AddFeedFragment extends Fragment {
         viewBinding.searchAudiothekButton.setVisibility(
                 enabled.contains("AudiothekPodcastSearcher") ? View.VISIBLE : View.GONE);
         viewBinding.searchBbcButton.setVisibility(
-                enabled.contains("BBCSoundsPodcastSearcher") ? View.VISIBLE : View.GONE);
+                enabled.contains("BbcSoundsPodcastSearcher") ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putBoolean(KEY_UP_ARROW, displayUpArrow);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (disposable != null) {
+            disposable.dispose();
+        }
+        viewBinding = null;
     }
 
     private void showAddViaUrlDialog() {
@@ -223,8 +234,8 @@ public class AddFeedFragment extends Fragment {
         if (uri == null) {
             return;
         }
-        Observable.fromCallable(() -> addLocalFolder(uri))
-                .subscribeOn(Schedulers.io())
+        disposable = Observable.fromCallable(() -> addLocalFolder(uri))
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                         feed -> {

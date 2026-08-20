@@ -56,7 +56,6 @@ import de.danoeh.antennapod.event.FeedItemEvent;
 import de.danoeh.antennapod.event.FeedUpdateRunningEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
 import de.danoeh.antennapod.event.QueueEvent;
-import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeMultiSelectActionHandler;
 import de.danoeh.antennapod.ui.swipeactions.SwipeActions;
@@ -65,9 +64,9 @@ import de.danoeh.antennapod.model.feed.FeedItem;
 import de.danoeh.antennapod.model.feed.FeedItemFilter;
 import de.danoeh.antennapod.model.feed.SortOrder;
 import de.danoeh.antennapod.storage.preferences.UserPreferences;
-import de.danoeh.antennapod.ui.view.EmptyViewHandler;
+import de.danoeh.antennapod.ui.common.EmptyViewHandler;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeItemListRecyclerView;
-import de.danoeh.antennapod.ui.view.LiftOnScrollListener;
+import de.danoeh.antennapod.ui.common.LiftOnScrollListener;
 import de.danoeh.antennapod.ui.episodeslist.EpisodeItemViewHolder;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -157,8 +156,10 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
             case REMOVED:
             case IRREVERSIBLE_REMOVED:
                 position = FeedItemEvent.indexOfItemWithId(queue, event.item.getId());
-                queue.remove(position);
-                recyclerAdapter.notifyItemRemoved(position);
+                if (position >= 0) {
+                    queue.remove(position);
+                    recyclerAdapter.notifyItemRemoved(position);
+                }
                 break;
             case CLEARED:
                 queue.clear();
@@ -166,8 +167,10 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
                 break;
             case MOVED:
                 position = FeedItemEvent.indexOfItemWithId(queue, event.item.getId());
-                queue.add(event.position, queue.remove(position));
-                recyclerAdapter.notifyItemMoved(position, event.position);
+                if (position >= 0) {
+                    queue.add(event.position, queue.remove(position));
+                    recyclerAdapter.notifyItemMoved(position, event.position);
+                }
                 break;
             default:
                 return;
@@ -180,6 +183,11 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(FeedItemEvent event) {
         Log.d(TAG, "onEventMainThread() called with: " + "event = [" + event + "]");
+        if (event.unreadStatusChanged && event.items.isEmpty()) {
+            loadItems();
+            refreshToolbarState();
+            return;
+        }
         if (queue == null) {
             return;
         } else if (recyclerAdapter == null) {
@@ -195,6 +203,9 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
                 recyclerAdapter.notifyItemChangedCompat(pos);
                 refreshInfoBar();
             }
+        }
+        if (event.unreadStatusChanged) {
+            refreshToolbarState();
         }
     }
 
@@ -227,13 +238,6 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPlayerStatusChanged(PlayerStatusEvent event) {
-        loadItems();
-        refreshToolbarState();
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnreadItemsChanged(UnreadItemsUpdateEvent event) {
-        // Sent when playback position is reset
         loadItems();
         refreshToolbarState();
     }
@@ -312,7 +316,9 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
             conDialog.createNewDialog().show();
             return true;
         } else if (itemId == R.id.action_search) {
-            ((MainActivity) getActivity()).loadChildFragment(SearchFragment.newInstance());
+            ((MainActivity) getActivity()).loadChildFragment(
+                    SearchFragment.newInstance(new FeedItemFilter(FeedItemFilter.QUEUED,
+                            FeedItemFilter.INCLUDE_ALL_FEED_STATES)));
             return true;
         }
         return false;
@@ -429,7 +435,6 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
         if (animator instanceof SimpleItemAnimator) {
             ((SimpleItemAnimator) animator).setSupportsChangeAnimations(false);
         }
-        recyclerView.setRecycledViewPool(((MainActivity) getActivity()).getRecycledViewPool());
         registerForContextMenu(recyclerView);
         recyclerView.addOnScrollListener(new LiftOnScrollListener(root.findViewById(R.id.appbar)));
 
@@ -495,24 +500,20 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
     }
 
     private void refreshInfoBar() {
-        String info = getResources().getQuantityString(R.plurals.num_episodes, queue.size(), queue.size());
-        if (!queue.isEmpty()) {
-            long timeLeft = 0;
-            for (FeedItem item : queue) {
-                float playbackSpeed = 1;
-                if (UserPreferences.timeRespectsSpeed()) {
-                    playbackSpeed = PlaybackSpeedUtils.getCurrentPlaybackSpeed(item.getMedia());
-                }
-                if (item.getMedia() != null) {
-                    long itemTimeLeft = item.getMedia().getDuration() - item.getMedia().getPosition();
-                    timeLeft += itemTimeLeft / playbackSpeed;
-                }
+        long timeLeft = 0;
+        for (FeedItem item : queue) {
+            float playbackSpeed = 1;
+            if (UserPreferences.timeRespectsSpeed()) {
+                playbackSpeed = PlaybackSpeedUtils.getCurrentPlaybackSpeed(item.getMedia());
             }
-            info += " • ";
-            info += getString(R.string.time_left_label);
-            info += Converter.getDurationStringLocalized(getResources(), timeLeft, false);
+            if (item.getMedia() != null) {
+                long itemTimeLeft = item.getMedia().getDuration() - item.getMedia().getPosition();
+                timeLeft += (long) (itemTimeLeft / playbackSpeed);
+            }
         }
-        infoBar.setText(info);
+        String episodes = getResources().getQuantityString(R.plurals.num_episodes, queue.size(), queue.size());
+        String time = Converter.getDurationStringLocalized(getResources(), timeLeft, false);
+        infoBar.setText(getString(R.string.queue_time_left_label, episodes, time));
 
         if (recyclerAdapter.inActionMode()) {
             infoBar.setVisibility(View.INVISIBLE);
@@ -533,7 +534,7 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
             boolean displayGoToInboxButton = DBReader.getTotalEpisodeCount(new FeedItemFilter(FeedItemFilter.NEW)) > 0;
             return new Pair<>(DBReader.getQueue(), displayGoToInboxButton);
         })
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(itemsAndDisplayButton -> {
                     final boolean restoreScrollPosition = queue == null || queue.isEmpty();

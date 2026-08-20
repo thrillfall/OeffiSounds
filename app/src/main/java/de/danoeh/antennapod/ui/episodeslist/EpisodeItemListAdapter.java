@@ -1,7 +1,6 @@
 package de.danoeh.antennapod.ui.episodeslist;
 
 import android.app.Activity;
-import android.os.Build;
 import android.view.ContextMenu;
 import android.view.InputDevice;
 import android.view.MenuInflater;
@@ -16,7 +15,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import de.danoeh.antennapod.ui.SelectableAdapter;
-import de.danoeh.antennapod.ui.common.ThemeUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -111,27 +109,22 @@ public class EpisodeItemListAdapter extends SelectableAdapter<EpisodeItemViewHol
             return false;
         });
         holder.itemView.setOnTouchListener((v, e) -> {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (e.isFromSource(InputDevice.SOURCE_MOUSE)
-                        && e.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
-                    longPressedItem = item;
-                    longPressedPosition = holder.getBindingAdapterPosition();
-                    return false;
-                }
+            if (e.isFromSource(InputDevice.SOURCE_MOUSE)
+                    && e.getButtonState() == MotionEvent.BUTTON_SECONDARY) {
+                longPressedItem = item;
+                longPressedPosition = holder.getBindingAdapterPosition();
+                return false;
             }
             return false;
         });
 
         holder.itemView.setSelected(false);
         if (inActionMode()) {
+            holder.itemView.setActivated(false);
             holder.secondaryActionButton.setOnClickListener(
                     v -> toggleSelection(holder.getBindingAdapterPosition()));
             if (isSelected(pos)) {
                 holder.itemView.setSelected(true);
-                holder.itemView.setBackgroundColor(0x88000000
-                        + (0xffffff & ThemeUtils.getColorFromAttr(mainActivityRef.get(), R.attr.colorAccent)));
-            } else {
-                holder.itemView.setBackgroundResource(android.R.color.transparent);
             }
         }
 

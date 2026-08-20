@@ -18,6 +18,27 @@
     <item name="view_type_subscription_grid_without_title" type="id"/>
     <item name="view_type_subscription_list" type="id"/>
 
+    <!-- Home sections -->
+    <item name="home_section_echo" type="id"/>
+    <item name="home_section_queue" type="id"/>
+    <item name="home_section_inbox" type="id"/>
+    <item name="home_section_surprise" type="id"/>
+    <item name="home_section_subscriptions" type="id"/>
+    <item name="home_section_downloads" type="id"/>
+    <item name="home_section_audiothek_featured" type="id"/>
+    <item name="home_section_audiothek_charts" type="id"/>
+    <item name="home_section_audiothek_hot" type="id"/>
+    <item name="home_section_audiothek_live" type="id"/>
+    <item name="home_section_audiothek_stage" type="id"/>
+    <item name="home_section_audiothek" type="id"/>
+    <item name="home_section_audiothek_heute_wichtig" type="id"/>
+    <item name="home_section_bbc_featured" type="id"/>
+    <item name="home_section_bbc_recommended" type="id"/>
+    <item name="home_section_srf_popular" type="id"/>
+    <item name="home_section_orf_podcasts" type="id"/>
+    <item name="home_section_dlf_podcasts" type="id"/>
+    <item name="home_section_rtve_podcasts" type="id"/>
+
     <!-- Bottom navigation -->
     <item name="bottom_navigation_home" type="id"/>
     <item name="bottom_navigation_queue" type="id"/>
@@ -25,8 +46,10 @@
     <item name="bottom_navigation_episodes" type="id"/>
     <item name="bottom_navigation_downloads" type="id"/>
     <item name="bottom_navigation_history" type="id"/>
+    <item name="bottom_navigation_favorites" type="id"/>
     <item name="bottom_navigation_addfeed" type="id"/>
     <item name="bottom_navigation_subscriptions" type="id"/>
+    <item name="bottom_navigation_statistics" type="id"/>
     <item name="bottom_navigation_more" type="id"/>
     <item name="bottom_navigation_customize" type="id"/>
     <item name="bottom_navigation_settings" type="id"/>

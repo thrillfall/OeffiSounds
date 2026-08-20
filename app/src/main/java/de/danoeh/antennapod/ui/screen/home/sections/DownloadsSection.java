@@ -15,7 +15,6 @@ import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.event.DownloadLogEvent;
 import de.danoeh.antennapod.event.FeedItemEvent;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
-import de.danoeh.antennapod.event.UnreadItemsUpdateEvent;
 import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
 import de.danoeh.antennapod.model.feed.FeedItem;
 import de.danoeh.antennapod.model.feed.FeedItemFilter;
@@ -41,7 +40,7 @@ public class DownloadsSection extends HomeSection {
     public static final String TAG = "DownloadsSection";
     private static final int NUM_EPISODES = 2;
     private static final FeedItemFilter FILTER_DOWNLOADED = new FeedItemFilter(
-            FeedItemFilter.DOWNLOADED, FeedItemFilter.INCLUDE_NOT_SUBSCRIBED);
+            FeedItemFilter.DOWNLOADED, FeedItemFilter.INCLUDE_ALL_FEED_STATES);
     private EpisodeItemListAdapter adapter;
     private List<FeedItem> items;
     private Disposable disposable;
@@ -54,7 +53,6 @@ public class DownloadsSection extends HomeSection {
         viewBinding.recyclerView.setPadding(0, 0, 0, 0);
         viewBinding.recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         viewBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        viewBinding.recyclerView.setRecycledViewPool(((MainActivity) requireActivity()).getRecycledViewPool());
         adapter = new EpisodeItemListAdapter(requireActivity()) {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -76,6 +74,14 @@ public class DownloadsSection extends HomeSection {
     public void onStart() {
         super.onStart();
         loadItems();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -113,11 +119,6 @@ public class DownloadsSection extends HomeSection {
         loadItems();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onUnreadItemsUpdateEvent(UnreadItemsUpdateEvent event) {
-        loadItems();
-    }
-
     @Override
     protected String getSectionTitle() {
         return getString(R.string.home_downloads_title);
@@ -125,7 +126,7 @@ public class DownloadsSection extends HomeSection {
 
     @Override
     protected String getMoreLinkTitle() {
-        return getString(R.string.downloads_label_more);
+        return getString(R.string.downloads_label);
     }
 
     private void loadItems() {
@@ -134,7 +135,7 @@ public class DownloadsSection extends HomeSection {
         }
         SortOrder sortOrder = UserPreferences.getDownloadsSortedOrder();
         disposable = Observable.fromCallable(() -> DBReader.getEpisodes(0, NUM_EPISODES, FILTER_DOWNLOADED, sortOrder))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(downloads -> {
                     items = downloads;

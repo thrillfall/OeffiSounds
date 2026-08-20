@@ -86,9 +86,8 @@ public class FeedItemMenuHandler {
             canMarkPlayed |= !item.isPlayed();
             canMarkUnplayed |= item.isPlayed();
             canResetPosition |= hasMedia && item.getMedia().getPosition() != 0;
-            canDelete |= item.getFeed().isLocalFeed() || (hasMedia && item.getMedia().isDownloaded()) || isDownloading;
-            canDownload |= hasMedia && !item.getMedia().isDownloaded()
-                    && !item.getFeed().isLocalFeed() && !isDownloading;
+            canDelete |= (hasMedia && item.getMedia().isDownloaded()) || isDownloading;
+            canDownload |= hasMedia && !item.getMedia().isDownloaded() && !isDownloading;
             canAddFavorite |= !item.isTagged(FeedItem.TAG_FAVORITE);
             canRemoveFavorite |= item.isTagged(FeedItem.TAG_FAVORITE);
             canShowTranscript |= item.hasTranscript();
@@ -100,6 +99,9 @@ public class FeedItemMenuHandler {
             canShare = false;
             canShowTranscript = false;
             canShowSocialInteract = false;
+            if (canAddFavorite) {
+                canRemoveFavorite = false;
+            }
         }
 
         setItemVisibility(menu, R.id.skip_episode_item, canSkip);
@@ -198,16 +200,16 @@ public class FeedItemMenuHandler {
         } else if (menuItemId == R.id.remove_from_queue_item) {
             DBWriter.removeQueueItem(context, true, selectedItem);
         } else if (menuItemId == R.id.add_to_favorites_item) {
-            DBWriter.addFavoriteItem(selectedItem);
+            DBWriter.addFavoriteItems(Collections.singletonList(selectedItem));
         } else if (menuItemId == R.id.remove_from_favorites_item) {
-            DBWriter.removeFavoriteItem(selectedItem);
+            DBWriter.removeFavoriteItems(Collections.singletonList(selectedItem));
         } else if (menuItemId == R.id.reset_position) {
             selectedItem.getMedia().setPosition(0);
             if (PlaybackPreferences.getCurrentlyPlayingFeedMediaId() == selectedItem.getMedia().getId()) {
                 PlaybackPreferences.writeNoMediaPlaying();
                 IntentUtils.sendLocalBroadcast(context, PlaybackServiceInterface.ACTION_SHUTDOWN_PLAYBACK_SERVICE);
             }
-            DBWriter.markItemPlayed(FeedItem.UNPLAYED, true, selectedItem);
+            DBWriter.markItemsPlayed(FeedItem.UNPLAYED, true, Collections.singletonList(selectedItem));
         } else if (menuItemId == R.id.visit_website_item) {
             IntentUtils.openInBrowser(context, selectedItem.getLinkWithFallback());
         } else if (menuItemId == R.id.open_social_interact_url) {
@@ -246,9 +248,10 @@ public class FeedItemMenuHandler {
         Log.d(TAG, "markReadWithUndo(" + item.getId() + ")");
         // we're marking it as unplayed since the user didn't actually play it
         // but they don't want it considered 'NEW' anymore
-        DBWriter.markItemPlayed(playState, false, item);
+        DBWriter.markItemsPlayed(playState, false, Collections.singletonList(item));
 
-        final Handler h = new Handler(fragment.requireContext().getMainLooper());
+        Context context = fragment.requireContext();
+        final Handler h = new Handler(context.getMainLooper());
         final Runnable r = () -> {
             FeedMedia media = item.getMedia();
             if (media == null) {
@@ -260,7 +263,7 @@ public class FeedItemMenuHandler {
             boolean almostEnded = media.getDuration() > 0
                     && media.getPosition() >= media.getDuration() - smartMarkAsPlayedSecs * 1000;
             if (almostEnded && shouldAutoDelete) {
-                DBWriter.deleteFeedMediaOfItem(fragment.requireContext(), media);
+                DBWriter.deleteFeedMediaOfItem(context, media);
             }
         };
 
@@ -274,19 +277,19 @@ public class FeedItemMenuHandler {
                 } else {
                     //was played
                     message = fragment.getResources().getQuantityString(
-                            R.plurals.marked_as_unplayed_message, 1);
+                            R.plurals.marked_as_unplayed_message, 1, 1);
                 }
                 break;
             case FeedItem.PLAYED:
                 message = fragment.getResources().getQuantityString(
-                        R.plurals.marked_as_played_message, 1);
+                        R.plurals.marked_as_played_message, 1, 1);
                 break;
         }
 
         if (showSnackbar) {
             EventBus.getDefault().post(new MessageEvent(message,
-                    context -> {
-                        DBWriter.markItemPlayed(item.getPlayState(), false, item);
+                    ctx -> {
+                        DBWriter.markItemsPlayed(item.getPlayState(), false, Collections.singletonList(item));
                         // don't forget to cancel the thing that's going to remove the media
                         h.removeCallbacks(r);
                     }, fragment.getString(R.string.undo)));

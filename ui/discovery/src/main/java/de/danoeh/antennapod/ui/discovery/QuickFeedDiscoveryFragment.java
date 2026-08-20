@@ -70,6 +70,7 @@ public class QuickFeedDiscoveryFragment extends Fragment implements AdapterView.
         if (disposable != null) {
             disposable.dispose();
         }
+        viewBinding = null;
     }
 
     private void loadToplist() {

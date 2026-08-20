@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import de.danoeh.antennapod.BuildConfig;
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.event.PlayerStatusEvent;
@@ -22,6 +22,7 @@ import de.danoeh.antennapod.event.playback.PlaybackPositionEvent;
 import de.danoeh.antennapod.event.playback.PlaybackServiceEvent;
 import de.danoeh.antennapod.model.playback.MediaType;
 import de.danoeh.antennapod.model.playback.Playable;
+import de.danoeh.antennapod.playback.service.PlaybackController;
 import de.danoeh.antennapod.playback.service.PlaybackService;
 import de.danoeh.antennapod.playback.service.PlaybackServiceStarter;
 import de.danoeh.antennapod.storage.database.DBReader;
@@ -77,23 +78,22 @@ public class ExternalPlayerFragment extends Fragment {
                 }
             }
         });
-        return root;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         butPlay.setOnClickListener(v -> {
             if (PlaybackService.isRunning
                     && PlaybackPreferences.getCurrentPlayerStatus() == PlaybackPreferences.PLAYER_STATUS_PLAYING) {
-                getContext().sendBroadcast(MediaButtonStarter.createIntent(getContext(), KeyEvent.KEYCODE_MEDIA_PAUSE));
+                if (BuildConfig.USE_MEDIA3_PLAYBACK_SERVICE) {
+                    PlaybackController.bindToMedia3Service(getContext(), controller -> controller.pause());
+                } else {
+                    getContext().sendBroadcast(
+                            MediaButtonStarter.createIntent(getContext(), KeyEvent.KEYCODE_MEDIA_PAUSE));
+                }
             } else {
                 new PlaybackServiceStarter(getContext(), currentMedia)
                         .callEvenIfRunning(true)
                         .start();
             }
         });
-        loadMediaInfo();
+        return root;
     }
 
     @Override
@@ -146,7 +146,7 @@ public class ExternalPlayerFragment extends Fragment {
         }
         disposable = Maybe.fromCallable(
                         () -> DBReader.getFeedMedia(PlaybackPreferences.getCurrentlyPlayingFeedMediaId()))
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::updateUi,
                         error -> Log.e(TAG, Log.getStackTraceString(error)),

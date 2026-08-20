@@ -1,7 +1,8 @@
 plugins {
-    id("com.android.library")
+    alias(libs.plugins.android.library)
 }
 apply from: "../../common.gradle"
+apply from: "../../playFlavor.gradle"
 
 android {
     namespace "de.danoeh.antennapod.playback.base"
@@ -9,8 +10,13 @@ android {
 
 dependencies {
     implementation project(':model')
+    implementation project(':system')
+    implementation project(':net:common')
 
-    annotationProcessor "androidx.annotation:annotation:$annotationVersion"
+    implementation libs.androidx.media3.exoplayer
+    implementation libs.androidx.media3.session
+    annotationProcessor libs.androidx.annotation
+    implementation libs.glide
 
-    testImplementation "junit:junit:$junitVersion"
+    testImplementation libs.junit
 }

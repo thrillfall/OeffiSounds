@@ -54,7 +54,7 @@ public abstract class UserPreferences {
     public static final String PREF_EXPANDED_NOTIFICATION = "prefExpandNotify";
     public static final String PREF_USE_EPISODE_COVER = "prefEpisodeCover";
     public static final String PREF_SHOW_TIME_LEFT = "showTimeLeft";
-    private static final String PREF_PERSISTENT_NOTIFICATION = "prefPersistNotify";
+    public static final String PREF_PERSISTENT_NOTIFICATION = "prefPersistNotify";
     public static final String PREF_FULL_NOTIFICATION_BUTTONS = "prefFullNotificationButtons";
     private static final String PREF_SHOW_DOWNLOAD_REPORT = "prefShowDownloadReport";
     public static final String PREF_DEFAULT_PAGE = "prefDefaultPage";
@@ -62,6 +62,9 @@ public abstract class UserPreferences {
     public static final String PREF_SUBSCRIPTION_TITLE = "prefSubscriptionTitle";
     public static final String PREF_BACK_OPENS_DRAWER = "prefBackButtonOpensDrawer";
     public static final String PREF_BOTTOM_NAVIGATION = "prefBottomNavigation";
+    private static final String PREF_PARENTAL_CONTROL_PASSWORD = "prefParentalControlPassword";
+    public static final String PREF_PARENTAL_CONTROL_ENABLED = "prefParentalControlEnabled";
+    public static final String PREF_PARENTAL_CONTROL_REQUIRE_SUBSCRIBE = "prefParentalControlRequireSubscribe";
 
     public static final String PREF_GLOBAL_DEFAULT_SORTED_ORDER = "prefGlobalDefaultSortedOrder";
     public static final String PREF_QUEUE_KEEP_SORTED = "prefQueueKeepSorted";
@@ -197,6 +200,27 @@ public abstract class UserPreferences {
             default:
                 return ThemePreference.SYSTEM;
         }
+    }
+
+    public static boolean isParentalControlPasswordSet() {
+        return prefs.contains(PREF_PARENTAL_CONTROL_PASSWORD);
+    }
+
+    public static boolean verifyParentalControlPassword(String password) {
+        String stored = prefs.getString(PREF_PARENTAL_CONTROL_PASSWORD, null);
+        return stored != null && stored.equals(password);
+    }
+
+    public static void setParentalControlPassword(String password) {
+        prefs.edit().putString(PREF_PARENTAL_CONTROL_PASSWORD, password).apply();
+    }
+
+    public static void clearParentalControlPassword() {
+        prefs.edit().remove(PREF_PARENTAL_CONTROL_PASSWORD).apply();
+    }
+
+    public static boolean isParentalControlRequireSubscribeSet() {
+        return prefs.getBoolean(PREF_PARENTAL_CONTROL_REQUIRE_SUBSCRIBE, true);
     }
 
     public static boolean getIsBlackTheme() {

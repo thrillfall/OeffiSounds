@@ -27,7 +27,8 @@ public class AudiothekPodcastSearcher implements PodcastSearcher {
 
     private static final MediaType JSON_MEDIA_TYPE = MediaType.parse("application/json; charset=utf-8");
 
-    private static final String PROGRAM_SET_SEARCH_QUERY = "query SearchProgramSets($query:String!, $offset:Int!, $limit:Int!) {"
+    private static final String PROGRAM_SET_SEARCH_QUERY =
+            "query SearchProgramSets($query:String!, $offset:Int!, $limit:Int!) {"
             + " search(query:$query, offset:$offset, limit:$limit, type:ProgramSets) {"
             + "  programSets {"
             + "   nodes {"

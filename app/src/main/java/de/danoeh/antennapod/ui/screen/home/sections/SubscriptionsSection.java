@@ -70,6 +70,14 @@ public class SubscriptionsSection extends HomeSection {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (disposable != null) {
+            disposable.dispose();
+        }
+    }
+
+    @Override
     protected void handleMoreClick() {
         ((MainActivity) requireActivity()).loadChildFragment(new SubscriptionFragment());
     }
@@ -86,7 +94,7 @@ public class SubscriptionsSection extends HomeSection {
 
     @Override
     protected String getMoreLinkTitle() {
-        return getString(R.string.subscriptions_label_more);
+        return getString(R.string.subscriptions_label);
     }
 
     private void loadItems() {
@@ -99,7 +107,7 @@ public class SubscriptionsSection extends HomeSection {
         long threeYearsAgo = System.currentTimeMillis() - 3L * 365L * 24L * 60L * 60L * 1000L;
         disposable = Observable.fromCallable(() ->
                         DBReader.getStatistics(includeMarkedAsPlayed, threeYearsAgo, Long.MAX_VALUE).feedTime)
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(statisticsData -> {
                     Collections.sort(statisticsData, (item1, item2) ->

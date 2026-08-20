@@ -3,6 +3,7 @@ package de.danoeh.antennapod.parser.feed;
 import de.danoeh.antennapod.net.common.AntennapodHttpClient;
 import de.danoeh.antennapod.parser.feed.util.TypeGetter;
 import org.apache.commons.io.input.XmlStreamReader;
+import org.apache.commons.io.FileUtils;
 import org.json.JSONObject;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -11,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
@@ -25,7 +25,7 @@ public class FeedHandler {
         File file = new File(feed.getLocalFileUrl());
         if (isJsonFile(file)) {
             try {
-                String json = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+                String json = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
                 JSONObject root = new JSONObject(json);
                 if (SrfPlayJsonFeedParser.canParse(root)) {
                     return SrfPlayJsonFeedParser.parse(feed,
@@ -54,7 +54,7 @@ public class FeedHandler {
 
     private static boolean isJsonFile(File file) {
         try {
-            String content = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
+            String content = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
             int i = 0;
             while (i < content.length() && Character.isWhitespace(content.charAt(i))) {
                 i++;

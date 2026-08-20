@@ -10,6 +10,9 @@
     </style>
 
     <style name="Theme.Base.AntennaPod.Dynamic.Light" parent="Theme.Material3.DynamicColors.Light">
+        <item name="linearProgressIndicatorStyle">@style/Widget.AntennaPod.LinearProgressIndicator</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="background_color">@color/background_light</item>
         <item name="actionBarStyle">@style/Widget.AntennaPod.ActionBar</item>
         <item name="background_elevated">@color/background_elevated_light</item>
@@ -56,7 +59,7 @@
         <item name="colorOutline">@color/text_color_secondary_light</item>
         <item name="colorOutlineVariant">@color/text_color_secondary_light</item>
         <item name="colorSurfaceContainerHigh">@color/color_surface_variant_light</item>
-        <item name="colorSurfaceContainerHighest">@color/color_surface_variant_light</item>
+        <item name="colorSurfaceContainerHighest">#C0CFD3</item>
         <item name="colorSurfaceContainerLow">@color/color_surface_variant_light</item>
         <item name="colorSurfaceContainerLowest">@color/color_surface_variant_light</item>
     </style>
@@ -66,6 +69,7 @@
     </style>
 
     <style name="Theme.Base.AntennaPod.Dynamic.Dark" parent="Theme.Material3.DynamicColors.Dark">
+        <item name="linearProgressIndicatorStyle">@style/Widget.AntennaPod.LinearProgressIndicator</item>
         <item name="background_color">@color/background_darktheme</item>
         <item name="background_elevated">@color/background_elevated_darktheme</item>
         <item name="action_icon_color">@color/white</item>
@@ -82,7 +86,7 @@
         <item name="android:splitMotionEvents">false</item>
         <item name="android:fitsSystemWindows">false</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="toolbarStyle">@style/Style.AntennaPod.Toolbar</item>
@@ -114,7 +118,7 @@
         <item name="colorOutline">@color/text_color_secondary_dark</item>
         <item name="colorOutlineVariant">@color/text_color_secondary_dark</item>
         <item name="colorSurfaceContainerHigh">@color/color_surface_variant_dark</item>
-        <item name="colorSurfaceContainerHighest">@color/color_surface_variant_dark</item>
+        <item name="colorSurfaceContainerHighest">#38455C</item>
         <item name="colorSurfaceContainerLow">@color/color_surface_variant_dark</item>
         <item name="colorSurfaceContainerLowest">@color/color_surface_variant_dark</item>
     </style>
@@ -177,7 +181,7 @@
 
     <style name="Theme.AntennaPod.Dynamic.Light.Translucent" parent="Theme.AntennaPod.Dynamic.Light.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -187,7 +191,7 @@
 
     <style name="Theme.AntennaPod.Light.Translucent" parent="Theme.AntennaPod.Light.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -197,7 +201,7 @@
 
     <style name="Theme.AntennaPod.Dynamic.Dark.Translucent" parent="Theme.AntennaPod.Dynamic.Dark.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -207,7 +211,7 @@
 
     <style name="Theme.AntennaPod.Dark.Translucent" parent="Theme.AntennaPod.Dark.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -217,7 +221,7 @@
 
     <style name="Theme.AntennaPod.Dynamic.TrueBlack.Translucent" parent="Theme.AntennaPod.Dynamic.TrueBlack.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -227,7 +231,7 @@
 
     <style name="Theme.AntennaPod.TrueBlack.Translucent" parent="Theme.AntennaPod.TrueBlack.NoTitle">
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowContentOverlay">@null</item>
@@ -243,7 +247,7 @@
     <style name="Theme.AntennaPod.Splash" parent="Theme.SplashScreen">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="M">false</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:fitsSystemWindows">true</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
@@ -312,6 +316,10 @@
         <item name="fastScrollHorizontalTrackDrawable">@drawable/scrollbar_track</item>
         <item name="fastScrollVerticalThumbDrawable">?attr/scrollbar_thumb</item>
         <item name="fastScrollVerticalTrackDrawable">@drawable/scrollbar_track</item>
+    </style>
+
+    <style name="Widget.AntennaPod.LinearProgressIndicator" parent="Widget.Material3.LinearProgressIndicator">
+        <item name="trackColor">#55888888</item>
     </style>
 
     <style name="Widget.AntennaPod.ActionBar" parent="Widget.Material3.Light.ActionBar.Solid">

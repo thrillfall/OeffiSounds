@@ -396,7 +396,7 @@ public class FeedMedia implements Playable {
     }
 
     public boolean isDownloaded() {
-        return downloadDate > 0;
+        return downloadDate > 0 || (item != null && item.getFeed() != null && item.getFeed().isLocalFeed());
     }
 
     public long getItemId() {
@@ -491,6 +491,11 @@ public class FeedMedia implements Playable {
             e.printStackTrace();
             hasEmbeddedPicture = Boolean.FALSE;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
     }
 
     @Override
