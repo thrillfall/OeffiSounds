@@ -2,6 +2,14 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.10.0] - 2026-08-20
+
+### Changed
+- Rebased on AntennaPod 3.12.0 (previously 3.11.0), bringing upstream's playback service rewrite, home screen and database improvements. The app now requires Android 6 (was Android 5)
+
+### Fixed
+- ARD Sounds and SRF Play feeds could crash on Android 6 and 7 while parsing (used an API that only exists since Android 8)
+
 ## [2.9.0] - 2026-08-19
 
 ### Added

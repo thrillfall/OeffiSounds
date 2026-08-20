@@ -102,7 +102,7 @@ public class MainActivity extends CastEnabledActivity implements NavigationToolb
     public static final String PREF_NAME = "MainActivityPrefs";
     public static final String PREF_IS_FIRST_LAUNCH = "prefMainActivityIsFirstLaunch";
     private static final String PREF_WHATS_NEW_SHOWN_VERSION = "prefWhatsNewShownVersion";
-    private static final int WHATS_NEW_VERSION = 37; // versionCode for 2.9.0
+    private static final int WHATS_NEW_VERSION = 38; // versionCode for 2.10.0
 
     public static final String EXTRA_REFRESH_ON_START = "refresh_on_start";
     public static final String KEY_GENERATED_VIEW_ID = "generated_view_id";
@@ -387,7 +387,7 @@ public class MainActivity extends CastEnabledActivity implements NavigationToolb
         new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.whats_new_title)
                 .setMessage(androidx.core.text.HtmlCompat.fromHtml(
-                        getString(R.string.whats_new_message_2_9_0),
+                        getString(R.string.whats_new_message_2_10_0),
                         androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY))
                 .setPositiveButton(android.R.string.ok, null)
                 .show();

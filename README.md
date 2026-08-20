@@ -28,11 +28,17 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.9.0)
+### Latest Release (2.10.0)
 
-- Player: optional volume slider that plays back more quietly than the lowest Android volume step allows (down to -30 dB), enabled via Settings → Playback
+- Rebased on AntennaPod 3.12.0: upstream's rewritten playback service, home screen and database improvements
+- Fix: ARD Sounds and SRF Play feeds could crash while parsing on Android 6 and 7
+- Minimum Android version is now 6 (was 5)
 
 ### Previous Releases
+
+#### 2.9.0
+
+- Player: optional volume slider that plays back more quietly than the lowest Android volume step allows (down to -30 dB), enabled via Settings → Playback
 
 #### 2.8.4
 

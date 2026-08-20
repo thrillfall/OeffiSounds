@@ -1,0 +1,3 @@
+- Auf die aktuelle AntennaPod-Basis (3.12.0) aktualisiert – mit überarbeiteter Wiedergabe und vielen Verbesserungen von Upstream.
+- Absturz beim Laden von ARD-Sounds- und SRF-Play-Feeds unter Android 6 und 7 behoben.
+- Diese Version benötigt Android 6 oder neuer.

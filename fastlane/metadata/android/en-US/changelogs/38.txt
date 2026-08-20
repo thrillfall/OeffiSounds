@@ -1,0 +1,3 @@
+- Updated to the latest AntennaPod base (3.12.0), with a rewritten playback engine and many upstream fixes.
+- Fixed a crash while loading ARD Sounds and SRF Play feeds on Android 6 and 7.
+- This version requires Android 6 or newer.
