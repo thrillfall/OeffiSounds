@@ -93,7 +93,7 @@ public class AudiothekSection extends HomeSection {
         }
     }
 
-    private static class AudiothekModule {
+    static class AudiothekModule {
         public final String title;
         public final List<AudiothekItem> items;
 
@@ -230,13 +230,16 @@ public class AudiothekSection extends HomeSection {
     }
 
     private static List<AudiothekModule> parseHomescreen(String json) throws JSONException {
-        List<AudiothekModule> modules = new ArrayList<>();
         JSONObject root = new JSONObject(json);
         JSONArray widgets = root.optJSONArray("widgets");
         if (widgets == null) {
-            return modules;
+            return new ArrayList<>();
         }
+        return parseModules(widgets);
+    }
 
+    static List<AudiothekModule> parseModules(JSONArray widgets) {
+        List<AudiothekModule> modules = new ArrayList<>();
         for (int i = 0; i < widgets.length() && modules.size() < NUM_MODULES; i++) {
             JSONObject widget = widgets.optJSONObject(i);
             if (widget == null) {
@@ -284,7 +287,7 @@ public class AudiothekSection extends HomeSection {
         return items;
     }
 
-    private static class AudiothekItem {
+    static class AudiothekItem {
         public final String title;
         public final String imageUrl;
         public final String feedUrl;

@@ -142,7 +142,13 @@ public class AudiothekFeaturedSection extends HomeSection {
             return items;
         }
 
-        List<String> seenShowIds = new ArrayList<>();
+        List<String> takenFeedUrls = new ArrayList<>();
+        for (AudiothekSection.AudiothekModule module : AudiothekSection.parseModules(widgets)) {
+            for (AudiothekSection.AudiothekItem item : module.items) {
+                takenFeedUrls.add(item.feedUrl);
+            }
+        }
+
         for (int i = 0; i < widgets.length() && items.size() < NUM_ITEMS; i++) {
             JSONObject widget = widgets.optJSONObject(i);
             JSONArray teasers = widget != null ? widget.optJSONArray("teasers") : null;
@@ -157,18 +163,21 @@ public class AudiothekFeaturedSection extends HomeSection {
                 String teaserType = teaser.optString("teaserType", "");
                 String assetId = teaser.optString("assetId", "");
                 boolean isShowTeaser = teaserType.contains("Show") && !teaserType.startsWith("ranked");
-                if (!isShowTeaser || !assetId.startsWith("urn:ard:show:") || seenShowIds.contains(assetId)) {
+                if (!isShowTeaser || !assetId.startsWith("urn:ard:show:")) {
                     continue;
                 }
-                seenShowIds.add(assetId);
+                String feedUrl = PROGRAM_SET_URL_PREFIX + assetId;
+                if (takenFeedUrls.contains(feedUrl)) {
+                    continue;
+                }
+                takenFeedUrls.add(feedUrl);
 
                 JSONObject image = teaser.optJSONObject("image");
                 String imageUrl = image != null ? image.optString("templateURL", null) : null;
                 if (imageUrl != null) {
                     imageUrl = imageUrl.replace("{width}", "400");
                 }
-                items.add(new AudiothekItem(teaser.optString("title", ""), imageUrl,
-                        PROGRAM_SET_URL_PREFIX + assetId));
+                items.add(new AudiothekItem(teaser.optString("title", ""), imageUrl, feedUrl));
             }
         }
         return items;
