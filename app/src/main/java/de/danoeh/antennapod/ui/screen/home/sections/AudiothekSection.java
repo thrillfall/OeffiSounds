@@ -49,9 +49,11 @@ import org.greenrobot.eventbus.ThreadMode;
 public class AudiothekSection extends HomeSection {
     public static final String TAG = "AudiothekSection";
 
-    private static final String AUDIOTHEK_HOME_URL = "https://api.ardaudiothek.de/homescreen";
+    private static final String PLAYOUT_API_URL = "https://api.ard.de/playout-api/v1/pages?canonicalWebURL=/";
     private static final int NUM_ITEMS = 8;
-    private static final String API_BASE_URL = "https://api.ardaudiothek.de";
+    private static final int NUM_MODULES = 4;
+    private static final int MIN_MODULE_ITEMS = 2;
+    private static final String PROGRAM_SET_URL_PREFIX = "https://api.ardaudiothek.de/programsets/";
 
     private Disposable disposable;
     private AudiothekModulesAdapter listAdapter;
@@ -201,7 +203,7 @@ public class AudiothekSection extends HomeSection {
         listAdapter.setDummyModules(2, NUM_ITEMS);
 
         disposable = Observable.fromCallable(() -> {
-            Request request = new Request.Builder().url(AUDIOTHEK_HOME_URL).build();
+            Request request = new Request.Builder().url(PLAYOUT_API_URL).build();
             try (Response response = AntennapodHttpClient.getHttpClient().newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected response: " + response);
@@ -228,156 +230,58 @@ public class AudiothekSection extends HomeSection {
     }
 
     private static List<AudiothekModule> parseHomescreen(String json) throws JSONException {
+        List<AudiothekModule> modules = new ArrayList<>();
         JSONObject root = new JSONObject(json);
-        JSONObject embedded = root.optJSONObject("_embedded");
-        if (embedded == null) {
-            return new ArrayList<>();
+        JSONArray widgets = root.optJSONArray("widgets");
+        if (widgets == null) {
+            return modules;
         }
 
-        List<AudiothekModule> modules = new ArrayList<>();
-        AudiothekModule featured = parseFeaturedProgramSets(embedded);
-        if (featured != null && !featured.items.isEmpty()) {
-            modules.add(featured);
-        }
-        AudiothekModule mostPlayed = parseMostPlayed(embedded);
-        if (mostPlayed != null && !mostPlayed.items.isEmpty()) {
-            modules.add(mostPlayed);
+        for (int i = 0; i < widgets.length() && modules.size() < NUM_MODULES; i++) {
+            JSONObject widget = widgets.optJSONObject(i);
+            if (widget == null) {
+                continue;
+            }
+            String title = widget.optString("title", "");
+            JSONArray teasers = widget.optJSONArray("teasers");
+            if (title.isEmpty() || teasers == null) {
+                continue;
+            }
+            List<AudiothekItem> items = parseShowTeasers(teasers);
+            if (items.size() < MIN_MODULE_ITEMS) {
+                continue;
+            }
+            modules.add(new AudiothekModule(title, items));
         }
         return modules;
     }
 
-    @Nullable
-    private static AudiothekModule parseFeaturedProgramSets(JSONObject homescreenEmbedded) {
-        JSONObject featured = homescreenEmbedded.optJSONObject("mt:featuredProgramSets");
-        if (featured == null) {
-            return null;
-        }
-        JSONObject featuredEmbedded = featured.optJSONObject("_embedded");
-        if (featuredEmbedded == null) {
-            return null;
-        }
-        JSONArray programSets = featuredEmbedded.optJSONArray("mt:programSets");
-        if (programSets == null) {
-            return null;
-        }
-        List<AudiothekItem> items = parseProgramSetsArray(programSets);
-        return new AudiothekModule(getModuleTitle(featured), items);
-    }
-
-    @Nullable
-    private static AudiothekModule parseMostPlayed(JSONObject homescreenEmbedded) {
-        JSONObject mostPlayed = homescreenEmbedded.optJSONObject("mt:mostPlayed");
-        if (mostPlayed == null) {
-            return null;
-        }
-        JSONObject mostPlayedEmbedded = mostPlayed.optJSONObject("_embedded");
-        if (mostPlayedEmbedded == null) {
-            return null;
-        }
-        Object itemsObj = mostPlayedEmbedded.opt("mt:items");
-
+    private static List<AudiothekItem> parseShowTeasers(JSONArray teasers) {
         List<AudiothekItem> items = new ArrayList<>();
-        if (itemsObj instanceof JSONObject) {
-            items.addAll(parseItemsArray(new JSONArray().put(itemsObj)));
-        } else if (itemsObj instanceof JSONArray) {
-            items.addAll(parseItemsArray((JSONArray) itemsObj));
-        }
-        return new AudiothekModule(getModuleTitle(mostPlayed), items);
-    }
-
-    private static String getModuleTitle(JSONObject module) {
-        JSONObject widget = module.optJSONObject("widget");
-        if (widget != null) {
-            String widgetTitle = widget.optString("widget_title", "");
-            if (!widgetTitle.isEmpty()) {
-                return widgetTitle;
-            }
-        }
-        return module.optString("title", "");
-    }
-
-    private static List<AudiothekItem> parseProgramSetsArray(JSONArray programSetsArray) {
-        List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < programSetsArray.length(); i++) {
-            JSONObject programSet = programSetsArray.optJSONObject(i);
-            if (programSet == null) {
+        for (int i = 0; i < teasers.length() && items.size() < NUM_ITEMS; i++) {
+            JSONObject teaser = teasers.optJSONObject(i);
+            if (teaser == null) {
                 continue;
             }
-            JSONObject links = programSet.optJSONObject("_links");
-            JSONObject self = links != null ? links.optJSONObject("self") : null;
-            String href = self != null ? self.optString("href", null) : null;
-            if (href == null) {
+            String teaserType = teaser.optString("teaserType", "");
+            String assetId = teaser.optString("assetId", "");
+            boolean isShowTeaser = teaserType.contains("Show") && !teaserType.startsWith("ranked");
+            if (!isShowTeaser || !assetId.startsWith("urn:ard:show:")) {
                 continue;
             }
-            href = href.replace("{?order,offset,limit}", "");
-            String feedUrl = normalizeFeedUrl(href.startsWith("http") ? href : API_BASE_URL + href);
 
-            JSONObject image = links != null ? links.optJSONObject("mt:squareImage") : null;
+            JSONObject image = teaser.optJSONObject("squareImage");
             if (image == null) {
-                image = links != null ? links.optJSONObject("mt:image") : null;
+                image = teaser.optJSONObject("image");
             }
-            String imageUrl = image != null ? image.optString("href", null) : null;
+            String imageUrl = image != null ? image.optString("templateURL", null) : null;
             if (imageUrl != null) {
                 imageUrl = imageUrl.replace("{width}", "400");
-                imageUrl = imageUrl.replace("{ratio}", "1x1");
             }
-
-            String title = programSet.optString("title", "");
-            items.add(new AudiothekItem(title, imageUrl, feedUrl));
+            items.add(new AudiothekItem(teaser.optString("title", ""), imageUrl,
+                    PROGRAM_SET_URL_PREFIX + assetId));
         }
         return items;
-    }
-
-    private static List<AudiothekItem> parseItemsArray(JSONArray itemsArray) {
-        List<AudiothekItem> items = new ArrayList<>();
-        for (int i = 0; i < itemsArray.length(); i++) {
-            JSONObject item = itemsArray.optJSONObject(i);
-            if (item == null) {
-                continue;
-            }
-
-            JSONObject embeddedProgramSet = null;
-            JSONObject embedded = item.optJSONObject("_embedded");
-            if (embedded != null) {
-                embeddedProgramSet = embedded.optJSONObject("mt:programSet");
-            }
-            if (embeddedProgramSet == null) {
-                continue;
-            }
-
-            JSONObject links = embeddedProgramSet.optJSONObject("_links");
-            JSONObject self = links != null ? links.optJSONObject("self") : null;
-            String href = self != null ? self.optString("href", null) : null;
-            if (href == null) {
-                continue;
-            }
-            href = href.replace("{?order,offset,limit}", "");
-            String feedUrl = normalizeFeedUrl(href.startsWith("http") ? href : API_BASE_URL + href);
-
-            JSONObject image = links != null ? links.optJSONObject("mt:squareImage") : null;
-            if (image == null) {
-                image = links != null ? links.optJSONObject("mt:image") : null;
-            }
-            String imageUrl = image != null ? image.optString("href", null) : null;
-            if (imageUrl != null) {
-                imageUrl = imageUrl.replace("{width}", "400");
-                imageUrl = imageUrl.replace("{ratio}", "1x1");
-            }
-
-            String title = embeddedProgramSet.optString("title", "");
-            items.add(new AudiothekItem(title, imageUrl, feedUrl));
-        }
-        return items;
-    }
-
-    private static String normalizeFeedUrl(String url) {
-        if (url == null) {
-            return null;
-        }
-        url = url.replace("://api.ardaudiothek.de./", "://api.ardaudiothek.de/");
-        url = url.replace("{?order,offset,limit}", "");
-        url = url.replace("{?offset,limit}", "?offset=0&limit=50");
-        return url;
     }
 
     private static class AudiothekItem {
