@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.10.2)
+### Latest Release (2.10.3)
 
-- Fix: the app no longer crashes on startup after installing or updating — the release build's code shrinker had stripped a constructor WorkManager creates by reflection and miscompiled the preferences class
+- Fix: the "Heute wichtig" and "ARD Sounds: Empfohlen" rows on the home screen were empty after ARD changed their APIs — both are filled again, and tapping an entry in "Heute wichtig" now opens the episode directly
 
 ### Previous Releases
+
+#### 2.10.2
+
+- Fix: the app no longer crashes on startup after installing or updating — the release build's code shrinker had stripped a constructor WorkManager creates by reflection and miscompiled the preferences class
 
 #### 2.10.1
 

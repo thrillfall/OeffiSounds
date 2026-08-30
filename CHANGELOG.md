@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.10.3] - 2026-08-30
+
+### Fixed
+- Home screen: the "Heute wichtig" and "ARD Sounds: Empfohlen" rows were empty. ARD changed their APIs: the recommended shows disappeared from the homescreen endpoint, and the teasers no longer carry a show id. Both rows are filled again, and tapping an entry in "Heute wichtig" now opens the episode directly
+
 ## [2.10.2] - 2026-08-20
 
 ### Fixed

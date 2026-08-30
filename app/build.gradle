@@ -19,8 +19,8 @@ android {
     defaultConfig {
         applicationId "de.oeffisounds.app"
         // Version code: simple incrementing integer, bump per release
-        versionCode 40
-        versionName "2.10.2"
+        versionCode 41
+        versionName "2.10.3"
     }
 
     signingConfigs {

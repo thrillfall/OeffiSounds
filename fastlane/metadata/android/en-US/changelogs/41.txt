@@ -1,0 +1,1 @@
+- Fix: the "Heute wichtig" and "ARD Sounds: Empfohlen" rows on the home screen were empty after ARD changed their APIs. Both are filled again, and tapping an entry in "Heute wichtig" now opens the episode directly

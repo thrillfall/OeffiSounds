@@ -1,0 +1,1 @@
+- Fehlerbehebung: Die Zeilen "Heute wichtig" und "ARD Sounds: Empfohlen" auf dem Startbildschirm waren leer, nachdem die ARD ihre APIs geändert hat. Beide sind wieder gefüllt, und ein Tippen auf einen Eintrag in "Heute wichtig" öffnet jetzt direkt die Episode
