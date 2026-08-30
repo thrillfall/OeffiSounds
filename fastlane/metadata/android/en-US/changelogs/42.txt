@@ -1,0 +1,2 @@
+- Fix: the "ARD Sounds entdecken" section on the home screen was empty after ARD changed their APIs. It lists the ARD's current editorial rows again
+- "ARD Sounds: Empfohlen" no longer repeats the podcasts shown right below it in "ARD Sounds entdecken"

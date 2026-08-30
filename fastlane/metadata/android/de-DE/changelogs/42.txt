@@ -1,0 +1,2 @@
+- Fehlerbehebung: Der Bereich "ARD Sounds entdecken" auf dem Startbildschirm war leer, nachdem die ARD ihre APIs geändert hat. Er zeigt wieder die aktuellen redaktionellen Reihen der ARD
+- "ARD Sounds: Empfohlen" wiederholt nicht mehr die Podcasts, die direkt darunter in "ARD Sounds entdecken" stehen

@@ -28,11 +28,16 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.10.3)
+### Latest Release (2.10.4)
 
-- Fix: the "Heute wichtig" and "ARD Sounds: Empfohlen" rows on the home screen were empty after ARD changed their APIs — both are filled again, and tapping an entry in "Heute wichtig" now opens the episode directly
+- Fix: the "ARD Sounds entdecken" section on the home screen was empty for the same reason as the rows fixed in 2.10.3 — it lists the ARD's current editorial rows again
+- "ARD Sounds: Empfohlen" no longer repeats the podcasts shown right below it in "ARD Sounds entdecken"
 
 ### Previous Releases
+
+#### 2.10.3
+
+- Fix: the "Heute wichtig" and "ARD Sounds: Empfohlen" rows on the home screen were empty after ARD changed their APIs — both are filled again, and tapping an entry in "Heute wichtig" now opens the episode directly
 
 #### 2.10.2
 

@@ -2,6 +2,14 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.10.4] - 2026-08-30
+
+### Fixed
+- Home screen: the "ARD Sounds entdecken" section was empty, for the same reason the two rows fixed in 2.10.3 were. It shows the ARD's current editorial rows again ("Neu dabei", "Exklusiv und vorab bei uns")
+
+### Changed
+- Home screen: "ARD Sounds: Empfohlen" no longer repeats the podcasts that "ARD Sounds entdecken" already lists right below it
+
 ## [2.10.3] - 2026-08-30
 
 ### Fixed
