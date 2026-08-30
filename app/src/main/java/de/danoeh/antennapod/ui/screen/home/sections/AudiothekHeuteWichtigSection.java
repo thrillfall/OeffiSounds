@@ -23,14 +23,20 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import de.danoeh.antennapod.R;
 import de.danoeh.antennapod.activity.MainActivity;
 import de.danoeh.antennapod.event.FeedListUpdateEvent;
+import de.danoeh.antennapod.model.feed.Feed;
+import de.danoeh.antennapod.model.feed.FeedItem;
+import de.danoeh.antennapod.model.feed.FeedMedia;
 import de.danoeh.antennapod.net.common.AntennapodHttpClient;
+import de.danoeh.antennapod.storage.database.FeedDatabaseWriter;
 import de.danoeh.antennapod.ui.appstartintent.OnlineFeedviewActivityStarter;
 import de.danoeh.antennapod.ui.common.SquareImageView;
+import de.danoeh.antennapod.ui.screen.episode.ItemPagerFragment;
 import de.danoeh.antennapod.ui.screen.home.HomeSection;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -164,15 +170,14 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
             return items;
         }
 
-        for (int i = 0; i < teasers.length() && i < NUM_ITEMS; i++) {
+        for (int i = 0; i < teasers.length() && items.size() < NUM_ITEMS; i++) {
             JSONObject teaser = teasers.optJSONObject(i);
             if (teaser == null) {
                 continue;
             }
 
-            String title = teaser.optString("title", "");
-            String showId = teaser.optString("showId", null);
-            if (showId == null || showId.isEmpty()) {
+            String assetId = teaser.optString("assetId", null);
+            if (assetId == null || assetId.isEmpty()) {
                 continue;
             }
 
@@ -182,21 +187,43 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
                 imageUrl = imageUrl.replace("{width}", "400");
             }
 
-            String feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, showId);
-            items.add(new AudiothekItem(title, imageUrl, feedUrl));
+            String audioUrl = teaser.optString("assetDownloadURL", null);
+            if (audioUrl != null && audioUrl.isEmpty()) {
+                audioUrl = null;
+            }
+
+            String feedUrl = "";
+            if (assetId.startsWith("urn:ard:show:")) {
+                feedUrl = String.format(PROGRAM_SET_URL_TEMPLATE, assetId);
+            }
+            if (audioUrl == null && feedUrl.isEmpty()) {
+                continue;
+            }
+
+            items.add(new AudiothekItem(teaser.optString("title", ""), teaser.optString("description", null),
+                    imageUrl, feedUrl, audioUrl, teaser.optInt("duration", 0), assetId));
         }
         return items;
     }
 
     private static class AudiothekItem {
         public final String title;
+        public final String description;
         public final String imageUrl;
         public final String feedUrl;
+        public final String audioUrl;
+        public final int durationSeconds;
+        public final String itemId;
 
-        private AudiothekItem(String title, String imageUrl, String feedUrl) {
+        private AudiothekItem(String title, String description, String imageUrl, String feedUrl,
+                              String audioUrl, int durationSeconds, String itemId) {
             this.title = title;
+            this.description = description;
             this.imageUrl = imageUrl;
             this.feedUrl = feedUrl;
+            this.audioUrl = audioUrl;
+            this.durationSeconds = durationSeconds;
+            this.itemId = itemId;
         }
     }
 
@@ -258,7 +285,11 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
             holder.titleLabel.setText(item.title);
             holder.titleLabel.setVisibility(View.VISIBLE);
             holder.imageView.setOnClickListener(v -> {
-                activity.startActivity(new OnlineFeedviewActivityStarter(activity, item.feedUrl).getIntent());
+                if (item.audioUrl != null) {
+                    openEpisode(activity, item);
+                } else if (!item.feedUrl.isEmpty()) {
+                    activity.startActivity(new OnlineFeedviewActivityStarter(activity, item.feedUrl).getIntent());
+                }
             });
 
             Glide.with(activity)
@@ -289,6 +320,49 @@ public class AudiothekHeuteWichtigSection extends HomeSection {
                 cardView = itemView.findViewById(R.id.cardView);
                 titleLabel = itemView.findViewById(R.id.titleLabel);
             }
+        }
+
+        private static void openEpisode(MainActivity activity, AudiothekItem item) {
+            Observable.fromCallable(() -> {
+                Feed feed = new Feed("audiothek:heutewichtig:" + item.itemId, null, "ARD Audiothek");
+                feed.setType(Feed.TYPE_RSS2);
+                feed.setTitle("ARD Audiothek");
+                feed.setState(Feed.STATE_NOT_SUBSCRIBED);
+                feed.setImageUrl(item.imageUrl);
+
+                FeedItem feedItem = new FeedItem();
+                feedItem.setFeed(feed);
+                feedItem.setTitle(item.title);
+                feedItem.setDescriptionIfLonger(item.description);
+                feedItem.setImageUrl(item.imageUrl);
+                feedItem.setItemIdentifier(item.itemId);
+
+                FeedMedia media = new FeedMedia(feedItem, item.audioUrl, 0, "audio/*");
+                if (item.durationSeconds > 0) {
+                    long durationMs = item.durationSeconds * 1000L;
+                    if (durationMs <= Integer.MAX_VALUE) {
+                        media.setDuration((int) durationMs);
+                    }
+                }
+                feedItem.setMedia(media);
+
+                feed.setItems(Collections.singletonList(feedItem));
+
+                Feed storedFeed = FeedDatabaseWriter.updateFeed(activity, feed, false);
+                if (storedFeed == null || storedFeed.getItems() == null || storedFeed.getItems().isEmpty()) {
+                    return null;
+                }
+                return storedFeed.getItems().get(0);
+            })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(createdItem -> {
+                        if (createdItem == null) {
+                            return;
+                        }
+                        activity.loadChildFragment(ItemPagerFragment.newInstance(
+                                Collections.singletonList(createdItem), createdItem));
+                    }, error -> Log.e(TAG, Log.getStackTraceString(error)));
         }
     }
 }
