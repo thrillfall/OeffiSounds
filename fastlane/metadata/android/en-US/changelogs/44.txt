@@ -1,0 +1,2 @@
+• Updated to AntennaPod 3.12.3
+• Fixes for seeking, headset/media buttons, the widget, the playback history, the inbox and the listening statistics

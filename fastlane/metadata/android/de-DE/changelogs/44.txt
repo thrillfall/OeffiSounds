@@ -1,0 +1,2 @@
+• Aktualisiert auf AntennaPod 3.12.3
+• Fehlerbehebungen beim Spulen, bei Kopfhörer- und Medientasten, im Widget, im Wiedergabeverlauf, in der Inbox und in der Hörstatistik

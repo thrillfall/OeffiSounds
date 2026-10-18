@@ -28,12 +28,16 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.11.0)
+### Latest Release (2.11.1)
+
+- Updated to AntennaPod 3.12.3, with upstream fixes for seeking, headset/media buttons, the widget, the playback history, the inbox and the listening statistics
+
+### Previous Releases
+
+#### 2.11.0
 
 - Home screen: new "ARD Sounds: Highlights" section at the top with the large editorial banners from the ARD Sounds start page (e.g. "Krieg der Welten") as wide cards
 - Home screen: larger tiles with up to three lines of title, so titles are cut off less often
-
-### Previous Releases
 
 #### 2.10.4
 

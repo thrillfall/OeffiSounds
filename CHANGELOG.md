@@ -2,6 +2,14 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.11.1] - 2026-10-18
+
+### Changed
+- Updated to AntennaPod 3.12.3 (previously 3.12.0)
+
+### Fixed
+- Bugfixes from AntennaPod 3.12.1 to 3.12.3: seeking before the episode has loaded, headset and media buttons, the widget not updating to the prepared episode, unplayed episodes ending up in the playback history, episodes not being removed from the inbox, and the played-time statistics
+
 ## [2.11.0] - 2026-10-18
 
 ### Added
