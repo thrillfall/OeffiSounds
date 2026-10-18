@@ -32,6 +32,7 @@
     <item name="home_section_audiothek_stage" type="id"/>
     <item name="home_section_audiothek" type="id"/>
     <item name="home_section_audiothek_heute_wichtig" type="id"/>
+    <item name="home_section_audiothek_panorama" type="id"/>
     <item name="home_section_bbc_featured" type="id"/>
     <item name="home_section_bbc_recommended" type="id"/>
     <item name="home_section_srf_popular" type="id"/>

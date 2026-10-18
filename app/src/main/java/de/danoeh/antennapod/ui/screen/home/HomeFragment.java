@@ -28,6 +28,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHeuteWichtigSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekPanoramaSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EchoSection;
@@ -128,6 +129,7 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
             case AudiothekStageSection.TAG -> R.id.home_section_audiothek_stage;
             case AudiothekSection.TAG -> R.id.home_section_audiothek;
             case AudiothekHeuteWichtigSection.TAG -> R.id.home_section_audiothek_heute_wichtig;
+            case AudiothekPanoramaSection.TAG -> R.id.home_section_audiothek_panorama;
             case BbcSoundsFeaturedSection.TAG -> R.id.home_section_bbc_featured;
             case BbcAudioRecommendedTodaySection.TAG -> R.id.home_section_bbc_recommended;
             case SrfPlayPopularSection.TAG -> R.id.home_section_srf_popular;
@@ -152,6 +154,7 @@ public class HomeFragment extends Fragment implements Toolbar.OnMenuItemClickLis
             case AudiothekStageSection.TAG -> new AudiothekStageSection();
             case AudiothekSection.TAG -> new AudiothekSection();
             case AudiothekHeuteWichtigSection.TAG -> new AudiothekHeuteWichtigSection();
+            case AudiothekPanoramaSection.TAG -> new AudiothekPanoramaSection();
             case BbcSoundsFeaturedSection.TAG -> new BbcSoundsFeaturedSection();
             case BbcAudioRecommendedTodaySection.TAG -> new BbcAudioRecommendedTodaySection();
             case SrfPlayPopularSection.TAG -> new SrfPlayPopularSection();

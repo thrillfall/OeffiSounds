@@ -19,6 +19,8 @@ The `Audiothek*Section` classes on the home screen read the ARD playout page
 A widget is identified either by its `widgetType` (stable) or by its `title` (editorial, may change).
 Each entry in a widget's `teasers` carries an `assetId`: `urn:ard:show:…` for a podcast, `urn:ard:episode:…` for a
 single episode.
+`panoramaTeaserWidget` entries are single-teaser editorial banners (wide `image`, `description`); episode teasers there
+carry the podcast in `showId`. `AudiothekPanoramaSection` collects all of them.
 
 A subscribable feed URL is `https://api.ardaudiothek.de/programsets/<urn:ard:show:…>`; `:parser:feed` recognises the
 JSON it returns. Episode teasers additionally carry `assetDownloadURL` and are opened in the player directly instead.

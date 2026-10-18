@@ -20,6 +20,7 @@ import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHotSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekLiveSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekHeuteWichtigSection;
+import de.danoeh.antennapod.ui.screen.home.sections.AudiothekPanoramaSection;
 import de.danoeh.antennapod.ui.screen.home.sections.AudiothekStageSection;
 import de.danoeh.antennapod.ui.screen.home.sections.DownloadsSection;
 import de.danoeh.antennapod.ui.screen.home.sections.EpisodesSurpriseSection;
@@ -78,6 +79,7 @@ public class HomePreferences {
         List<String> storedSectionTagOrder = getListPreference(context, PREF_SECTION_ORDER);
         final List<String> sectionTagOrder = storedSectionTagOrder.isEmpty()
                 ? new ArrayList<>(Arrays.asList(
+                    AudiothekPanoramaSection.TAG,
                     AudiothekHotSection.TAG,
                     AudiothekChartsSection.TAG,
                     AudiothekHeuteWichtigSection.TAG,
@@ -97,6 +99,9 @@ public class HomePreferences {
                     DlfPodcastsSection.TAG,
                     RtvePodcastsSection.TAG))
                 : storedSectionTagOrder;
+        if (!sectionTagOrder.contains(AudiothekPanoramaSection.TAG)) {
+            sectionTagOrder.add(0, AudiothekPanoramaSection.TAG);
+        }
         List<String> hiddenSectionTags = getHiddenSectionTags(context);
         String[] sectionTags = context.getResources().getStringArray(R.array.home_section_tags);
         Arrays.sort(sectionTags, (String a, String b) -> Integer.signum(
