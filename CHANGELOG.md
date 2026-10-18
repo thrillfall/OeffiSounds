@@ -2,6 +2,14 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.11.0] - 2026-10-18
+
+### Added
+- Home screen: new "ARD Sounds: Highlights" section at the top. It shows the large editorial banners from the ARD Sounds start page (e.g. "Science Fiction-Klassiker" with H. G. Wells' "Krieg der Welten") as wide cards; tapping one opens the podcast
+
+### Changed
+- Home screen: the podcast and episode tiles are larger and show up to three lines of title, so titles are no longer cut off as often
+
 ## [2.10.4] - 2026-08-30
 
 ### Fixed

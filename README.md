@@ -28,12 +28,17 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.10.4)
+### Latest Release (2.11.0)
+
+- Home screen: new "ARD Sounds: Highlights" section at the top with the large editorial banners from the ARD Sounds start page (e.g. "Krieg der Welten") as wide cards
+- Home screen: larger tiles with up to three lines of title, so titles are cut off less often
+
+### Previous Releases
+
+#### 2.10.4
 
 - Fix: the "ARD Sounds entdecken" section on the home screen was empty for the same reason as the rows fixed in 2.10.3 — it lists the ARD's current editorial rows again
 - "ARD Sounds: Empfohlen" no longer repeats the podcasts shown right below it in "ARD Sounds entdecken"
-
-### Previous Releases
 
 #### 2.10.3
 

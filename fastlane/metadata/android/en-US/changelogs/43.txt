@@ -1,0 +1,2 @@
+• Home screen: new "ARD Sounds: Highlights" section at the top with the editorial banners from the ARD Sounds start page
+• Home screen: larger tiles with up to three lines of title, so titles are cut off less often
