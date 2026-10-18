@@ -23,7 +23,7 @@
         <de.danoeh.antennapod.ui.common.SquareImageView
             android:id="@+id/discovery_cover"
             android:layout_width="match_parent"
-            android:layout_height="96dp"
+            android:layout_height="120dp"
             android:elevation="4dp"
             android:outlineProvider="bounds"
             android:foreground="?android:attr/selectableItemBackground"
@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:ellipsize="end"
-        android:lines="2"
+        android:lines="3"
         android:singleLine="false"
         android:textColor="?android:attr/textColorPrimary"
         android:textSize="14sp"
