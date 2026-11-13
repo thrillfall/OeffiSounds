@@ -2,6 +2,11 @@
 
 All notable changes to Öffi Sounds are documented here.
 
+## [2.11.2] - 2026-11-13
+
+### Fixed
+- Podcasts that search directories such as Podcast Index or iTunes list with an `http://` address (e.g. many RTVE programmes like "Cinco continentes" or the regional "Informativos") failed with "CLEARTEXT communication not permitted". All `http://` requests are now upgraded to `https://` (#26)
+
 ## [2.11.1] - 2026-10-18
 
 ### Changed

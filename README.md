@@ -28,11 +28,15 @@ It focuses on discovering and listening to content from German public radio via 
 APK releases are published on GitHub:
 https://github.com/thrillfall/OeffiSounds/releases
 
-### Latest Release (2.11.1)
+### Latest Release (2.11.2)
 
-- Updated to AntennaPod 3.12.3, with upstream fixes for seeking, headset/media buttons, the widget, the playback history, the inbox and the listening statistics
+- Fix: podcasts listed with an `http://` address (e.g. many RTVE programmes) can be opened, subscribed to and played again — all `http://` requests are now upgraded to `https://`
 
 ### Previous Releases
+
+#### 2.11.1
+
+- Updated to AntennaPod 3.12.3, with upstream fixes for seeking, headset/media buttons, the widget, the playback history, the inbox and the listening statistics
 
 #### 2.11.0
 
