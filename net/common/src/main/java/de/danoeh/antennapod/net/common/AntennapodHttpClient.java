@@ -70,12 +70,11 @@ public class AntennapodHttpClient {
             String urlString = request.url().toString();
             if (urlString.startsWith("http://")) {
                 String host = request.url().host();
+                String upgraded = "https://" + urlString.substring("http://".length());
                 if (host.endsWith(".bbc.co.uk") || host.endsWith(".bbci.co.uk")) {
-                    String upgraded = urlString
-                            .replace("http://", "https://")
-                            .replace("/proto/http/", "/proto/https/");
-                    request = request.newBuilder().url(upgraded).build();
+                    upgraded = upgraded.replace("/proto/http/", "/proto/https/");
                 }
+                request = request.newBuilder().url(upgraded).build();
             }
             return chain.proceed(request);
         });
